@@ -1,0 +1,10 @@
+import AboutPage from '@/components/pages/AboutPage';
+
+export const metadata = {
+  title: 'About Us - Site Era',
+  description: 'Learn about Site Era - Premium Web & Mobile App Development Company based in Nepal.',
+};
+
+export default function About() {
+  return <AboutPage />;
+}
