@@ -1,12 +1,12 @@
 import BlogPostPage from '@/components/pages/BlogPostPage';
 
-export async function generateMetadata({ params }) {
+export async function generateMetadata() {
   return {
     title: `Blog Post - Site Era`,
     description: `Read our blog post.`,
   };
 }
 
-export default function BlogPost({ params }) {
-  return <BlogPostPage slug={params.slug} />;
+export default function BlogPost() {
+  return <BlogPostPage />;
 }

@@ -1,130 +1,140 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ArrowRight } from 'lucide-react';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 
 const Navbar = () => {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
   const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'About', path: '/about' },
-    { name: 'Services', path: '/services' },
-    { name: 'Portfolio', path: '/portfolio' },
-    { name: 'Blog', path: '/blog' },
-    { name: 'Contact', path: '/contact' },
+    { href: '/', label: 'Home' },
+    { href: '/about', label: 'About' },
+    { href: '/services', label: 'Services' },
+    { href: '/portfolio', label: 'Portfolio' },
+    { href: '/blog', label: 'Blog' },
+    { href: '/contact', label: 'Contact' },
   ];
 
   return (
     <>
-      <motion.nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled ? 'glass-luxury py-4' : 'bg-transparent py-6'
-        }`}
+      <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
+        transition={{ duration: 0.5 }}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          isScrolled 
+            ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-soft border-b border-gray-100 dark:border-gray-800' 
+            : 'bg-transparent'
+        }`}
       >
-        <div className="container mx-auto px-6 flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2 group">
-            <div className="text-2xl font-display font-bold">
-              <span className="gradient-royal">SITE</span>
-              <span className="text-white"> ERA</span>
-            </div>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                href={link.path}
-                className="relative text-white hover:text-indigo-400 transition-colors duration-300 font-medium text-sm tracking-wide"
-              >
-                {link.name}
-                {pathname === link.path && (
-                  <motion.div
-                    className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500"
-                    layoutId="navbar-indicator"
-                  />
-                )}
-              </Link>
-            ))}
-          </div>
-
-          {/* CTA Button */}
-          <div className="hidden md:block">
-            <Link href="/contact">
-              <button className="btn-luxury text-white px-6 py-3 rounded-full font-semibold text-sm tracking-wide">
-                Start a Project →
-              </button>
+        <div className="container mx-auto px-6 lg:px-8">
+          <nav className="flex items-center justify-between h-18">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2 group">
+              <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center group-hover:bg-primary-700 transition-colors">
+                <span className="text-white font-bold text-lg">S</span>
+              </div>
+              <span className="text-xl font-semibold text-gray-900 dark:text-white">
+                Site<span className="text-primary-600">Era</span>
+              </span>
             </Link>
-          </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden text-white"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center gap-1">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                    pathname === link.href
+                      ? 'text-primary-600 bg-primary-50 dark:bg-primary-900/30'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+
+            {/* CTA Button & Theme Toggle */}
+            <div className="hidden lg:flex items-center gap-3">
+              <ThemeToggle />
+              <Link href="/contact">
+                <button className="group inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-all shadow-md shadow-primary-600/20">
+                  Get Started
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                </button>
+              </Link>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <div className="lg:hidden flex items-center gap-2">
+              <ThemeToggle />
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              >
+                {isMobileMenuOpen ? (
+                  <X className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+                ) : (
+                  <Menu className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+                )}
+              </button>
+            </div>
+          </nav>
         </div>
-      </motion.nav>
+      </motion.header>
 
       {/* Mobile Menu */}
       <AnimatePresence>
-        {mobileMenuOpen && (
+        {isMobileMenuOpen && (
           <motion.div
-            className="fixed inset-0 bg-black z-40 md:hidden"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-x-0 top-18 z-40 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 shadow-lg lg:hidden"
           >
-            <div className="flex flex-col items-center justify-center h-full space-y-8">
-              {navLinks.map((link, index) => (
-                <motion.div
-                  key={link.path}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
+            <div className="container mx-auto px-6 py-4">
+              <div className="flex flex-col gap-1">
+                {navLinks.map((link) => (
                   <Link
-                    href={link.path}
-                    className="text-3xl font-display text-white hover:text-indigo-400 transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
+                    key={link.href}
+                    href={link.href}
+                    className={`px-4 py-3 text-base font-medium rounded-lg transition-colors ${
+                      pathname === link.href
+                        ? 'text-primary-600 bg-primary-50 dark:bg-primary-900/30'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                    }`}
                   >
-                    {link.name}
+                    {link.label}
                   </Link>
-                </motion.div>
-              ))}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: navLinks.length * 0.1 }}
-              >
-                <Link
-                  href="/contact"
-                  className="btn-luxury text-white px-8 py-4 rounded-full font-display font-semibold text-xl inline-block"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Start a Project →
-                </Link>
-              </motion.div>
+                ))}
+                <div className="pt-4 mt-2 border-t border-gray-100 dark:border-gray-800">
+                  <Link href="/contact">
+                    <button className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-all">
+                      Get Started
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </Link>
+                </div>
+              </div>
             </div>
           </motion.div>
         )}

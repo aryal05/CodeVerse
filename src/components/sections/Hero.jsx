@@ -1,202 +1,168 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 import Link from 'next/link';
-import { ChevronDown, Sparkles, Zap, Rocket } from 'lucide-react';
-import MagneticButton from '../ui/MagneticButton';
-import MarqueeStrip from '../ui/MarqueeStrip';
-import ParticleBackground from '../ui/ParticleBackground';
-import GlitchText from '../ui/GlitchText';
+import { ArrowRight, Play, CheckCircle2, Sparkles } from 'lucide-react';
+import DashboardVisual from '@/components/ui/DashboardVisual';
+import AnimatedGrid from '@/components/ui/AnimatedGrid';
 
 const Hero = () => {
-  const { scrollY } = useScroll();
-  const y1 = useTransform(scrollY, [0, 300], [0, 100]);
-  const y2 = useTransform(scrollY, [0, 300], [0, -100]);
-  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
 
-  const fadeUp = {
-    hidden: { opacity: 0, y: 60 },
-    visible: (i) => ({
+  const features = [
+    'Award-winning design team',
+    '150+ successful projects',
+    '99% client satisfaction rate'
+  ];
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1, delayChildren: 0.2 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 0.7,
-        delay: i * 0.2,
-        ease: [0.22, 1, 0.36, 1],
-      },
-    }),
+      transition: { duration: 0.5, ease: [0.25, 0.4, 0.25, 1] }
+    }
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
-      {/* Background Elements */}
-      <ParticleBackground />
-      
+    <section ref={ref} className="relative min-h-screen flex items-center bg-white dark:bg-gray-950 overflow-hidden pt-20">
       {/* Animated Grid Background */}
-      <motion.div 
-        className="absolute inset-0 bg-grid opacity-20" 
-        style={{ backgroundSize: '50px 50px', y: y1 }} 
-      />
+      <AnimatedGrid />
+      
+      {/* Gradient Orbs */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-br from-primary-400/30 via-purple-400/20 to-transparent dark:from-primary-600/20 dark:via-purple-600/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-tr from-cyan-400/20 via-blue-400/10 to-transparent dark:from-cyan-600/10 dark:via-blue-600/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4" />
 
-      {/* Enhanced Floating Orbs with Parallax */}
-      <motion.div 
-        className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-royal-500 rounded-full blur-[150px] opacity-20 animate-float"
-        style={{ y: y1 }}
-      />
-      <motion.div 
-        className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-gold-500 rounded-full blur-[150px] opacity-20 animate-float-delay"
-        style={{ y: y2 }}
-      />
-      <motion.div 
-        className="absolute top-1/2 right-1/3 w-[400px] h-[400px] bg-emerald-500 rounded-full blur-[150px] opacity-15 animate-float"
-        style={{ y: y1 }}
-      />
-      <motion.div 
-        className="absolute bottom-1/3 left-1/3 w-[400px] h-[400px] bg-royal-600 rounded-full blur-[150px] opacity-10 animate-float-delay"
-        style={{ y: y2 }}
-      />
-
-      {/* Spotlight Effect */}
-      <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black opacity-60" />
-
-      {/* Content */}
-      <motion.div 
-        className="container mx-auto px-6 relative z-10 text-center"
-        style={{ opacity }}
-      >
-        {/* Premium Badge */}
-        <motion.div
-          className="mb-8 inline-flex items-center gap-2 glass-luxury px-6 py-3 rounded-full"
-          custom={0}
-          initial="hidden"
-          animate="visible"
-          variants={fadeUp}
-        >
-          <Sparkles className="text-gold-500" size={16} />
-          <span className="text-gold-500 font-mono text-xs tracking-wider uppercase">
-            Award-Winning Digital Studio · Est. 2015
-          </span>
-          <Sparkles className="text-gold-500" size={16} />
-        </motion.div>
-
-        {/* Main Heading with Enhanced Typography */}
-        <motion.h1
-          className="text-6xl md:text-8xl lg:text-9xl font-display font-bold text-white mb-8 leading-[0.9]"
-          custom={1}
-          initial="hidden"
-          animate="visible"
-          variants={fadeUp}
-        >
-          <div className="mb-4">
-            <GlitchText>We Don't Just</GlitchText>
-          </div>
-          <div className="mb-4">
-            <GlitchText>Build Websites.</GlitchText>
-          </div>
-          <div className="relative inline-block">
-            <span className="gradient-luxury">We Build Empires.</span>
-            <motion.div
-              className="absolute -bottom-4 left-0 right-0 h-1 bg-gradient-luxury"
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ duration: 1, delay: 1.5 }}
-            />
-          </div>
-        </motion.h1>
-
-        {/* Enhanced Subtext */}
-        <motion.p
-          className="text-xl md:text-2xl text-platinum-300 max-w-4xl mx-auto mb-8 leading-relaxed"
-          custom={2}
-          initial="hidden"
-          animate="visible"
-          variants={fadeUp}
-        >
-          Site Era crafts <span className="text-white font-semibold">high-performance</span> web & mobile experiences that turn
-          visitors into customers and startups into <span className="text-royal-400">industry leaders</span>.
-        </motion.p>
-
-        {/* Trust Indicators */}
-        <motion.div
-          className="flex flex-wrap items-center justify-center gap-8 mb-12 text-sm text-platinum-300"
-          custom={2.5}
-          initial="hidden"
-          animate="visible"
-          variants={fadeUp}
-        >
-          <div className="flex items-center gap-2">
-            <Zap className="text-gold-500" size={16} />
-            <span>9+ Years Experience</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Rocket className="text-gold-500" size={16} />
-            <span>150+ Projects Delivered</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Sparkles className="text-gold-500" size={16} />
-            <span>100% Client Satisfaction</span>
-          </div>
-        </motion.div>
-
-        {/* Enhanced CTA Buttons */}
-        <motion.div
-          className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-20"
-          custom={3}
-          initial="hidden"
-          animate="visible"
-          variants={fadeUp}
-        >
-          <MagneticButton className="group relative btn-luxury text-white px-10 py-5 rounded-full font-display font-semibold text-lg transition-all duration-300 overflow-hidden">
-            <Link href="/portfolio" className="relative z-10 flex items-center gap-2">
-              <span>View Our Work</span>
-              <motion.span
-                animate={{ x: [0, 5, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              >
-                →
-              </motion.span>
-            </Link>
-          </MagneticButton>
-          
-          <MagneticButton className="group relative border-2 border-white text-white px-10 py-5 rounded-full font-display font-semibold text-lg hover:bg-white hover:text-black transition-all duration-300 overflow-hidden">
-            <Link href="/contact" className="relative z-10 flex items-center gap-2">
-              <span>Let's Talk</span>
-              <Sparkles size={18} className="group-hover:rotate-180 transition-transform duration-500" />
-            </Link>
-          </MagneticButton>
-        </motion.div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          className="flex flex-col items-center gap-2"
-          custom={4}
-          initial="hidden"
-          animate="visible"
-          variants={fadeUp}
-        >
-          <span className="text-xs text-platinum-400 font-mono uppercase tracking-wider">Scroll to Explore</span>
+      <div className="container mx-auto px-6 lg:px-8 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Left Content */}
           <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
+            variants={containerVariants}
+            initial="hidden"
+            animate={isInView ? "visible" : "hidden"}
+            className="max-w-2xl"
           >
-            <ChevronDown className="text-royal-500" size={32} />
-          </motion.div>
-        </motion.div>
-      </motion.div>
+            {/* Badge */}
+            <motion.div
+              variants={itemVariants}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-primary-50 dark:bg-primary-900/30 border border-primary-100 dark:border-primary-800 rounded-full mb-6"
+            >
+              <Sparkles className="w-4 h-4 text-primary-600" />
+              <span className="text-sm font-medium text-primary-700 dark:text-primary-400">
+                Nepal&apos;s Leading Digital Agency
+              </span>
+            </motion.div>
 
-      {/* Enhanced Bottom Marquee */}
+            {/* Headline */}
+            <motion.h1
+              variants={itemVariants}
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white leading-[1.1] mb-6"
+            >
+              We build digital
+              <br />
+              products that
+              <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 via-purple-600 to-cyan-600">
+                drive growth
+              </span>
+            </motion.h1>
+
+            {/* Description */}
+            <motion.p
+              variants={itemVariants}
+              className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-lg"
+            >
+              Full-service digital agency specializing in web development, 
+              mobile apps, and brand experiences for ambitious companies.
+            </motion.p>
+
+            {/* CTA Buttons */}
+            <motion.div
+              variants={itemVariants}
+              className="flex flex-wrap gap-4 mb-10"
+            >
+              <Link href="/contact">
+                <motion.button 
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="group inline-flex items-center gap-2 px-6 py-3.5 bg-primary-600 text-white font-medium rounded-xl hover:bg-primary-700 transition-all shadow-lg shadow-primary-600/25 hover:shadow-xl hover:shadow-primary-600/30"
+                >
+                  Start Your Project
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </motion.button>
+              </Link>
+              <Link href="/portfolio">
+                <motion.button 
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="group inline-flex items-center gap-2 px-6 py-3.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
+                >
+                  <Play className="w-4 h-4" />
+                  View Our Work
+                </motion.button>
+              </Link>
+            </motion.div>
+
+            {/* Trust Indicators */}
+            <motion.div
+              variants={itemVariants}
+              className="space-y-3"
+            >
+              {features.map((feature, index) => (
+                <motion.div 
+                  key={index} 
+                  className="flex items-center gap-2 text-gray-600 dark:text-gray-400"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={isInView ? { opacity: 1, x: 0 } : {}}
+                  transition={{ delay: 0.6 + index * 0.1 }}
+                >
+                  <CheckCircle2 className="w-5 h-5 text-primary-500" />
+                  <span className="text-sm">{feature}</span>
+                </motion.div>
+              ))}
+            </motion.div>
+          </motion.div>
+
+          {/* Right Content - Dashboard Visual */}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="relative hidden lg:block"
+          >
+            <DashboardVisual />
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Scroll Indicator */}
       <motion.div
-        className="absolute bottom-0 left-0 right-0 bg-gradient-luxury text-black py-5 font-mono text-sm font-bold overflow-hidden"
-        custom={5}
-        initial="hidden"
-        animate="visible"
-        variants={fadeUp}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-2"
       >
-        <MarqueeStrip text="🚀 WEB DEVELOPMENT · 📱 MOBILE APPS · 🎨 UI/UX DESIGN · 🛒 E-COMMERCE · ⚡ API INTEGRATION · ✨ BRANDING · 💎 DIGITAL TRANSFORMATION · " />
+        <span className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wider">Scroll</span>
+        <div className="w-6 h-10 border-2 border-gray-300 dark:border-gray-700 rounded-full flex justify-center pt-2">
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+            className="w-1.5 h-1.5 bg-gray-400 dark:bg-gray-600 rounded-full"
+          />
+        </div>
       </motion.div>
     </section>
   );
 };
 
 export default Hero;
-

@@ -11,10 +11,24 @@ const ScrollProgress = () => {
   });
 
   return (
-    <motion.div
-      className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 origin-left z-[9999]"
-      style={{ scaleX }}
-    />
+    <>
+      {/* Main progress bar */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-[2px] origin-left z-[100]"
+        style={{ 
+          scaleX,
+          background: 'linear-gradient(90deg, #d4af37 0%, #f4d03f 50%, #d4af37 100%)'
+        }}
+      />
+      {/* Glow effect */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-[6px] origin-left z-[99] blur-sm opacity-60"
+        style={{ 
+          scaleX,
+          background: 'linear-gradient(90deg, #d4af37 0%, #f4d03f 50%, #d4af37 100%)'
+        }}
+      />
+    </>
   );
 };
 

@@ -1,19 +1,21 @@
 'use client';
 
-
+import { useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { ArrowLeft, CheckCircle, ArrowRight, Code, Smartphone, Palette, ShoppingCart, Database, Sparkles } from 'lucide-react';
+import AnimatedGrid from '@/components/ui/AnimatedGrid';
 
 const ServiceDetail = () => {
-  const { slug } = useParams();
+  const params = useParams();
+  const slug = params?.slug;
 
-  // Service data
   const services = {
     'web-development': {
       icon: Code,
       name: 'Web Development',
       tagline: 'Powerful, Scalable Web Applications',
-      description: 'We build lightning-fast, SEO-optimized websites and web applications that convert visitors into customers. From simple landing pages to complex enterprise solutions, we deliver excellence.',
+      description: 'We build lightning-fast, SEO-optimized websites and web applications that convert visitors into customers.',
       features: [
         'Custom Web Applications',
         'Progressive Web Apps (PWA)',
@@ -27,38 +29,21 @@ const ServiceDetail = () => {
         'Ongoing Maintenance & Support'
       ],
       process: [
-        { step: 'Discovery', description: 'Understanding your goals, audience, and requirements' },
-        { step: 'Planning', description: 'Creating wireframes, architecture, and project timeline' },
+        { step: 'Discovery', description: 'Understanding your goals and requirements' },
+        { step: 'Planning', description: 'Creating wireframes and project timeline' },
         { step: 'Design', description: 'Crafting beautiful, user-centered interfaces' },
         { step: 'Development', description: 'Building with clean code and best practices' },
         { step: 'Testing', description: 'Rigorous QA across devices and browsers' },
         { step: 'Launch', description: 'Deployment, monitoring, and optimization' }
       ],
-      technologies: ['React', 'Next.js', 'Vue.js', 'Node.js', 'Laravel', 'Django', 'PostgreSQL', 'MongoDB', 'AWS', 'Vercel'],
-      pricing: [
-        {
-          name: 'Basic',
-          price: '50,000',
-          features: ['5-10 Pages', 'Responsive Design', 'Contact Form', 'Basic SEO', '1 Month Support']
-        },
-        {
-          name: 'Professional',
-          price: '150,000',
-          features: ['15-25 Pages', 'Custom Design', 'CMS Integration', 'Advanced SEO', 'E-Commerce Ready', '3 Months Support'],
-          popular: true
-        },
-        {
-          name: 'Enterprise',
-          price: 'Custom',
-          features: ['Unlimited Pages', 'Custom Features', 'API Integration', 'Performance Optimization', 'Dedicated Support', '12 Months Support']
-        }
-      ]
+      technologies: ['React', 'Next.js', 'Vue.js', 'Node.js', 'PostgreSQL', 'MongoDB', 'AWS'],
+      color: 'from-blue-500 to-cyan-500'
     },
-    'mobile-app-development': {
+    'mobile-development': {
       icon: Smartphone,
       name: 'Mobile App Development',
       tagline: 'Native & Cross-Platform Excellence',
-      description: 'Create stunning mobile experiences for iOS and Android. We build apps that users love, with smooth animations, intuitive interfaces, and robust functionality.',
+      description: 'Create stunning mobile experiences for iOS and Android that users love.',
       features: [
         'iOS & Android Apps',
         'Cross-Platform Development',
@@ -67,9 +52,7 @@ const ServiceDetail = () => {
         'Offline Functionality',
         'In-App Purchases',
         'Social Media Integration',
-        'Analytics & Tracking',
-        'App Maintenance & Updates',
-        'Beta Testing & QA'
+        'Analytics & Tracking'
       ],
       process: [
         { step: 'Concept', description: 'Defining app features and user flows' },
@@ -79,31 +62,14 @@ const ServiceDetail = () => {
         { step: 'Deployment', description: 'App Store and Play Store submission' },
         { step: 'Support', description: 'Updates, bug fixes, and new features' }
       ],
-      technologies: ['React Native', 'Flutter', 'Swift', 'Kotlin', 'Firebase', 'AWS Amplify', 'Redux', 'GraphQL'],
-      pricing: [
-        {
-          name: 'Basic',
-          price: '100,000',
-          features: ['Single Platform', 'Basic Features', 'Standard UI', '1 Month Support']
-        },
-        {
-          name: 'Professional',
-          price: '250,000',
-          features: ['iOS & Android', 'Advanced Features', 'Custom Design', 'Push Notifications', '3 Months Support'],
-          popular: true
-        },
-        {
-          name: 'Enterprise',
-          price: 'Custom',
-          features: ['Complex Features', 'Backend Integration', 'Real-time Features', 'Dedicated Team', '12 Months Support']
-        }
-      ]
+      technologies: ['React Native', 'Flutter', 'Swift', 'Kotlin', 'Firebase'],
+      color: 'from-purple-500 to-pink-500'
     },
     'ui-ux-design': {
       icon: Palette,
       name: 'UI/UX Design',
       tagline: 'Beautiful, User-Centered Design',
-      description: 'We create interfaces that are not just beautiful, but intuitive and conversion-focused. Every pixel serves a purpose, every interaction delights users.',
+      description: 'We create interfaces that are not just beautiful, but intuitive and conversion-focused.',
       features: [
         'User Research & Analysis',
         'Wireframing & Prototyping',
@@ -112,43 +78,24 @@ const ServiceDetail = () => {
         'Usability Testing',
         'Brand Identity Design',
         'Responsive Design',
-        'Accessibility Compliance',
-        'Design Handoff',
-        'Design Consultation'
+        'Accessibility Compliance'
       ],
       process: [
         { step: 'Research', description: 'Understanding users and competitors' },
         { step: 'Wireframes', description: 'Creating low-fidelity layouts' },
         { step: 'Prototypes', description: 'Building interactive mockups' },
-        { step: 'Visual Design', description: 'Applying colors, typography, and branding' },
+        { step: 'Visual Design', description: 'Applying colors and branding' },
         { step: 'Testing', description: 'Validating with real users' },
         { step: 'Handoff', description: 'Delivering assets to developers' }
       ],
-      technologies: ['Figma', 'Adobe XD', 'Sketch', 'InVision', 'Principle', 'Framer', 'Adobe Illustrator', 'Photoshop'],
-      pricing: [
-        {
-          name: 'Basic',
-          price: '30,000',
-          features: ['5-10 Screens', 'Basic Wireframes', 'Visual Design', 'Design Files']
-        },
-        {
-          name: 'Professional',
-          price: '80,000',
-          features: ['15-25 Screens', 'Interactive Prototypes', 'Design System', 'User Testing', 'Revisions'],
-          popular: true
-        },
-        {
-          name: 'Enterprise',
-          price: 'Custom',
-          features: ['Unlimited Screens', 'Complete Design System', 'User Research', 'Ongoing Support', 'Brand Guidelines']
-        }
-      ]
+      technologies: ['Figma', 'Adobe XD', 'Sketch', 'InVision', 'Framer'],
+      color: 'from-pink-500 to-rose-500'
     },
     'ecommerce': {
       icon: ShoppingCart,
       name: 'E-Commerce Solutions',
       tagline: 'Sell More, Grow Faster',
-      description: 'Complete e-commerce solutions that drive sales. From product catalogs to payment gateways, we handle everything to get your store online and profitable.',
+      description: 'Complete e-commerce solutions that drive sales and grow your business.',
       features: [
         'Custom Online Stores',
         'Payment Gateway Integration',
@@ -157,9 +104,7 @@ const ServiceDetail = () => {
         'Multi-vendor Marketplaces',
         'Analytics & Reporting',
         'Email Marketing Integration',
-        'SEO Optimization',
-        'Mobile Responsive',
-        'Security & Compliance'
+        'SEO Optimization'
       ],
       process: [
         { step: 'Planning', description: 'Defining store structure and features' },
@@ -169,31 +114,14 @@ const ServiceDetail = () => {
         { step: 'Testing', description: 'Ensuring smooth checkout experience' },
         { step: 'Launch', description: 'Going live with marketing support' }
       ],
-      technologies: ['Shopify', 'WooCommerce', 'Magento', 'Custom Solutions', 'Stripe', 'PayPal', 'Razorpay', 'eSewa'],
-      pricing: [
-        {
-          name: 'Basic',
-          price: '80,000',
-          features: ['Up to 50 Products', 'Payment Gateway', 'Basic Design', 'Mobile Responsive', '1 Month Support']
-        },
-        {
-          name: 'Professional',
-          price: '200,000',
-          features: ['Unlimited Products', 'Custom Design', 'Inventory Management', 'Email Marketing', '3 Months Support'],
-          popular: true
-        },
-        {
-          name: 'Enterprise',
-          price: 'Custom',
-          features: ['Multi-vendor', 'Advanced Features', 'Custom Integrations', 'Dedicated Support', '12 Months Support']
-        }
-      ]
+      technologies: ['Shopify', 'WooCommerce', 'Stripe', 'PayPal'],
+      color: 'from-orange-500 to-red-500'
     },
-    'api-development': {
+    'cloud-devops': {
       icon: Database,
-      name: 'API & Backend Development',
+      name: 'Cloud & DevOps',
       tagline: 'Robust, Scalable Infrastructure',
-      description: 'Build the backbone of your digital products. We create secure, scalable APIs and backend systems that power your applications reliably.',
+      description: 'Build the backbone of your digital products with secure, scalable infrastructure.',
       features: [
         'RESTful API Development',
         'GraphQL APIs',
@@ -202,82 +130,44 @@ const ServiceDetail = () => {
         'Cloud Infrastructure',
         'DevOps & CI/CD',
         'API Documentation',
-        'Security Implementation',
-        'Performance Optimization',
-        'Monitoring & Logging'
+        'Security Implementation'
       ],
       process: [
         { step: 'Architecture', description: 'Designing scalable system architecture' },
         { step: 'Development', description: 'Building robust APIs and services' },
-        { step: 'Database', description: 'Optimizing data storage and retrieval' },
+        { step: 'Database', description: 'Optimizing data storage' },
         { step: 'Testing', description: 'Comprehensive API testing' },
         { step: 'Deployment', description: 'Cloud deployment and configuration' },
         { step: 'Monitoring', description: 'Ongoing performance monitoring' }
       ],
-      technologies: ['Node.js', 'Python', 'Go', 'PostgreSQL', 'MongoDB', 'Redis', 'AWS', 'Docker', 'Kubernetes', 'GraphQL'],
-      pricing: [
-        {
-          name: 'Basic',
-          price: '60,000',
-          features: ['Simple API', 'Basic Database', 'Documentation', '1 Month Support']
-        },
-        {
-          name: 'Professional',
-          price: '150,000',
-          features: ['Complex APIs', 'Microservices', 'Cloud Deployment', 'CI/CD Pipeline', '3 Months Support'],
-          popular: true
-        },
-        {
-          name: 'Enterprise',
-          price: 'Custom',
-          features: ['Enterprise Architecture', 'High Availability', 'Advanced Security', 'Dedicated Team', '12 Months Support']
-        }
-      ]
+      technologies: ['AWS', 'GCP', 'Docker', 'Kubernetes', 'Terraform'],
+      color: 'from-cyan-500 to-teal-500'
     },
-    'digital-branding': {
+    'digital-strategy': {
       icon: Sparkles,
-      name: 'Digital Branding',
+      name: 'Digital Strategy',
       tagline: 'Stand Out, Be Remembered',
-      description: 'Create a memorable brand identity that resonates with your audience. From logos to complete brand guidelines, we help you make a lasting impression.',
+      description: 'Data-driven growth strategies to help your business succeed online.',
       features: [
-        'Logo Design',
-        'Brand Identity',
-        'Style Guides',
-        'Marketing Collateral',
-        'Social Media Assets',
+        'SEO Optimization',
+        'Content Strategy',
+        'Analytics Setup',
+        'Conversion Optimization',
+        'Social Media Strategy',
         'Brand Strategy',
-        'Typography Selection',
-        'Color Palette',
-        'Brand Guidelines',
-        'Ongoing Brand Support'
+        'Marketing Automation',
+        'Performance Marketing'
       ],
       process: [
-        { step: 'Discovery', description: 'Understanding your brand values and audience' },
-        { step: 'Research', description: 'Analyzing competitors and market trends' },
-        { step: 'Concepts', description: 'Creating initial design directions' },
-        { step: 'Refinement', description: 'Perfecting the chosen direction' },
-        { step: 'Guidelines', description: 'Creating comprehensive brand guidelines' },
-        { step: 'Delivery', description: 'Providing all brand assets' }
+        { step: 'Discovery', description: 'Understanding your brand and audience' },
+        { step: 'Research', description: 'Analyzing competitors and market' },
+        { step: 'Strategy', description: 'Creating actionable growth plan' },
+        { step: 'Implementation', description: 'Executing the strategy' },
+        { step: 'Optimization', description: 'Continuous improvement' },
+        { step: 'Reporting', description: 'Measuring and reporting results' }
       ],
-      technologies: ['Adobe Illustrator', 'Photoshop', 'After Effects', 'Figma', 'InDesign'],
-      pricing: [
-        {
-          name: 'Basic',
-          price: '25,000',
-          features: ['Logo Design', 'Color Palette', 'Typography', 'Basic Guidelines']
-        },
-        {
-          name: 'Professional',
-          price: '60,000',
-          features: ['Complete Brand Identity', 'Style Guide', 'Marketing Materials', 'Social Media Kit', 'Revisions'],
-          popular: true
-        },
-        {
-          name: 'Enterprise',
-          price: 'Custom',
-          features: ['Full Brand Strategy', 'Complete Guidelines', 'Marketing Campaigns', 'Ongoing Support', 'Brand Consultation']
-        }
-      ]
+      technologies: ['Google Analytics', 'SEMrush', 'Hotjar', 'Mixpanel'],
+      color: 'from-emerald-500 to-green-500'
     }
   };
 
@@ -285,10 +175,10 @@ const ServiceDetail = () => {
 
   if (!service) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-gray-950 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-3xl font-display text-white mb-4">Service Not Found</h2>
-          <Link href="/services" className="btn-luxury text-white px-6 py-3 rounded-full inline-block">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Service Not Found</h2>
+          <Link href="/services" className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 text-white rounded-xl">
             Back to Services
           </Link>
         </div>
@@ -299,13 +189,14 @@ const ServiceDetail = () => {
   const ServiceIcon = service.icon;
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Hero Section */}
-      <section className="relative pt-32 pb-16 overflow-hidden">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-royal-500 rounded-full blur-[150px] opacity-10" />
+      <section className="relative pt-32 pb-20 overflow-hidden">
+        <AnimatedGrid />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary-400/20 dark:bg-primary-600/10 rounded-full blur-3xl" />
         
-        <div className="container mx-auto px-6 relative z-10">
-          <Link href="/services" className="inline-flex items-center gap-2 text-platinum-300 hover:text-royal-400 transition-colors mb-8">
+        <div className="container mx-auto px-6 lg:px-8 relative z-10">
+          <Link href="/services" className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-primary-600 transition-colors mb-8">
             <ArrowLeft size={20} />
             <span>Back to Services</span>
           </Link>
@@ -313,15 +204,17 @@ const ServiceDetail = () => {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
+            transition={{ duration: 0.6 }}
             className="text-center max-w-4xl mx-auto"
           >
-            <ServiceIcon className="text-gold-500 mx-auto mb-6" size={64} />
-            <h1 className="text-5xl md:text-7xl font-display font-bold text-white mb-6 leading-tight">
+            <div className={`w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br ${service.color} flex items-center justify-center mb-6`}>
+              <ServiceIcon className="text-white" size={40} />
+            </div>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6">
               {service.name}
             </h1>
-            <p className="text-2xl text-gold-500 font-display mb-6">{service.tagline}</p>
-            <p className="text-xl text-platinum-300 leading-relaxed">
+            <p className="text-xl text-primary-600 font-medium mb-4">{service.tagline}</p>
+            <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
               {service.description}
             </p>
           </motion.div>
@@ -329,23 +222,23 @@ const ServiceDetail = () => {
       </section>
 
       {/* What's Included */}
-      <section className="py-16 bg-luxury-50">
-        <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-display font-bold text-white mb-12 text-center">
-            What's <span className="gradient-luxury">Included</span>
+      <section className="py-20 bg-gray-50 dark:bg-gray-900">
+        <div className="container mx-auto px-6 lg:px-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-12 text-center">
+            What&apos;s Included
           </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
             {service.features.map((feature, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.05 }}
-                className="flex items-start gap-3"
+                transition={{ duration: 0.4, delay: index * 0.05 }}
+                className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700"
               >
-                <CheckCircle className="text-emerald-500 flex-shrink-0 mt-1" size={20} />
-                <span className="text-platinum-200">{feature}</span>
+                <CheckCircle className="text-primary-500 flex-shrink-0" size={20} />
+                <span className="text-gray-700 dark:text-gray-300 text-sm">{feature}</span>
               </motion.div>
             ))}
           </div>
@@ -353,26 +246,26 @@ const ServiceDetail = () => {
       </section>
 
       {/* Process */}
-      <section className="py-16">
-        <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-display font-bold text-white mb-12 text-center">
-            Our <span className="gradient-luxury">Process</span>
+      <section className="py-20 bg-white dark:bg-gray-950">
+        <div className="container mx-auto px-6 lg:px-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-12 text-center">
+            Our Process
           </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {service.process.map((step, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="card-luxury p-6 rounded-xl"
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+                className="p-6 bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800"
               >
-                <div className="text-4xl font-display font-bold gradient-luxury mb-4">
+                <div className={`text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r ${service.color} mb-3`}>
                   {String(index + 1).padStart(2, '0')}
                 </div>
-                <h3 className="text-xl font-display font-semibold text-white mb-2">{step.step}</h3>
-                <p className="text-platinum-300">{step.description}</p>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{step.step}</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">{step.description}</p>
               </motion.div>
             ))}
           </div>
@@ -380,89 +273,54 @@ const ServiceDetail = () => {
       </section>
 
       {/* Technologies */}
-      <section className="py-16 bg-luxury-50">
-        <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-display font-bold text-white mb-12 text-center">
-            Technologies We <span className="gradient-luxury">Use</span>
+      <section className="py-20 bg-gray-50 dark:bg-gray-900">
+        <div className="container mx-auto px-6 lg:px-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-12 text-center">
+            Technologies We Use
           </h2>
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-wrap justify-center gap-3 max-w-3xl mx-auto">
             {service.technologies.map((tech, index) => (
-              <span
+              <motion.span
                 key={index}
-                className="glass-luxury px-6 py-3 rounded-full text-white font-semibold border border-royal-500/20 hover:border-royal-500/50 transition-colors"
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+                className="px-5 py-2.5 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full border border-gray-200 dark:border-gray-700 font-medium text-sm"
               >
                 {tech}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing */}
-      <section className="py-16">
-        <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-display font-bold text-white mb-4 text-center">
-            Transparent <span className="gradient-luxury">Pricing</span>
-          </h2>
-          <p className="text-platinum-300 text-center mb-12 max-w-2xl mx-auto">
-            Choose the package that fits your needs. All prices in NPR.
-          </p>
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {service.pricing.map((plan, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className={`card-luxury p-8 rounded-xl ${plan.popular ? 'border-2 border-gold-500' : ''}`}
-              >
-                {plan.popular && (
-                  <div className="text-gold-500 font-semibold text-sm mb-4 uppercase">Most Popular</div>
-                )}
-                <h3 className="text-2xl font-display font-bold text-white mb-2">{plan.name}</h3>
-                <div className="mb-6">
-                  <span className="text-4xl font-display font-bold gradient-luxury">
-                    {plan.price === 'Custom' ? plan.price : `NPR ${plan.price}`}
-                  </span>
-                </div>
-                <ul className="space-y-3 mb-8">
-                  {plan.features.map((feature, i) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <CheckCircle className="text-emerald-500 flex-shrink-0 mt-1" size={16} />
-                      <span className="text-platinum-300 text-sm">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  to="/contact"
-                  className={`block text-center py-3 rounded-full font-display font-semibold transition-all ${
-                    plan.popular
-                      ? 'btn-luxury text-white'
-                      : 'border-2 border-white text-white hover:bg-white hover:text-black'
-                  }`}
-                >
-                  Get Started
-                </Link>
-              </motion.div>
+              </motion.span>
             ))}
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-24 bg-luxury-50">
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="text-4xl md:text-5xl font-display font-bold text-white mb-6">
-            Ready to Get <span className="gradient-luxury">Started?</span>
-          </h2>
-          <p className="text-xl text-platinum-300 mb-8 max-w-2xl mx-auto">
-            Let's discuss your project and create something amazing together.
-          </p>
-          <Link href="/contact" className="btn-luxury text-white px-10 py-5 rounded-full font-display font-semibold text-lg inline-flex items-center gap-2">
-            <span>Contact Us</span>
-            <ArrowRight size={20} />
-          </Link>
+      <section className="py-20 bg-primary-600">
+        <div className="container mx-auto px-6 lg:px-8 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
+              Ready to Get Started?
+            </h2>
+            <p className="text-lg text-primary-100 mb-10 max-w-2xl mx-auto">
+              Let&apos;s discuss your project and create something amazing together.
+            </p>
+            <Link href="/contact">
+              <motion.button
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                className="inline-flex items-center gap-2 px-8 py-4 bg-white text-primary-600 rounded-xl text-lg font-semibold shadow-lg"
+              >
+                <span>Contact Us</span>
+                <ArrowRight size={20} />
+              </motion.button>
+            </Link>
+          </motion.div>
         </div>
       </section>
     </div>
@@ -470,4 +328,3 @@ const ServiceDetail = () => {
 };
 
 export default ServiceDetail;
-
