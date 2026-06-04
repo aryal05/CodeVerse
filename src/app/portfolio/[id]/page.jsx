@@ -2,7 +2,7 @@ import ProjectDetailPage from '@/components/pages/ProjectDetailPage';
 
 export async function generateMetadata() {
   return {
-    title: `Project Details - Site Era`,
+    title: `Project Details - CodeVerse`,
     description: `View project details and case study.`,
   };
 }

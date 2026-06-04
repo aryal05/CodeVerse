@@ -77,10 +77,10 @@ export default function AdminLogin() {
             transition={{ type: "spring", duration: 0.8 }}
             className="w-16 h-16 bg-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-primary-600/25"
           >
-            <span className="text-white font-bold text-2xl">S</span>
+            <span className="text-white font-bold text-2xl">C</span>
           </motion.div>
           <h1 className="text-2xl font-bold text-white mb-1">
-            Site<span className="text-primary-500">Era</span> Admin
+            Code<span className="text-primary-500">verse</span> Admin
           </h1>
           <p className="text-gray-500">Sign in to your dashboard</p>
         </div>
@@ -169,7 +169,7 @@ export default function AdminLogin() {
         </motion.div>
 
         <p className="text-center text-gray-600 text-sm mt-6">
-          &copy; {new Date().getFullYear()} SiteEra. All rights reserved.
+          &copy; {new Date().getFullYear()} Codeverse. All rights reserved.
         </p>
       </motion.div>
     </div>

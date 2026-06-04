@@ -1,4 +1,4 @@
-# Site Era - Next.js Full Stack Application
+# CodeVerse - Next.js Full Stack Application
 
 Premium Web & Mobile App Development Company website built with **Next.js 14**, **MongoDB**, and **Tailwind CSS**.
 
@@ -32,7 +32,7 @@ npm install
 Create `.env.local`:
 
 ```env
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/siteera?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/codeverse?retryWrites=true&w=majority
 JWT_SECRET=your-super-secret-jwt-key
 ```
 
@@ -68,7 +68,7 @@ curl -X POST http://localhost:3000/api/seed
 
 After deployment:
 1. Go to Project Settings → Domains
-2. Add `siteera.com`
+2. Add `codeverse.com`
 3. Configure DNS as instructed
 
 ## 📁 Project Structure
@@ -146,7 +146,7 @@ Use the admin dashboard at `/admin` to manage all content.
 
 ## 📝 License
 
-MIT License - Rajat Aryal / Site Era
+MIT License - Rajat Aryal / CodeVerse
 
 ---
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Calendar, Clock, ArrowRight, Search } from 'lucide-react';
@@ -9,72 +9,30 @@ import PageHeader from '@/components/ui/PageHeader';
 const BlogPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState(['All']);
 
-  const categories = ['All', 'Development', 'Design', 'Business', 'Technology'];
+  // Fetch blog posts from API
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const res = await fetch('/api/blog');
+        const data = await res.json();
+        setPosts(data);
+        
+        // Extract unique categories
+        const uniqueCategories = ['All', ...new Set(data.map(p => p.category).filter(Boolean))];
+        setCategories(uniqueCategories);
+      } catch (error) {
+        console.error('Failed to fetch blog posts:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const posts = [
-    {
-      title: 'Building Scalable Web Applications with Next.js 14',
-      excerpt: 'Learn how to leverage the latest features in Next.js 14 to build performant and scalable web applications.',
-      category: 'Development',
-      author: 'Rajesh Sharma',
-      date: 'Dec 15, 2024',
-      readTime: '8 min read',
-      image: '/blog/nextjs.jpg',
-      slug: 'building-scalable-web-applications-nextjs-14',
-      featured: true
-    },
-    {
-      title: 'The Future of UI/UX Design in 2025',
-      excerpt: 'Explore the emerging trends and technologies that will shape the future of user interface and experience design.',
-      category: 'Design',
-      author: 'Priya Thapa',
-      date: 'Dec 10, 2024',
-      readTime: '6 min read',
-      image: '/blog/uiux.jpg',
-      slug: 'future-of-ui-ux-design-2025'
-    },
-    {
-      title: 'How to Choose the Right Tech Stack for Your Startup',
-      excerpt: 'A comprehensive guide to selecting the perfect technology stack that aligns with your business goals.',
-      category: 'Business',
-      author: 'Anil Joshi',
-      date: 'Dec 5, 2024',
-      readTime: '10 min read',
-      image: '/blog/techstack.jpg',
-      slug: 'choosing-right-tech-stack-startup'
-    },
-    {
-      title: 'Introduction to React Native for Mobile Development',
-      excerpt: 'Get started with React Native and learn how to build cross-platform mobile applications efficiently.',
-      category: 'Development',
-      author: 'Suman Karki',
-      date: 'Nov 28, 2024',
-      readTime: '7 min read',
-      image: '/blog/reactnative.jpg',
-      slug: 'introduction-react-native-mobile-development'
-    },
-    {
-      title: 'Design Systems: Building Consistency at Scale',
-      excerpt: 'Learn how to create and maintain design systems that ensure consistency across your digital products.',
-      category: 'Design',
-      author: 'Priya Thapa',
-      date: 'Nov 20, 2024',
-      readTime: '9 min read',
-      image: '/blog/designsystems.jpg',
-      slug: 'design-systems-building-consistency-scale'
-    },
-    {
-      title: 'AI and Machine Learning in Web Development',
-      excerpt: 'Discover how AI and ML are transforming the way we build and interact with web applications.',
-      category: 'Technology',
-      author: 'Rajesh Sharma',
-      date: 'Nov 15, 2024',
-      readTime: '8 min read',
-      image: '/blog/aiml.jpg',
-      slug: 'ai-machine-learning-web-development'
-    },
-  ];
+    fetchPosts();
+  }, []);
 
   const filteredPosts = posts.filter(post => {
     const matchesCategory = activeCategory === 'All' || post.category === activeCategory;
@@ -150,7 +108,7 @@ const BlogPage = () => {
       </section>
 
       {/* Featured Post */}
-      {featuredPost && activeCategory === 'All' && !searchQuery && (
+      {!loading && featuredPost && activeCategory === 'All' && !searchQuery && (
         <section className="py-12 bg-gray-50 dark:bg-gray-900">
           <div className="container mx-auto px-6 lg:px-8">
             <motion.div
@@ -182,16 +140,16 @@ const BlogPage = () => {
                       {featuredPost.excerpt}
                     </p>
                     <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-                      <span>{featuredPost.author}</span>
+                      <span>{featuredPost.author?.name || 'Admin'}</span>
                       <span>•</span>
                       <span className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
-                        {featuredPost.date}
+                        {new Date(featuredPost.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                       </span>
                       <span>•</span>
                       <span className="flex items-center gap-1">
                         <Clock className="w-4 h-4" />
-                        {featuredPost.readTime}
+                        {featuredPost.readTime || '5 min read'}
                       </span>
                     </div>
                   </div>
@@ -205,57 +163,74 @@ const BlogPage = () => {
       {/* Blog Grid */}
       <section className="py-16 lg:py-24 bg-white dark:bg-gray-950">
         <div className="container mx-auto px-6 lg:px-8">
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
-            {filteredPosts.filter(p => !p.featured || activeCategory !== 'All' || searchQuery).map((post, index) => (
-              <motion.div
-                key={post.slug}
-                variants={itemVariants}
-              >
-                <Link href={`/blog/${post.slug}`}>
-                  <div className="group h-full bg-gray-50 dark:bg-gray-900 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-large transition-all">
-                    {/* Image */}
-                    <div className="h-48 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 relative">
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-gray-400/50 dark:text-gray-600/50 text-6xl font-bold">
-                          {post.title.charAt(0)}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-6">
-                      <span className="text-xs font-medium text-primary-600 bg-primary-50 dark:bg-primary-900/30 px-2.5 py-1 rounded-full">
-                        {post.category}
-                      </span>
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mt-4 mb-2 group-hover:text-primary-600 transition-colors line-clamp-2">
-                        {post.title}
-                      </h3>
-                      <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
-                        {post.excerpt}
-                      </p>
-                      <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-                        <span>{post.author}</span>
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {post.readTime}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {filteredPosts.length === 0 && (
-            <div className="text-center py-16">
-              <p className="text-gray-500 dark:text-gray-400">No articles found matching your criteria.</p>
+          {loading ? (
+            <div className="text-center py-20">
+              <div className="inline-block w-12 h-12 border-4 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
+              <p className="mt-4 text-gray-600 dark:text-gray-400">Loading blog posts...</p>
             </div>
+          ) : filteredPosts.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-gray-600 dark:text-gray-400 text-lg">
+                {posts.length === 0 
+                  ? 'No blog posts yet. Add some from the admin panel!' 
+                  : 'No articles found matching your criteria.'}
+              </p>
+            </div>
+          ) : (
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+            >
+              {filteredPosts.filter(p => !p.featured || activeCategory !== 'All' || searchQuery).map((post, index) => {
+                const formattedDate = new Date(post.createdAt).toLocaleDateString('en-US', { 
+                  month: 'short', 
+                  day: 'numeric', 
+                  year: 'numeric' 
+                });
+                
+                return (
+                  <motion.div
+                    key={post._id || post.slug}
+                    variants={itemVariants}
+                  >
+                    <Link href={`/blog/${post.slug}`}>
+                      <div className="group h-full bg-gray-50 dark:bg-gray-900 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-large transition-all">
+                        {/* Image */}
+                        <div className="h-48 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 relative">
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <span className="text-gray-400/50 dark:text-gray-600/50 text-6xl font-bold">
+                              {post.title.charAt(0)}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Content */}
+                        <div className="p-6">
+                          <span className="text-xs font-medium text-primary-600 bg-primary-50 dark:bg-primary-900/30 px-2.5 py-1 rounded-full">
+                            {post.category}
+                          </span>
+                          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mt-4 mb-2 group-hover:text-primary-600 transition-colors line-clamp-2">
+                            {post.title}
+                          </h3>
+                          <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
+                            {post.excerpt}
+                          </p>
+                          <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                            <span>{post.author?.name || 'Admin'}</span>
+                            <span className="flex items-center gap-1">
+                              <Clock className="w-3 h-3" />
+                              {post.readTime || '5 min read'}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
           )}
         </div>
       </section>

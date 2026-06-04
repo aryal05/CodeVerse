@@ -48,10 +48,10 @@ const Navbar = () => {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group">
               <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center group-hover:bg-primary-700 transition-colors">
-                <span className="text-white font-bold text-lg">S</span>
+                <span className="text-white font-bold text-lg">C</span>
               </div>
               <span className="text-xl font-semibold text-gray-900 dark:text-white">
-                Site<span className="text-primary-600">Era</span>
+                Code<span className="text-primary-600">verse</span>
               </span>
             </Link>
 

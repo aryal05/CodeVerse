@@ -4,7 +4,7 @@ export async function generateMetadata({ params }) {
   const resolvedParams = await params;
   const slug = resolvedParams?.slug || '';
   return {
-    title: `${slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} - Site Era`,
+    title: `${slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} - CodeVerse`,
     description: `Learn more about our ${slug.replace(/-/g, ' ')} services.`,
   };
 }

@@ -43,10 +43,10 @@ const Footer = () => {
           <div className="col-span-2 lg:col-span-2">
             <Link href="/" className="inline-flex items-center gap-2 mb-6">
               <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center">
-                <span className="text-white font-bold text-lg">S</span>
+                <span className="text-white font-bold text-lg">C</span>
               </div>
               <span className="text-xl font-semibold text-white">
-                Site<span className="text-primary-400">Era</span>
+                Code<span className="text-primary-400">verse</span>
               </span>
             </Link>
             
@@ -57,9 +57,9 @@ const Footer = () => {
 
             {/* Contact Info */}
             <div className="space-y-3">
-              <a href="mailto:hello@siteera.com" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
+              <a href="mailto:codeversebuild@outlook.com" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
                 <Mail className="w-5 h-5 text-primary-500" />
-                <span>hello@siteera.com</span>
+                <span>codeversebuild@outlook.com</span>
               </a>
               <a href="tel:+9779800000000" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
                 <Phone className="w-5 h-5 text-primary-500" />
@@ -130,7 +130,7 @@ const Footer = () => {
         <div className="container mx-auto px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-gray-500 text-sm">
-              © {currentYear} Site Era. All rights reserved.
+              © {currentYear} Codeverse. All rights reserved.
             </p>
 
             {/* Social Links */}

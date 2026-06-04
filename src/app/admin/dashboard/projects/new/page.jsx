@@ -29,20 +29,39 @@ export default function NewProjectPage() {
     setError('');
 
     try {
+      // Generate slug from title
+      const slug = formData.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+
       const res = await fetch('/api/projects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...formData,
-          technologies: formData.technologies.split(',').map(t => t.trim())
+          title: formData.title,
+          slug: slug,
+          description: formData.description,
+          category: formData.category,
+          client: formData.client,
+          link: formData.liveUrl,
+          github: formData.githubUrl,
+          technologies: formData.technologies ? formData.technologies.split(',').map(t => t.trim()) : [],
+          featured: formData.featured,
+          status: 'completed'
         })
       });
 
-      if (!res.ok) throw new Error('Failed to create project');
+      const data = await res.json();
+      
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to create project');
+      }
       
       router.push('/admin/dashboard/projects');
     } catch (err) {
       setError(err.message);
+      console.error('Create project error:', err);
     } finally {
       setLoading(false);
     }

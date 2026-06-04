@@ -76,10 +76,10 @@ const AboutPage = () => {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
       <PageHeader
-        badge="About Site Era"
+        badge="About CodeVerse"
         title="We're on a Mission to"
         titleHighlight="Transform Digital Nepal"
-        description="Founded in 2015, Site Era has grown from a small team of passionate developers into Nepal's leading digital agency. We combine creativity with technology to deliver exceptional digital experiences."
+        description="Founded in 2015, CodeVerse has grown from a small team of passionate developers into Nepal's leading digital agency. We combine creativity with technology to deliver exceptional digital experiences."
       />
 
       {/* Stats Section */}

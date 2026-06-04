@@ -25,11 +25,41 @@ const ContactPage = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    setIsSubmitting(false);
-    setIsSubmitted(true);
+    try {
+      const response = await fetch('/api/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          subject: `${formData.service || 'General Inquiry'} - ${formData.company || 'Contact Form'}`,
+          message: `Phone: ${formData.phone || 'Not provided'}\nCompany: ${formData.company || 'Not provided'}\nService: ${formData.service || 'Not specified'}\nBudget: ${formData.budget || 'Not specified'}\n\nMessage:\n${formData.message}`,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send message');
+      }
+      
+      setIsSubmitted(true);
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        company: '',
+        service: '',
+        budget: '',
+        message: ''
+      });
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert('Failed to send message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e) => {
@@ -40,8 +70,8 @@ const ContactPage = () => {
     {
       icon: Mail,
       title: 'Email Us',
-      value: 'hello@siteera.com',
-      link: 'mailto:hello@siteera.com'
+      value: 'codeversebuild@outlook.com',
+      link: 'mailto:codeversebuild@outlook.com'
     },
     {
       icon: Phone,

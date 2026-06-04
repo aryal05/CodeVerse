@@ -72,7 +72,7 @@ const About = () => {
               className="space-y-4 text-gray-600 dark:text-gray-400 text-lg mb-8"
             >
               <p>
-                Founded in 2015, Site Era has grown from a small team of passionate 
+                Founded in 2015, CodeVerse has grown from a small team of passionate 
                 developers into Nepal&apos;s leading digital agency.
               </p>
               <p>

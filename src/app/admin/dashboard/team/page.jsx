@@ -254,7 +254,7 @@ export default function TeamPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-400 mb-1">Email</label>
-                  <input type="email" placeholder="john@siteera.com" value={editModal.email} onChange={(e) => setEditModal({ ...editModal, email: e.target.value })} className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-primary-500 focus:outline-none" />
+                  <input type="email" placeholder="team@codeverse.com" value={editModal.email} onChange={(e) => setEditModal({ ...editModal, email: e.target.value })} className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-primary-500 focus:outline-none" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-400 mb-1">Phone</label>

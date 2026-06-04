@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Quote, Star } from 'lucide-react';
 
@@ -8,36 +8,35 @@ const Testimonials = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [current, setCurrent] = useState(0);
+  const [testimonials, setTestimonials] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const testimonials = [
-    {
-      quote: "Site Era transformed our online presence completely. Their attention to detail and understanding of our business needs was exceptional. The results exceeded our expectations and our sales increased by 40%.",
-      author: "Rajesh Sharma",
-      role: "CEO",
-      company: "TechVentures Nepal",
-      rating: 5,
-      image: "/testimonials/rajesh.jpg"
-    },
-    {
-      quote: "Working with Site Era was a game-changer for our e-commerce business. They delivered a platform that not only looks beautiful but converts visitors into customers. Highly recommended!",
-      author: "Priya Thapa",
-      role: "Founder",
-      company: "EcoStore Nepal",
-      rating: 5,
-      image: "/testimonials/priya.jpg"
-    },
-    {
-      quote: "The team's professionalism and technical expertise are unmatched. They delivered our healthcare app on time and the user feedback has been overwhelmingly positive. A truly reliable partner.",
-      author: "Dr. Anil Joshi",
-      role: "Director",
-      company: "MedCare Nepal",
-      rating: 5,
-      image: "/testimonials/anil.jpg"
-    }
-  ];
+  // Fetch testimonials from API
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        const res = await fetch('/api/testimonials');
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          setTestimonials(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch testimonials:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTestimonials();
+  }, []);
 
   const next = () => setCurrent((prev) => (prev + 1) % testimonials.length);
   const prev = () => setCurrent((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+
+  // Don't render if no testimonials
+  if (loading || testimonials.length === 0) {
+    return null;
+  }
 
   return (
     <section ref={ref} className="py-24 lg:py-32 bg-white dark:bg-gray-950">
@@ -87,24 +86,24 @@ const Testimonials = () => {
               >
                 {/* Rating */}
                 <div className="flex gap-1 mb-6">
-                  {[...Array(testimonials[current].rating)].map((_, i) => (
+                  {[...Array(testimonials[current].rating || 5)].map((_, i) => (
                     <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
                   ))}
                 </div>
 
                 {/* Quote */}
                 <p className="text-xl lg:text-2xl text-gray-700 dark:text-gray-300 leading-relaxed mb-8">
-                  &ldquo;{testimonials[current].quote}&rdquo;
+                  &ldquo;{testimonials[current].content}&rdquo;
                 </p>
                 
                 {/* Author */}
                 <div className="flex items-center gap-4">
                   <div className="w-14 h-14 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center text-white font-semibold text-lg">
-                    {testimonials[current].author.charAt(0)}
+                    {testimonials[current].name.charAt(0)}
                   </div>
                   <div>
                     <div className="font-semibold text-gray-900 dark:text-white">
-                      {testimonials[current].author}
+                      {testimonials[current].name}
                     </div>
                     <div className="text-gray-500 dark:text-gray-400 text-sm">
                       {testimonials[current].role}, {testimonials[current].company}

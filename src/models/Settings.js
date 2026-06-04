@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const SettingsSchema = new mongoose.Schema({
   // Site Info
-  siteName: { type: String, default: 'Site Era' },
+  siteName: { type: String, default: 'Codeverse' },
   tagline: { type: String, default: 'Premium Web & Mobile App Development' },
   description: { type: String },
   
@@ -12,7 +12,7 @@ const SettingsSchema = new mongoose.Schema({
   favicon: { type: String },
   
   // Contact Info
-  email: { type: String, default: 'contact@siteera.com' },
+  email: { type: String, default: 'codeversebuild@outlook.com' },
   phone: { type: String },
   address: { type: String },
   

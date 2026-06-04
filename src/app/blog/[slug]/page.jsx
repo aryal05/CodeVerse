@@ -2,7 +2,7 @@ import BlogPostPage from '@/components/pages/BlogPostPage';
 
 export async function generateMetadata() {
   return {
-    title: `Blog Post - Site Era`,
+    title: `Blog Post - CodeVerse`,
     description: `Read our blog post.`,
   };
 }

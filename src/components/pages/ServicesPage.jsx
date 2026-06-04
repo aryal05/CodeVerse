@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { 
@@ -9,95 +10,45 @@ import {
 import PageHeader from '@/components/ui/PageHeader';
 
 const ServicesPage = () => {
-  const services = [
-    {
-      icon: Code2,
-      title: 'Web Development',
-      description: 'Custom web applications built with modern frameworks. Scalable, secure, and performant solutions for your business.',
-      features: [
-        'Custom Web Applications',
-        'Progressive Web Apps (PWA)',
-        'API Development & Integration',
-        'Content Management Systems',
-        'E-commerce Solutions',
-        'Performance Optimization'
-      ],
-      technologies: ['React', 'Next.js', 'Node.js', 'TypeScript', 'PostgreSQL'],
-      color: 'from-blue-500 to-cyan-500',
-      link: '/services/web-development'
-    },
-    {
-      icon: Smartphone,
-      title: 'Mobile Development',
-      description: 'Native and cross-platform mobile applications for iOS and Android that users love.',
-      features: [
-        'iOS App Development',
-        'Android App Development',
-        'Cross-Platform Apps',
-        'App Store Optimization',
-        'Push Notifications',
-        'Offline Functionality'
-      ],
-      technologies: ['React Native', 'Flutter', 'Swift', 'Kotlin'],
-      color: 'from-purple-500 to-pink-500',
-      link: '/services/mobile-development'
-    },
-    {
-      icon: Palette,
-      title: 'UI/UX Design',
-      description: 'User-centered design that converts. Research-driven interfaces that users love and businesses trust.',
-      features: [
-        'User Research & Analysis',
-        'Wireframing & Prototyping',
-        'Visual Design',
-        'Design Systems',
-        'Usability Testing',
-        'Interaction Design'
-      ],
-      technologies: ['Figma', 'Adobe XD', 'Sketch', 'Framer'],
-      color: 'from-pink-500 to-rose-500',
-      link: '/services/ui-ux-design'
-    },
-    {
-      icon: ShoppingBag,
-      title: 'E-Commerce Solutions',
-      description: 'High-converting online stores with seamless checkout and inventory management.',
-      features: [
-        'Custom E-commerce Platforms',
-        'Payment Gateway Integration',
-        'Inventory Management',
-        'Order Processing',
-        'Analytics & Reporting',
-        'Multi-currency Support'
-      ],
-      technologies: ['Shopify', 'WooCommerce', 'Stripe', 'PayPal'],
-      color: 'from-orange-500 to-red-500',
-      link: '/services/ecommerce'
-    },
-    {
-      icon: Server,
-      title: 'Cloud & DevOps',
-      description: 'Scalable cloud infrastructure, CI/CD pipelines, and 24/7 monitoring for reliable operations.',
-      features: [
-        'Cloud Architecture Design',
-        'CI/CD Pipeline Setup',
-        'Container Orchestration',
-        'Infrastructure as Code',
-        'Monitoring & Alerting',
-        'Security & Compliance'
-      ],
-      technologies: ['AWS', 'GCP', 'Docker', 'Kubernetes', 'Terraform'],
-      color: 'from-cyan-500 to-teal-500',
-      link: '/services/cloud-devops'
-    },
-    {
-      icon: Rocket,
-      title: 'Digital Strategy',
-      description: 'Data-driven growth strategies including SEO, analytics, and performance marketing.',
-      features: [
-        'SEO Optimization',
-        'Analytics Setup',
-        'Conversion Optimization',
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch services from API
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const res = await fetch('/api/services');
+        const data = await res.json();
+        setServices(data);
+      } catch (error) {
+        console.error('Failed to fetch services:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchServices();
+  }, []);
+
+  // Icon mapping
+  const iconMap = {
+    'code': Code2,
+    'smartphone': Smartphone,
+    'palette': Palette,
+    'shopping-bag': ShoppingBag,
+    'server': Server,
+    'rocket': Rocket,
+  };
+
+  // Color mapping based on index
+  const colors = [
+    'from-blue-500 to-cyan-500',
+    'from-purple-500 to-pink-500',
+    'from-pink-500 to-rose-500',
+    'from-orange-500 to-red-500',
+    'from-cyan-500 to-teal-500',
+    'from-emerald-500 to-green-500',
+  ];
         'Content Strategy',
         'Performance Marketing',
         'Growth Consulting'

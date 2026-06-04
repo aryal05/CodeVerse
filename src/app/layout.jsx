@@ -5,15 +5,15 @@ import ClientLayout from '@/components/layout/ClientLayout';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata = {
-  title: 'Site Era - Premium Web & Mobile App Development',
-  description: 'Transform your digital presence with Site Era. We craft exceptional web and mobile applications that drive results.',
+  title: 'Codeverse - Premium Web & Mobile App Development',
+  description: 'Transform your digital presence with Codeverse. We craft exceptional web and mobile applications that drive results.',
   keywords: ['web development', 'mobile app', 'digital agency', 'react', 'next.js'],
-  authors: [{ name: 'Site Era' }],
+  authors: [{ name: 'Codeverse' }],
   openGraph: {
-    title: 'Site Era - Premium Web & Mobile App Development',
-    description: 'Transform your digital presence with Site Era.',
-    url: 'https://siteera.com',
-    siteName: 'Site Era',
+    title: 'Codeverse - Premium Web & Mobile App Development',
+    description: 'Transform your digital presence with Codeverse.',
+    url: 'https://codeverse.com',
+    siteName: 'Codeverse',
     type: 'website',
   },
 };

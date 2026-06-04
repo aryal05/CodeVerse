@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowUpRight, ExternalLink } from 'lucide-react';
@@ -8,83 +8,30 @@ import PageHeader from '@/components/ui/PageHeader';
 
 const PortfolioPage = () => {
   const [activeFilter, setActiveFilter] = useState('All');
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState(['All']);
 
-  const filters = ['All', 'Web App', 'Mobile', 'E-Commerce', 'Branding'];
+  // Fetch projects from API
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const res = await fetch('/api/projects');
+        const data = await res.json();
+        setProjects(data);
+        
+        // Extract unique categories
+        const uniqueCategories = ['All', ...new Set(data.map(p => p.category))];
+        setCategories(uniqueCategories);
+      } catch (error) {
+        console.error('Failed to fetch projects:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const projects = [
-    {
-      title: 'FinTech Dashboard',
-      category: 'Web App',
-      description: 'Real-time financial analytics platform with AI-powered insights for investment firms.',
-      tags: ['Next.js', 'TypeScript', 'PostgreSQL', 'TailwindCSS'],
-      color: 'from-blue-500 to-indigo-600',
-      client: 'FinServe Nepal',
-      year: '2024'
-    },
-    {
-      title: 'EcoStore Nepal',
-      category: 'E-Commerce',
-      description: 'Sustainable e-commerce platform with 40% increase in conversion rate.',
-      tags: ['React', 'Node.js', 'Stripe', 'MongoDB'],
-      color: 'from-green-500 to-emerald-600',
-      client: 'EcoStore',
-      year: '2024'
-    },
-    {
-      title: 'MedCare App',
-      category: 'Mobile',
-      description: 'Healthcare management app serving 10,000+ patients across Nepal.',
-      tags: ['React Native', 'Firebase', 'Node.js'],
-      color: 'from-purple-500 to-violet-600',
-      client: 'MedCare Nepal',
-      year: '2023'
-    },
-    {
-      title: 'PropertyHub',
-      category: 'Web App',
-      description: 'Real estate platform with virtual tours and advanced property search.',
-      tags: ['Next.js', 'Three.js', 'Prisma', 'PostgreSQL'],
-      color: 'from-orange-500 to-red-600',
-      client: 'PropertyHub',
-      year: '2023'
-    },
-    {
-      title: 'TravelNepal',
-      category: 'Mobile',
-      description: 'Travel booking app with offline maps and local guide features.',
-      tags: ['Flutter', 'Firebase', 'Google Maps'],
-      color: 'from-cyan-500 to-blue-600',
-      client: 'TravelNepal',
-      year: '2023'
-    },
-    {
-      title: 'FoodieApp',
-      category: 'Mobile',
-      description: 'Food delivery app with real-time tracking and restaurant management.',
-      tags: ['React Native', 'Node.js', 'Socket.io'],
-      color: 'from-pink-500 to-rose-600',
-      client: 'FoodieApp',
-      year: '2022'
-    },
-    {
-      title: 'EduLearn Platform',
-      category: 'Web App',
-      description: 'Online learning platform with live classes and progress tracking.',
-      tags: ['Next.js', 'WebRTC', 'PostgreSQL'],
-      color: 'from-amber-500 to-orange-600',
-      client: 'EduLearn',
-      year: '2022'
-    },
-    {
-      title: 'Brand Identity - TechCorp',
-      category: 'Branding',
-      description: 'Complete brand identity design including logo, guidelines, and collateral.',
-      tags: ['Figma', 'Illustrator', 'Brand Strategy'],
-      color: 'from-gray-600 to-gray-800',
-      client: 'TechCorp Nepal',
-      year: '2022'
-    },
-  ];
+    fetchProjects();
+  }, []);
 
   const filteredProjects = activeFilter === 'All' 
     ? projects 
@@ -120,7 +67,7 @@ const PortfolioPage = () => {
       <section className="py-8 bg-white dark:bg-gray-950 border-b border-gray-100 dark:border-gray-800 sticky top-18 z-30 backdrop-blur-md bg-white/90 dark:bg-gray-950/90">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="flex flex-wrap justify-center gap-2">
-            {filters.map((filter) => (
+            {categories.map((filter) => (
               <motion.button
                 key={filter}
                 onClick={() => setActiveFilter(filter)}
@@ -142,87 +89,115 @@ const PortfolioPage = () => {
       {/* Projects Grid */}
       <section className="py-16 lg:py-24 bg-gray-50 dark:bg-gray-900">
         <div className="container mx-auto px-6 lg:px-8">
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
-          >
-            <AnimatePresence mode="popLayout">
-              {filteredProjects.map((project, index) => (
-                <motion.div
-                  key={project.title}
-                  variants={itemVariants}
-                  layout
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Link href={`/portfolio/${project.title.toLowerCase().replace(/\s+/g, '-')}`}>
-                    <div className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-large transition-all h-full">
-                      {/* Project Image */}
-                      <div className={`h-56 bg-gradient-to-br ${project.color} relative overflow-hidden`}>
-                        <div className="absolute inset-0 bg-black/10" />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-white/20 text-8xl font-bold">{project.title.charAt(0)}</span>
-                        </div>
-                        
-                        {/* Hover Overlay */}
-                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                          <motion.div 
-                            initial={{ scale: 0 }}
-                            whileHover={{ scale: 1.1 }}
-                            className="w-14 h-14 bg-white rounded-full flex items-center justify-center"
-                          >
-                            <ArrowUpRight className="w-6 h-6 text-gray-900" />
-                          </motion.div>
-                        </div>
+          {loading ? (
+            <div className="text-center py-20">
+              <div className="inline-block w-12 h-12 border-4 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
+              <p className="mt-4 text-gray-600 dark:text-gray-400">Loading projects...</p>
+            </div>
+          ) : filteredProjects.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-gray-600 dark:text-gray-400 text-lg">No projects found. Add some from the admin panel!</p>
+            </div>
+          ) : (
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
+            >
+              <AnimatePresence mode="popLayout">
+                {filteredProjects.map((project, index) => {
+                  const colors = [
+                    'from-blue-500 to-indigo-600',
+                    'from-green-500 to-emerald-600',
+                    'from-purple-500 to-violet-600',
+                    'from-orange-500 to-red-600',
+                    'from-cyan-500 to-blue-600',
+                    'from-pink-500 to-rose-600',
+                  ];
+                  const color = colors[index % colors.length];
+                  const year = new Date(project.createdAt).getFullYear();
 
-                        {/* Year Badge */}
-                        <div className="absolute top-4 right-4 px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-xs font-medium">
-                          {project.year}
+                  return (
+                    <motion.div
+                      key={project._id}
+                      variants={itemVariants}
+                      layout
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Link href={`/portfolio/${project.slug}`}>
+                        <div className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-large transition-all h-full">
+                          {/* Project Image */}
+                          <div className={`h-56 bg-gradient-to-br ${color} relative overflow-hidden`}>
+                            <div className="absolute inset-0 bg-black/10" />
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <span className="text-white/20 text-8xl font-bold">{project.title.charAt(0)}</span>
+                            </div>
+                            
+                            {/* Hover Overlay */}
+                            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                              <motion.div 
+                                initial={{ scale: 0 }}
+                                whileHover={{ scale: 1.1 }}
+                                className="w-14 h-14 bg-white rounded-full flex items-center justify-center"
+                              >
+                                <ArrowUpRight className="w-6 h-6 text-gray-900" />
+                              </motion.div>
+                            </div>
+
+                            {/* Year Badge */}
+                            <div className="absolute top-4 right-4 px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-xs font-medium">
+                              {year}
+                            </div>
+                          </div>
+                          
+                          {/* Content */}
+                          <div className="p-6">
+                            <div className="flex items-center justify-between mb-3">
+                              <span className="text-xs font-medium text-primary-600 bg-primary-50 dark:bg-primary-900/30 px-2.5 py-1 rounded-full">
+                                {project.category}
+                              </span>
+                              {project.client && (
+                                <span className="text-xs text-gray-500 dark:text-gray-400">
+                                  {project.client}
+                                </span>
+                              )}
+                            </div>
+                            
+                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 transition-colors">
+                              {project.title}
+                            </h3>
+                            
+                            <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
+                              {project.description}
+                            </p>
+                            
+                            {project.technologies && project.technologies.length > 0 && (
+                              <div className="flex flex-wrap gap-2">
+                                {project.technologies.slice(0, 3).map((tag, i) => (
+                                  <span key={i} className="text-xs px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg">
+                                    {tag}
+                                  </span>
+                                ))}
+                                {project.technologies.length > 3 && (
+                                  <span className="text-xs px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg">
+                                    +{project.technologies.length - 3}
+                                  </span>
+                                )}
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                      
-                      {/* Content */}
-                      <div className="p-6">
-                        <div className="flex items-center justify-between mb-3">
-                          <span className="text-xs font-medium text-primary-600 bg-primary-50 dark:bg-primary-900/30 px-2.5 py-1 rounded-full">
-                            {project.category}
-                          </span>
-                          <span className="text-xs text-gray-500 dark:text-gray-400">
-                            {project.client}
-                          </span>
-                        </div>
-                        
-                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 transition-colors">
-                          {project.title}
-                        </h3>
-                        
-                        <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
-                          {project.description}
-                        </p>
-                        
-                        <div className="flex flex-wrap gap-2">
-                          {project.tags.slice(0, 3).map((tag, i) => (
-                            <span key={i} className="text-xs px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg">
-                              {tag}
-                            </span>
-                          ))}
-                          {project.tags.length > 3 && (
-                            <span className="text-xs px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg">
-                              +{project.tags.length - 3}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </motion.div>
+                      </Link>
+                    </motion.div>
+                  );
+                })}
+              </AnimatePresence>
+            </motion.div>
+          )}
         </div>
       </section>
 

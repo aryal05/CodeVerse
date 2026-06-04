@@ -44,10 +44,10 @@ const AdminSidebar = ({ onLogout }) => {
               className="flex items-center gap-2"
             >
               <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold">S</span>
+                <span className="text-white font-bold">C</span>
               </div>
               <span className="text-lg font-semibold text-white">
-                Site<span className="text-primary-500">Era</span>
+                Code<span className="text-primary-500">verse</span>
               </span>
             </motion.div>
           )}

@@ -67,9 +67,9 @@ const CTA = () => {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="flex flex-col md:flex-row items-center justify-center gap-8 text-primary-100"
           >
-            <a href="mailto:hello@siteera.com" className="flex items-center gap-2 hover:text-white transition-colors">
+            <a href="mailto:codeversebuild@outlook.com" className="flex items-center gap-2 hover:text-white transition-colors">
               <Mail className="w-5 h-5" />
-              <span>hello@siteera.com</span>
+              <span>codeversebuild@outlook.com</span>
             </a>
             <a href="tel:+9779800000000" className="flex items-center gap-2 hover:text-white transition-colors">
               <Phone className="w-5 h-5" />
