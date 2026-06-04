@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Save } from 'lucide-react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
+import ImageUrlInput from '@/components/admin/ImageUrlInput';
 
 export default function EditProjectPage() {
   const params = useParams();
@@ -20,7 +21,9 @@ export default function EditProjectPage() {
     technologies: '',
     liveUrl: '',
     githubUrl: '',
-    featured: false
+    featured: false,
+    image: '',
+    gallery: []
   });
 
   useEffect(() => {
@@ -41,9 +44,11 @@ export default function EditProjectPage() {
             category: data.category || '',
             client: data.client || '',
             technologies: Array.isArray(data.technologies) ? data.technologies.join(', ') : '',
-            liveUrl: data.liveUrl || '',
-            githubUrl: data.githubUrl || '',
-            featured: data.featured || false
+            liveUrl: data.link || data.liveUrl || '',
+            githubUrl: data.github || data.githubUrl || '',
+            featured: data.featured || false,
+            image: data.image || '',
+            gallery: Array.isArray(data.gallery) ? data.gallery : []
           });
         }
       })
@@ -59,8 +64,16 @@ export default function EditProjectPage() {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...formData,
-          technologies: formData.technologies.split(',').map(t => t.trim())
+          title: formData.title,
+          description: formData.description,
+          category: formData.category,
+          client: formData.client,
+          link: formData.liveUrl,
+          github: formData.githubUrl,
+          technologies: formData.technologies.split(',').map(t => t.trim()),
+          featured: formData.featured,
+          image: formData.image,
+          gallery: formData.gallery
         })
       });
       router.push('/admin/dashboard/projects');
@@ -116,6 +129,22 @@ export default function EditProjectPage() {
                     required
                   />
                 </div>
+
+                {/* Main Image */}
+                <ImageUrlInput
+                  label="Main Project Image"
+                  value={formData.image}
+                  onChange={(url) => setFormData({ ...formData, image: url })}
+                  placeholder="https://example.com/project-screenshot.jpg"
+                />
+
+                {/* Gallery Images */}
+                <ImageUrlInput
+                  label="Project Gallery (Multiple Images)"
+                  gallery={true}
+                  galleryValues={formData.gallery}
+                  onGalleryChange={(urls) => setFormData({ ...formData, gallery: urls })}
+                />
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>

@@ -3,14 +3,18 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowUpRight, ExternalLink } from 'lucide-react';
+import { ArrowUpRight, ExternalLink, Expand } from 'lucide-react';
 import PageHeader from '@/components/ui/PageHeader';
+import ImageLightbox from '@/components/ui/ImageLightbox';
 
 const PortfolioPage = () => {
   const [activeFilter, setActiveFilter] = useState('All');
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState(['All']);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxImages, setLightboxImages] = useState([]);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   // Fetch projects from API
   useEffect(() => {
@@ -36,6 +40,21 @@ const PortfolioPage = () => {
   const filteredProjects = activeFilter === 'All' 
     ? projects 
     : projects.filter(p => p.category === activeFilter);
+
+  const openImageLightbox = (e, project) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const images = [];
+    if (project.image) images.push(project.image);
+    if (project.gallery && Array.isArray(project.gallery)) {
+      images.push(...project.gallery);
+    }
+    if (images.length > 0) {
+      setLightboxImages(images);
+      setLightboxIndex(0);
+      setLightboxOpen(true);
+    }
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -120,7 +139,7 @@ const PortfolioPage = () => {
 
                   return (
                     <motion.div
-                      key={project._id}
+                      key={project.id}
                       variants={itemVariants}
                       layout
                       initial={{ opacity: 0, scale: 0.9 }}
@@ -131,21 +150,43 @@ const PortfolioPage = () => {
                       <Link href={`/portfolio/${project.slug}`}>
                         <div className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-large transition-all h-full">
                           {/* Project Image */}
-                          <div className={`h-56 bg-gradient-to-br ${color} relative overflow-hidden`}>
-                            <div className="absolute inset-0 bg-black/10" />
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <span className="text-white/20 text-8xl font-bold">{project.title.charAt(0)}</span>
-                            </div>
+                          <div className={`h-56 ${project.image ? 'bg-gray-100 dark:bg-gray-800' : `bg-gradient-to-br ${color}`} relative overflow-hidden flex items-center justify-center`}>
+                            {project.image ? (
+                              <img
+                                src={project.image}
+                                alt={project.title}
+                                className="w-full h-full object-contain"
+                              />
+                            ) : (
+                              <>
+                                <div className="absolute inset-0 bg-black/10" />
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                  <span className="text-white/20 text-8xl font-bold">{project.title.charAt(0)}</span>
+                                </div>
+                              </>
+                            )}
                             
                             {/* Hover Overlay */}
-                            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                              <motion.div 
-                                initial={{ scale: 0 }}
-                                whileHover={{ scale: 1.1 }}
-                                className="w-14 h-14 bg-white rounded-full flex items-center justify-center"
-                              >
-                                <ArrowUpRight className="w-6 h-6 text-gray-900" />
-                              </motion.div>
+                            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                              <Link href={`/portfolio/${project.slug}`}>
+                                <motion.div 
+                                  initial={{ scale: 0 }}
+                                  whileHover={{ scale: 1.1 }}
+                                  className="w-12 h-12 bg-white rounded-full flex items-center justify-center"
+                                >
+                                  <ArrowUpRight className="w-5 h-5 text-gray-900" />
+                                </motion.div>
+                              </Link>
+                              {project.image && (
+                                <motion.button
+                                  onClick={(e) => openImageLightbox(e, project)}
+                                  initial={{ scale: 0 }}
+                                  whileHover={{ scale: 1.1 }}
+                                  className="w-12 h-12 bg-white rounded-full flex items-center justify-center"
+                                >
+                                  <Expand className="w-5 h-5 text-gray-900" />
+                                </motion.button>
+                              )}
                             </div>
 
                             {/* Year Badge */}
@@ -200,6 +241,14 @@ const PortfolioPage = () => {
           )}
         </div>
       </section>
+
+      {/* Image Lightbox */}
+      <ImageLightbox
+        images={lightboxImages}
+        initialIndex={lightboxIndex}
+        isOpen={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+      />
 
       {/* CTA Section */}
       <section className="py-20 lg:py-28 bg-primary-600">

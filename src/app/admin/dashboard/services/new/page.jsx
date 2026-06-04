@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Save } from 'lucide-react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
+import ImageUrlInput from '@/components/admin/ImageUrlInput';
 
 export default function NewServicePage() {
   const [formData, setFormData] = useState({
@@ -14,7 +15,8 @@ export default function NewServicePage() {
     slug: '',
     description: '',
     features: '',
-    icon: 'code'
+    icon: 'code',
+    image: ''
   });
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -45,6 +47,7 @@ export default function NewServicePage() {
           shortDescription: formData.description,
           description: formData.description,
           icon: formData.icon,
+          image: formData.image,
           features: featuresArray,
           technologies: [],
           active: true,
@@ -134,6 +137,14 @@ export default function NewServicePage() {
                   </select>
                 </div>
 
+                {/* Service Image */}
+                <ImageUrlInput
+                  label="Service Image"
+                  value={formData.image}
+                  onChange={(url) => setFormData({ ...formData, image: url })}
+                  placeholder="https://example.com/service-image.jpg"
+                />
+
                 <div>
                   <label className="block text-sm font-medium text-gray-400 mb-2">Description *</label>
                   <textarea
@@ -153,7 +164,7 @@ export default function NewServicePage() {
                     onChange={(e) => setFormData({ ...formData, features: e.target.value })}
                     rows={6}
                     className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-primary-500 focus:outline-none resize-none"
-                    placeholder="Custom Web Applications&#10;Responsive Design&#10;SEO Optimization"
+                    placeholder={"Custom Web Applications\nResponsive Design\nSEO Optimization"}
                   />
                 </div>
 

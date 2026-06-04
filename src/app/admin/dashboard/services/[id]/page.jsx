@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Save } from 'lucide-react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
+import ImageUrlInput from '@/components/admin/ImageUrlInput';
 
 export default function EditServicePage() {
   const params = useParams();
@@ -17,7 +18,8 @@ export default function EditServicePage() {
     slug: '',
     description: '',
     features: '',
-    icon: 'code'
+    icon: 'code',
+    image: ''
   });
 
   useEffect(() => {
@@ -38,7 +40,8 @@ export default function EditServicePage() {
             features: Array.isArray(data.features) 
               ? data.features.map(f => typeof f === 'string' ? f : f.title || f.description || '').join('\n') 
               : '',
-            icon: data.icon || 'code'
+            icon: data.icon || 'code',
+            image: data.image || ''
           });
         }
       })
@@ -69,6 +72,7 @@ export default function EditServicePage() {
           shortDescription: formData.description,
           description: formData.description,
           icon: formData.icon,
+          image: formData.image,
           features: featuresArray
         })
       });
@@ -152,6 +156,14 @@ export default function EditServicePage() {
                     {icons.map(icon => <option key={icon.value} value={icon.value}>{icon.label}</option>)}
                   </select>
                 </div>
+
+                {/* Service Image */}
+                <ImageUrlInput
+                  label="Service Image"
+                  value={formData.image}
+                  onChange={(url) => setFormData({ ...formData, image: url })}
+                  placeholder="https://example.com/service-image.jpg"
+                />
 
                 <div>
                   <label className="block text-sm font-medium text-gray-400 mb-2">Description *</label>

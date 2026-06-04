@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { ArrowUpRight, Mail, Phone, MapPin, Linkedin, Twitter, Instagram, Github } from 'lucide-react';
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
 
   const footerLinks = {
     company: [
@@ -61,9 +60,9 @@ const Footer = () => {
                 <Mail className="w-5 h-5 text-primary-500" />
                 <span>codeversebuild@outlook.com</span>
               </a>
-              <a href="tel:+9779800000000" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
+              <a href="tel:+9779762454572" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
                 <Phone className="w-5 h-5 text-primary-500" />
-                <span>+977 980-000-0000</span>
+                <span>+977 976-245-4572</span>
               </a>
               <div className="flex items-center gap-3 text-gray-400">
                 <MapPin className="w-5 h-5 text-primary-500" />
@@ -129,8 +128,8 @@ const Footer = () => {
       <div className="border-t border-gray-800">
         <div className="container mx-auto px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-gray-500 text-sm">
-              © {currentYear} Codeverse. All rights reserved.
+            <p className="text-gray-500 text-sm" suppressHydrationWarning>
+              © {new Date().getFullYear()} Codeverse. All rights reserved.
             </p>
 
             {/* Social Links */}

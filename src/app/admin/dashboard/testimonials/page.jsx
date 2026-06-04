@@ -53,7 +53,7 @@ export default function TestimonialsPage() {
     try {
       const res = await fetch(`/api/testimonials/${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete');
-      setTestimonials(testimonials.filter(t => t._id !== id));
+      setTestimonials(testimonials.filter(t => t.id !== id));
       setDeleteModal(null);
       showToast('Testimonial deleted successfully');
     } catch (err) {
@@ -67,8 +67,8 @@ export default function TestimonialsPage() {
     setSaving(true);
 
     try {
-      const isEditing = editModal._id;
-      const url = isEditing ? `/api/testimonials/${editModal._id}` : '/api/testimonials';
+      const isEditing = editModal.id;
+      const url = isEditing ? `/api/testimonials/${editModal.id}` : '/api/testimonials';
       const method = isEditing ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
@@ -154,7 +154,7 @@ export default function TestimonialsPage() {
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredTestimonials.length > 0 ? filteredTestimonials.map((testimonial, index) => (
                 <motion.div
-                  key={testimonial._id}
+                  key={testimonial.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
@@ -187,7 +187,7 @@ export default function TestimonialsPage() {
                   <div className="flex gap-2 mt-4 pt-4 border-t border-gray-800 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={() => setEditModal({
-                        _id: testimonial._id,
+                        id: testimonial.id,
                         name: testimonial.name || '',
                         role: testimonial.role || '',
                         company: testimonial.company || '',
@@ -228,7 +228,7 @@ export default function TestimonialsPage() {
               <p className="text-gray-400 mb-6">Are you sure you want to delete this testimonial from <span className="text-white font-medium">{deleteModal.name}</span>?</p>
               <div className="flex gap-3">
                 <button onClick={() => setDeleteModal(null)} className="flex-1 px-4 py-2.5 bg-gray-800 text-white rounded-xl hover:bg-gray-700">Cancel</button>
-                <button onClick={() => handleDelete(deleteModal._id)} className="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700">Delete</button>
+                <button onClick={() => handleDelete(deleteModal.id)} className="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700">Delete</button>
               </div>
             </motion.div>
           </motion.div>
@@ -241,7 +241,7 @@ export default function TestimonialsPage() {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setEditModal(null)}>
             <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} onClick={(e) => e.stopPropagation()} className="bg-gray-900 border border-gray-800 rounded-2xl p-6 max-w-lg w-full">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-semibold text-white">{editModal._id ? 'Edit' : 'Add'} Testimonial</h3>
+                <h3 className="text-xl font-semibold text-white">{editModal.id ? 'Edit' : 'Add'} Testimonial</h3>
                 <button onClick={() => setEditModal(null)} className="p-1 text-gray-500 hover:text-white"><X size={20} /></button>
               </div>
               <form className="space-y-4" onSubmit={handleSave}>

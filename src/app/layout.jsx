@@ -5,15 +5,18 @@ import ClientLayout from '@/components/layout/ClientLayout';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata = {
-  title: 'Codeverse - Premium Web & Mobile App Development',
-  description: 'Transform your digital presence with Codeverse. We craft exceptional web and mobile applications that drive results.',
+  title: 'SiteEra - Premium Web & Mobile App Development',
+  description: 'Transform your digital presence with SiteEra. We craft exceptional web and mobile applications that drive results.',
   keywords: ['web development', 'mobile app', 'digital agency', 'react', 'next.js'],
-  authors: [{ name: 'Codeverse' }],
+  authors: [{ name: 'SiteEra' }],
+  icons: {
+    icon: '/icon.svg',
+  },
   openGraph: {
-    title: 'Codeverse - Premium Web & Mobile App Development',
-    description: 'Transform your digital presence with Codeverse.',
-    url: 'https://codeverse.com',
-    siteName: 'Codeverse',
+    title: 'SiteEra - Premium Web & Mobile App Development',
+    description: 'Transform your digital presence with SiteEra.',
+    url: 'https://siteera.com',
+    siteName: 'SiteEra',
     type: 'website',
   },
 };
@@ -21,7 +24,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
-      <body className="bg-white dark:bg-gray-950 text-gray-900 dark:text-white antialiased transition-colors duration-300">
+      <body className="bg-white dark:bg-gray-950 text-gray-900 dark:text-white antialiased transition-colors duration-300" suppressHydrationWarning>
         <ClientLayout>
           {children}
         </ClientLayout>

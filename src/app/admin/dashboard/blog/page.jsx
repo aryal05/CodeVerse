@@ -54,7 +54,7 @@ export default function BlogPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...post, published: !post.published })
       });
-      setPosts(posts.map(p => p._id === post._id ? { ...p, published: !p.published } : p));
+      setPosts(posts.map(p => p.id === post.id ? { ...p, published: !p.published } : p));
     } catch (err) {
       console.error('Failed to toggle publish:', err);
     }
@@ -144,7 +144,7 @@ export default function BlogPage() {
                   <tbody className="divide-y divide-gray-800">
                     {filteredPosts.map((post, index) => (
                       <motion.tr
-                        key={post._id}
+                        key={post.id}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: index * 0.05 }}
@@ -152,8 +152,18 @@ export default function BlogPage() {
                       >
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-4">
-                            <div className="w-16 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                              <span className="text-white/50 font-bold">{post.title?.charAt(0) || 'B'}</span>
+                            <div className="w-16 h-12 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden bg-gray-800">
+                              {post.image ? (
+                                <img
+                                  src={post.image}
+                                  alt={post.title || 'Blog post'}
+                                  className="w-full h-full object-contain"
+                                />
+                              ) : (
+                                <div className="w-full h-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
+                                  <span className="text-white/50 font-bold">{post.title?.charAt(0) || 'B'}</span>
+                                </div>
+                              )}
                             </div>
                             <div className="min-w-0">
                               <h3 className="text-white font-medium truncate max-w-xs">{post.title || 'Untitled'}</h3>
@@ -186,7 +196,7 @@ export default function BlogPage() {
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center justify-end gap-2">
-                            <Link href={`/admin/dashboard/blog/${post.slug || post._id}`}>
+                            <Link href={`/admin/dashboard/blog/${post.slug || post.id}`}>
                               <button className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors">
                                 <Edit size={16} />
                               </button>

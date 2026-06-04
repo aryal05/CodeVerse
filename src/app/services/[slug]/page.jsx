@@ -9,7 +9,6 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default async function ServiceDetail({ params }) {
-  const resolvedParams = await params;
-  return <ServiceDetailPage slug={resolvedParams?.slug} />;
+export default function ServiceDetailPageWrapper() {
+  return <ServiceDetailPage />;
 }

@@ -4,9 +4,10 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Save, Image } from 'lucide-react';
+import { ArrowLeft, Save } from 'lucide-react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
+import ImageUrlInput from '@/components/admin/ImageUrlInput';
 
 export default function NewBlogPostPage() {
   const [formData, setFormData] = useState({
@@ -15,7 +16,8 @@ export default function NewBlogPostPage() {
     content: '',
     category: '',
     tags: '',
-    published: false
+    published: false,
+    image: ''
   });
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -77,6 +79,14 @@ export default function NewBlogPostPage() {
                     required
                   />
                 </div>
+
+                {/* Cover Image */}
+                <ImageUrlInput
+                  label="Cover Image"
+                  value={formData.image}
+                  onChange={(url) => setFormData({ ...formData, image: url })}
+                  placeholder="https://example.com/blog-cover.jpg"
+                />
 
                 <div>
                   <label className="block text-sm font-medium text-gray-400 mb-2">Excerpt</label>

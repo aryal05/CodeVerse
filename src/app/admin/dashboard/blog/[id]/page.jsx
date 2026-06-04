@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Save } from 'lucide-react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
+import ImageUrlInput from '@/components/admin/ImageUrlInput';
 
 export default function EditBlogPostPage() {
   const params = useParams();
@@ -18,7 +19,8 @@ export default function EditBlogPostPage() {
     content: '',
     category: '',
     tags: '',
-    published: false
+    published: false,
+    image: ''
   });
 
   useEffect(() => {
@@ -38,7 +40,8 @@ export default function EditBlogPostPage() {
             content: data.content || '',
             category: data.category || '',
             tags: Array.isArray(data.tags) ? data.tags.join(', ') : '',
-            published: data.published || false
+            published: data.published || false,
+            image: data.image || ''
           });
         }
       })
@@ -100,6 +103,14 @@ export default function EditBlogPostPage() {
                     required
                   />
                 </div>
+
+                {/* Cover Image */}
+                <ImageUrlInput
+                  label="Cover Image"
+                  value={formData.image}
+                  onChange={(url) => setFormData({ ...formData, image: url })}
+                  placeholder="https://example.com/blog-cover.jpg"
+                />
 
                 <div>
                   <label className="block text-sm font-medium text-gray-400 mb-2">Excerpt</label>

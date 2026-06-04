@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Mail, Phone, MapPin, Send, Clock, CheckCircle,
-  Linkedin, Twitter, Instagram, Github
+  Linkedin, Twitter, Instagram, Github, MessageCircle
 } from 'lucide-react';
 import PageHeader from '@/components/ui/PageHeader';
 
@@ -76,8 +76,8 @@ const ContactPage = () => {
     {
       icon: Phone,
       title: 'Call Us',
-      value: '+977 980-000-0000',
-      link: 'tel:+9779800000000'
+      value: '+977 976-245-4572',
+      link: 'tel:+9779762454572'
     },
     {
       icon: MapPin,
@@ -149,6 +149,35 @@ const ContactPage = () => {
                       </div>
                     </motion.a>
                   ))}
+                </div>
+
+                {/* Quick Actions - Call & WhatsApp */}
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
+                    Quick Contact
+                  </h3>
+                  <div className="flex gap-3 mb-8">
+                    <motion.a
+                      href="tel:+9779762454572"
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition-all shadow-lg shadow-primary-600/25"
+                    >
+                      <Phone className="w-5 h-5" />
+                      Call Now
+                    </motion.a>
+                    <motion.a
+                      href="https://wa.me/9779762454572"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-green-600 text-white font-semibold rounded-xl hover:bg-green-700 transition-all shadow-lg shadow-green-600/25"
+                    >
+                      <MessageCircle className="w-5 h-5" />
+                      WhatsApp
+                    </motion.a>
+                  </div>
                 </div>
 
                 {/* Social Links */}

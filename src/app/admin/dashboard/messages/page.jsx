@@ -39,7 +39,7 @@ export default function MessagesPage() {
   const handleDelete = async (id) => {
     try {
       await fetch(`/api/messages/${id}`, { method: 'DELETE' });
-      setMessages(messages.filter(m => m._id !== id));
+      setMessages(messages.filter(m => m.id !== id));
       setSelectedMessage(null);
     } catch (err) {
       console.error('Failed to delete:', err);
@@ -53,7 +53,7 @@ export default function MessagesPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ read: true })
       });
-      setMessages(messages.map(m => m._id === id ? { ...m, read: true } : m));
+      setMessages(messages.map(m => m.id === id ? { ...m, read: true } : m));
     } catch (err) {
       console.error('Failed to mark as read:', err);
     }
@@ -129,13 +129,13 @@ export default function MessagesPage() {
               <div className="divide-y divide-gray-800">
                 {filteredMessages.map((message, index) => (
                   <motion.div
-                    key={message._id}
+                    key={message.id}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}
                     onClick={() => {
                       setSelectedMessage(message);
-                      if (!message.read) markAsRead(message._id);
+                      if (!message.read) markAsRead(message.id);
                     }}
                     className={`p-5 flex items-start gap-4 cursor-pointer hover:bg-gray-800/50 transition-colors ${
                       !message.read ? 'bg-primary-500/5' : ''
@@ -172,7 +172,7 @@ export default function MessagesPage() {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleDelete(message._id);
+                          handleDelete(message.id);
                         }}
                         className="p-2 text-gray-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                       >
@@ -271,7 +271,7 @@ export default function MessagesPage() {
                   Reply via Email
                 </a>
                 <button
-                  onClick={() => handleDelete(selectedMessage._id)}
+                  onClick={() => handleDelete(selectedMessage.id)}
                   className="px-4 py-3 bg-red-600/10 text-red-400 rounded-xl hover:bg-red-600/20 transition-colors"
                 >
                   <Trash2 size={18} />

@@ -139,39 +139,52 @@ export default function ServicesPage() {
                 
                 return (
                   <motion.div
-                    key={service._id}
+                    key={service.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className="bg-gray-900 border border-gray-800 rounded-2xl p-6 hover:border-gray-700 transition-all group"
+                    className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden hover:border-gray-700 transition-all group"
                   >
-                    {/* Icon */}
-                    <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                      <Icon size={28} className="text-white" />
-                    </div>
-                    
-                    {/* Content */}
-                    <h3 className="text-lg font-semibold text-white mb-2">
-                       {service.title || 'Untitled Service'}
-                    </h3>
-                    <p className="text-sm text-gray-500 line-clamp-2 mb-4">
-                       {service.shortDescription || service.description || 'No description'}
-                    </p>
-                    
-                    {/* Actions */}
-                    <div className="flex gap-2">
-                      <Link href={`/admin/dashboard/services/${service.slug || service._id}`} className="flex-1">
-                        <button className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white transition-colors text-sm">
-                          <Edit size={14} />
-                          Edit
+                    {/* Service Image (if available) */}
+                    {service.image && (
+                      <div className="h-32 relative overflow-hidden bg-gray-800 flex items-center justify-center">
+                        <img
+                          src={service.image}
+                          alt={service.title || 'Service'}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                    )}
+
+                    <div className="p-6">
+                      {/* Icon */}
+                      <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                        <Icon size={28} className="text-white" />
+                      </div>
+                      
+                      {/* Content */}
+                      <h3 className="text-lg font-semibold text-white mb-2">
+                         {service.title || 'Untitled Service'}
+                      </h3>
+                      <p className="text-sm text-gray-500 line-clamp-2 mb-4">
+                         {service.shortDescription || service.description || 'No description'}
+                      </p>
+                      
+                      {/* Actions */}
+                      <div className="flex gap-2">
+                        <Link href={`/admin/dashboard/services/${service.slug || service.id}`} className="flex-1">
+                          <button className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white transition-colors text-sm">
+                            <Edit size={14} />
+                            Edit
+                          </button>
+                        </Link>
+                        <button
+                          onClick={() => setDeleteModal(service)}
+                          className="px-3 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 transition-colors"
+                        >
+                          <Trash2 size={14} />
                         </button>
-                      </Link>
-                      <button
-                        onClick={() => setDeleteModal(service)}
-                        className="px-3 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 transition-colors"
-                      >
-                        <Trash2 size={14} />
-                      </button>
+                      </div>
                     </div>
                   </motion.div>
                 );

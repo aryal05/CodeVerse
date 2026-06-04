@@ -4,9 +4,10 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Save, Image, X } from 'lucide-react';
+import { ArrowLeft, Save } from 'lucide-react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
+import ImageUrlInput from '@/components/admin/ImageUrlInput';
 
 export default function NewProjectPage() {
   const [formData, setFormData] = useState({
@@ -17,7 +18,9 @@ export default function NewProjectPage() {
     technologies: '',
     liveUrl: '',
     githubUrl: '',
-    featured: false
+    featured: false,
+    image: '',
+    gallery: []
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -48,7 +51,9 @@ export default function NewProjectPage() {
           github: formData.githubUrl,
           technologies: formData.technologies ? formData.technologies.split(',').map(t => t.trim()) : [],
           featured: formData.featured,
-          status: 'completed'
+          status: 'completed',
+          image: formData.image,
+          gallery: formData.gallery
         })
       });
 
@@ -128,6 +133,22 @@ export default function NewProjectPage() {
                     required
                   />
                 </div>
+
+                {/* Main Image */}
+                <ImageUrlInput
+                  label="Main Project Image"
+                  value={formData.image}
+                  onChange={(url) => setFormData({ ...formData, image: url })}
+                  placeholder="https://example.com/project-screenshot.jpg"
+                />
+
+                {/* Gallery Images */}
+                <ImageUrlInput
+                  label="Project Gallery (Multiple Images)"
+                  gallery={true}
+                  galleryValues={formData.gallery}
+                  onGalleryChange={(urls) => setFormData({ ...formData, gallery: urls })}
+                />
 
                 {/* Category & Client */}
                 <div className="grid md:grid-cols-2 gap-6">

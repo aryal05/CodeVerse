@@ -5,28 +5,55 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Calendar, Clock, ArrowLeft, Share2 } from 'lucide-react';
 import AnimatedGrid from '@/components/ui/AnimatedGrid';
+import { useState, useEffect } from 'react';
 
 const BlogPost = () => {
   const params = useParams();
   const slug = params?.slug;
+  const [post, setPost] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Sample blog post data
-  const post = {
-    title: 'Building Scalable Web Applications with Next.js 14',
-    excerpt: 'Learn how to leverage the latest features in Next.js 14 to build performant applications.',
-    content: `
-      <p>Next.js 14 brings exciting new features that make building web applications easier and more performant than ever before.</p>
-      <h2>Server Components</h2>
-      <p>React Server Components allow you to render components on the server, reducing the JavaScript bundle size sent to the client.</p>
-      <h2>App Router</h2>
-      <p>The new App Router provides a more intuitive way to handle routing with nested layouts and loading states.</p>
-    `,
-    author: 'Rajesh Sharma',
-    date: 'Dec 15, 2024',
-    readTime: '8 min read',
-    category: 'Development',
-    tags: ['Next.js', 'React', 'Web Development']
-  };
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const res = await fetch(`/api/blog/${slug}`);
+        const data = await res.json();
+        setPost(data);
+      } catch (error) {
+        console.error('Failed to fetch blog post:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (slug) {
+      fetchPost();
+    }
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-gray-950 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block w-12 h-12 border-4 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading post...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!post) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-gray-950 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Blog Post Not Found</h2>
+          <Link href="/blog" className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 text-white rounded-xl">
+            Back to Blog
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
@@ -47,30 +74,56 @@ const BlogPost = () => {
             transition={{ duration: 0.6 }}
             className="max-w-4xl"
           >
-            <span className="text-sm font-medium text-primary-600 bg-primary-50 dark:bg-primary-900/30 px-3 py-1 rounded-full">
-              {post.category}
-            </span>
+            {post.category && (
+              <span className="text-sm font-medium text-primary-600 bg-primary-50 dark:bg-primary-900/30 px-3 py-1 rounded-full">
+                {post.category}
+              </span>
+            )}
             
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mt-6 mb-6">
               {post.title}
             </h1>
             
             <div className="flex flex-wrap items-center gap-4 text-gray-600 dark:text-gray-400">
-              <span>{post.author}</span>
-              <span>•</span>
+              {post.author && <span>{post.author}</span>}
+              {post.author && <span>•</span>}
               <span className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
-                {post.date}
+                {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : 'N/A'}
               </span>
-              <span>•</span>
-              <span className="flex items-center gap-1">
-                <Clock className="w-4 h-4" />
-                {post.readTime}
-              </span>
+              {post.readTime && (
+                <>
+                  <span>•</span>
+                  <span className="flex items-center gap-1">
+                    <Clock className="w-4 h-4" />
+                    {post.readTime}
+                  </span>
+                </>
+              )}
             </div>
           </motion.div>
         </div>
       </section>
+
+      {/* Featured Image */}
+      {post.image && (
+        <section className="py-8">
+          <div className="container mx-auto px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6 }}
+              className="max-w-4xl mx-auto rounded-2xl overflow-hidden"
+            >
+              <img
+                src={post.image}
+                alt={post.title}
+                className="w-full h-auto object-cover"
+              />
+            </motion.div>
+          </div>
+        </section>
+      )}
 
       {/* Content */}
       <section className="py-16">
@@ -85,16 +138,18 @@ const BlogPost = () => {
             />
 
             {/* Tags */}
-            <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
-              <div className="flex flex-wrap gap-2">
-                <span className="text-gray-600 dark:text-gray-400">Tags:</span>
-                {post.tags.map((tag, index) => (
-                  <span key={index} className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-full text-sm">
-                    #{tag}
-                  </span>
-                ))}
+            {post.tags && post.tags.length > 0 && (
+              <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
+                <div className="flex flex-wrap gap-2">
+                  <span className="text-gray-600 dark:text-gray-400">Tags:</span>
+                  {post.tags.map((tag, index) => (
+                    <span key={index} className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-full text-sm">
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Share */}
             <div className="mt-8 flex items-center gap-4">

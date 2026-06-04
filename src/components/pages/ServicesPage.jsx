@@ -19,6 +19,13 @@ const ServicesPage = () => {
       try {
         const res = await fetch('/api/services');
         const data = await res.json();
+        console.log('Fetched services:', data);
+        console.log('Services with images:', data.filter(s => s.image).map(s => ({ 
+          title: s.title, 
+          hasImage: !!s.image,
+          imageType: s.image?.startsWith('data:') ? 'base64' : 'url',
+          imageLength: s.image?.length 
+        })));
         setServices(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error('Failed to fetch services:', error);
@@ -110,8 +117,18 @@ const ServicesPage = () => {
                     variants={itemVariants}
                     className="group"
                   >
-                    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-large transition-all overflow-hidden">
-                      <div className="grid lg:grid-cols-3 gap-8 p-8 lg:p-10">
+                    <div className={`bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-large transition-all overflow-hidden`}>
+                      {/* Show image banner if available */}
+                      {service.image && (
+                        <div className="w-full h-48 lg:h-56 overflow-hidden bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                          <img
+                            src={service.image}
+                            alt={service.title}
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                      )}
+                      <div className={`grid ${!service.image ? 'lg:grid-cols-3' : 'lg:grid-cols-2'} gap-8 p-8 lg:p-10`}>
                         {/* Left - Icon & Title */}
                         <div>
                           <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
@@ -133,41 +150,42 @@ const ServicesPage = () => {
                           </Link>
                         </div>
 
-                        {/* Middle - Features */}
-                        {featuresArray.length > 0 && (
-                          <div>
-                            <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
-                              What&apos;s Included
-                            </h4>
-                            <ul className="space-y-3">
-                              {featuresArray.slice(0, 6).map((feature, i) => (
-                                <li key={i} className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
-                                  <CheckCircle2 className="w-4 h-4 text-primary-500 flex-shrink-0" />
-                                  <span className="text-sm">{feature}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-
-                        {/* Right - Technologies */}
-                        {service.technologies && service.technologies.length > 0 && (
-                          <div>
-                            <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
-                              Technologies
-                            </h4>
-                            <div className="flex flex-wrap gap-2">
-                              {service.technologies.map((tech, i) => (
-                                <span 
-                                  key={i}
-                                  className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm rounded-lg"
-                                >
-                                  {tech}
-                                </span>
-                              ))}
+                        {/* Right - Features & Technologies */}
+                        <div className={!service.image ? 'lg:col-span-2 grid lg:grid-cols-2 gap-8' : ''}>
+                          {featuresArray.length > 0 && (
+                            <div>
+                              <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
+                                What&apos;s Included
+                              </h4>
+                              <ul className="space-y-3">
+                                {featuresArray.slice(0, 6).map((feature, i) => (
+                                  <li key={i} className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                                    <CheckCircle2 className="w-4 h-4 text-primary-500 flex-shrink-0" />
+                                    <span className="text-sm">{feature}</span>
+                                  </li>
+                                ))}
+                              </ul>
                             </div>
-                          </div>
-                        )}
+                          )}
+
+                          {service.technologies && service.technologies.length > 0 && (
+                            <div>
+                              <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
+                                Technologies
+                              </h4>
+                              <div className="flex flex-wrap gap-2">
+                                {service.technologies.map((tech, i) => (
+                                  <span 
+                                    key={i}
+                                    className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm rounded-lg"
+                                  >
+                                    {tech}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </motion.div>

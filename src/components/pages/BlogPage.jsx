@@ -119,10 +119,20 @@ const BlogPage = () => {
               <Link href={`/blog/${featuredPost.slug}`}>
                 <div className="group grid lg:grid-cols-2 gap-8 bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700 hover:shadow-large transition-all">
                   {/* Image */}
-                  <div className="h-64 lg:h-auto bg-gradient-to-br from-primary-500 to-purple-600 relative">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-white/20 text-9xl font-bold">F</span>
-                    </div>
+                  <div className="h-64 relative overflow-hidden bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                    {featuredPost.image ? (
+                      <img
+                        src={featuredPost.image}
+                        alt={featuredPost.title}
+                        className="w-full h-full object-contain"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-primary-500 to-purple-600">
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span className="text-white/20 text-9xl font-bold">F</span>
+                        </div>
+                      </div>
+                    )}
                     <div className="absolute top-4 left-4 px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-xs font-medium">
                       Featured
                     </div>
@@ -198,12 +208,22 @@ const BlogPage = () => {
                     <Link href={`/blog/${post.slug}`}>
                       <div className="group h-full bg-gray-50 dark:bg-gray-900 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-large transition-all">
                         {/* Image */}
-                        <div className="h-48 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 relative">
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-gray-400/50 dark:text-gray-600/50 text-6xl font-bold">
-                              {post.title.charAt(0)}
-                            </span>
-                          </div>
+                        <div className="h-48 relative overflow-hidden bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
+                          {post.image ? (
+                            <img
+                              src={post.image}
+                              alt={post.title}
+                              className="w-full h-full object-contain"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800">
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <span className="text-gray-400/50 dark:text-gray-600/50 text-6xl font-bold">
+                                  {post.title.charAt(0)}
+                                </span>
+                              </div>
+                            </div>
+                          )}
                         </div>
 
                         {/* Content */}

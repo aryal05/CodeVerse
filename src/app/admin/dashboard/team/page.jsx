@@ -53,7 +53,7 @@ export default function TeamPage() {
     try {
       const res = await fetch(`/api/team/${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete');
-      setTeam(team.filter(m => m._id !== id));
+      setTeam(team.filter(m => m.id !== id));
       setDeleteModal(null);
       showToast('Team member removed successfully');
     } catch (err) {
@@ -67,8 +67,8 @@ export default function TeamPage() {
     setSaving(true);
 
     try {
-      const isEditing = editModal._id;
-      const url = isEditing ? `/api/team/${editModal._id}` : '/api/team';
+      const isEditing = editModal.id;
+      const url = isEditing ? `/api/team/${editModal.id}` : '/api/team';
       const method = isEditing ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
@@ -154,7 +154,7 @@ export default function TeamPage() {
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredTeam.length > 0 ? filteredTeam.map((member, index) => (
                 <motion.div
-                  key={member._id}
+                  key={member.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
@@ -185,7 +185,7 @@ export default function TeamPage() {
                   <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={() => setEditModal({
-                        _id: member._id,
+                        id: member.id,
                         name: member.name || '',
                         role: member.role || '',
                         email: member.email || '',
@@ -227,7 +227,7 @@ export default function TeamPage() {
               <p className="text-gray-400 mb-6">Are you sure you want to remove <span className="text-white font-medium">{deleteModal.name}</span>? This action cannot be undone.</p>
               <div className="flex gap-3">
                 <button onClick={() => setDeleteModal(null)} className="flex-1 px-4 py-2.5 bg-gray-800 text-white rounded-xl hover:bg-gray-700">Cancel</button>
-                <button onClick={() => handleDelete(deleteModal._id)} className="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700">Remove</button>
+                <button onClick={() => handleDelete(deleteModal.id)} className="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700">Remove</button>
               </div>
             </motion.div>
           </motion.div>
@@ -240,7 +240,7 @@ export default function TeamPage() {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setEditModal(null)}>
             <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} onClick={(e) => e.stopPropagation()} className="bg-gray-900 border border-gray-800 rounded-2xl p-6 max-w-md w-full">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-semibold text-white">{editModal._id ? 'Edit' : 'Add'} Team Member</h3>
+                <h3 className="text-xl font-semibold text-white">{editModal.id ? 'Edit' : 'Add'} Team Member</h3>
                 <button onClick={() => setEditModal(null)} className="p-1 text-gray-500 hover:text-white"><X size={20} /></button>
               </div>
               <form className="space-y-4" onSubmit={handleSave}>

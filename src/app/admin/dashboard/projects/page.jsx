@@ -28,7 +28,19 @@ export default function ProjectsPage() {
     try {
       const res = await fetch('/api/projects');
       const data = await res.json();
-      setProjects(Array.isArray(data) ? data : []);
+      console.log('Fetched projects:', data);
+      
+      if (Array.isArray(data)) {
+        console.log('Projects with images:', data.filter(p => p.image).map(p => ({
+          title: p.title,
+          hasImage: !!p.image,
+          imagePreview: p.image ? p.image.substring(0, 50) + '...' : 'none'
+        })));
+        setProjects(data);
+      } else {
+        console.error('API did not return an array:', data);
+        setProjects([]);
+      }
     } catch (err) {
       console.error('Failed to fetch projects:', err);
       setProjects([]);
@@ -40,7 +52,7 @@ export default function ProjectsPage() {
   const handleDelete = async (id) => {
     try {
       await fetch(`/api/projects/${id}`, { method: 'DELETE' });
-      setProjects(projects.filter(p => p._id !== id));
+      setProjects(projects.filter(p => p.id !== id));
       setDeleteModal(null);
     } catch (err) {
       console.error('Failed to delete:', err);
@@ -117,23 +129,44 @@ export default function ProjectsPage() {
             >
               {filteredProjects.map((project, index) => (
                 <motion.div
-                  key={project._id}
+                  key={project.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
                   className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden hover:border-gray-700 transition-all group"
                 >
                   {/* Image */}
-                  <div className="h-40 bg-gradient-to-br from-primary-500 to-purple-600 relative">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-white/30 text-5xl font-bold">
-                        {project.title?.charAt(0) || 'P'}
-                      </span>
-                    </div>
+                  <div className="h-40 relative overflow-hidden bg-gray-800 flex items-center justify-center">
+                    {project.image && project.image.trim() !== '' ? (
+                      <img
+                        src={project.image}
+                        alt={project.title || 'Project'}
+                        className="w-full h-full object-contain"
+                        onError={(e) => {
+                          console.error('Image failed to load for project:', project.title, project.image?.substring(0, 50));
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                    ) : null}
+                    {(!project.image || project.image.trim() === '') && (
+                      <div className="h-full w-full bg-gradient-to-br from-primary-500 to-purple-600 relative flex items-center justify-center">
+                        <span className="text-white/30 text-5xl font-bold">
+                          {project.title?.charAt(0) || 'P'}
+                        </span>
+                      </div>
+                    )}
+                    {project.image && project.image.trim() !== '' && (
+                      <div className="h-full w-full bg-gradient-to-br from-primary-500 to-purple-600 relative hidden items-center justify-center">
+                        <span className="text-white/30 text-5xl font-bold">
+                          {project.title?.charAt(0) || 'P'}
+                        </span>
+                      </div>
+                    )}
                     
                     {/* Overlay Actions */}
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                      <Link href={`/admin/dashboard/projects/${project._id}`}>
+                      <Link href={`/admin/dashboard/projects/${project.id}`}>
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
@@ -216,7 +249,7 @@ export default function ProjectsPage() {
                   Cancel
                 </button>
                 <button
-                  onClick={() => handleDelete(deleteModal._id)}
+                  onClick={() => handleDelete(deleteModal.id)}
                   className="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors"
                 >
                   Delete
