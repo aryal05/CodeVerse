@@ -1,8 +1,9 @@
 import PortfolioPage from "@/components/pages/PortfolioPage";
-import { getDb } from "@/lib/api-helpers";
+import { getDb, safeImageUrl } from "@/lib/api-helpers";
 
-// Cache for 60 seconds — fast repeat visits, fresh enough data
-export const revalidate = 60;
+// force-dynamic prevents ISR snapshot generation.
+// ISR was failing because base64 images stored in DB made the snapshot > 43 MB.
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Our Portfolio - CodeVerse",
@@ -16,6 +17,8 @@ export default async function Portfolio() {
     const db = getDb();
     const { data } = await db
       .from("projects")
+      // Exclude gallery (may contain many base64 images) from the list view.
+      // The detail page fetches gallery separately when the user opens a project.
       .select(
         'id, title, slug, description, category, image, technologies, client, created_at, featured, status, "order"',
       )
@@ -26,6 +29,9 @@ export default async function Portfolio() {
       ...row,
       _id: row.id,
       createdAt: row.created_at,
+      // Replace base64 images with null — gradient placeholder shows instead.
+      // Base64 strings are 2-10 MB each and make the page payload enormous.
+      image: safeImageUrl(row.image),
     }));
   } catch {
     projects = [];

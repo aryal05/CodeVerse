@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase";
+import { safeImageUrl } from "@/lib/api-helpers";
 import ServicesPage from "@/components/pages/ServicesPage";
 
 export const dynamic = "force-dynamic";
@@ -15,10 +16,15 @@ export default async function ServicesRoute() {
     const supabase = createClient();
     const { data } = await supabase
       .from("services")
-      .select("*")
+      .select(
+        'id, title, slug, short_description, description, icon, image, technologies, featured, active, "order", created_at',
+      )
       .eq("active", true)
       .order("order", { ascending: true });
-    services = data || [];
+    services = (data || []).map((row) => ({
+      ...row,
+      image: safeImageUrl(row.image),
+    }));
   } catch (e) {
     services = [];
   }

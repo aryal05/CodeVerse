@@ -5,9 +5,9 @@ import Portfolio from "@/components/sections/Portfolio";
 import Process from "@/components/sections/Process";
 import Testimonials from "@/components/sections/Testimonials";
 import CTA from "@/components/sections/CTA";
-import { getDb } from "@/lib/api-helpers";
+import { getDb, safeImageUrl } from "@/lib/api-helpers";
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
 
 async function getHomepageData() {
   try {
@@ -48,7 +48,7 @@ async function getHomepageData() {
       id: row.id,
       title: row.title,
       slug: row.slug,
-      image: row.image,
+      image: safeImageUrl(row.image), // strip base64
       category: row.category,
       client: row.client,
       description: row.description,
@@ -75,8 +75,7 @@ async function getHomepageData() {
     }));
 
     return { projects, services, testimonials };
-  } catch (error) {
-    console.error("Failed to fetch homepage data:", error);
+  } catch {
     return { projects: [], services: [], testimonials: [] };
   }
 }
