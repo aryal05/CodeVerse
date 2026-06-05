@@ -8,6 +8,20 @@ import {
 
 export const dynamic = "force-dynamic";
 
+const TESTIMONIAL_LIST_COLUMNS = `
+  id,
+  name,
+  role,
+  company,
+  avatar,
+  rating,
+  content,
+  featured,
+  active,
+  "order",
+  created_at
+`;
+
 export async function GET(request) {
   try {
     const db = getDb();
@@ -15,9 +29,9 @@ export async function GET(request) {
 
     let query = db
       .from("testimonials")
-      .select("*")
+      .select(TESTIMONIAL_LIST_COLUMNS)
       .eq("active", true)
-      .order("order", { ascending: true })
+      .order("order", { ascending: true, nullsFirst: false })
       .order("created_at", { ascending: false });
 
     if (searchParams.get("featured") === "true")
@@ -28,7 +42,11 @@ export async function GET(request) {
     const { data, error } = await query;
     if (error) throw error;
 
-    return NextResponse.json((data || []).map(mapTestimonial));
+    return NextResponse.json((data || []).map(mapTestimonial), {
+      headers: {
+        "Cache-Control": "s-maxage=300, stale-while-revalidate=86400",
+      },
+    });
   } catch (error) {
     return handleApiError(error, "Failed to fetch testimonials");
   }

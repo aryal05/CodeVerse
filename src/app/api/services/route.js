@@ -8,6 +8,19 @@ import {
 
 export const dynamic = "force-dynamic";
 
+const SERVICE_LIST_COLUMNS = `
+  id,
+  title,
+  slug,
+  short_description,
+  description,
+  icon,
+  featured,
+  active,
+  "order",
+  created_at
+`;
+
 export async function GET(request) {
   try {
     const db = getDb();
@@ -15,8 +28,8 @@ export async function GET(request) {
 
     let query = db
       .from("services")
-      .select("*")
-      .order("order", { ascending: true })
+      .select(SERVICE_LIST_COLUMNS)
+      .order("order", { ascending: true, nullsFirst: false })
       .order("created_at", { ascending: false });
 
     if (searchParams.get("all") !== "true") query = query.eq("active", true);
@@ -28,7 +41,11 @@ export async function GET(request) {
     const { data, error } = await query;
     if (error) throw error;
 
-    return NextResponse.json((data || []).map(mapService));
+    return NextResponse.json((data || []).map(mapService), {
+      headers: {
+        "Cache-Control": "s-maxage=300, stale-while-revalidate=86400",
+      },
+    });
   } catch (error) {
     return handleApiError(error, "Failed to fetch services");
   }
