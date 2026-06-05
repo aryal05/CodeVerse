@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase";
 import ServiceDetailPage from "@/components/pages/ServiceDetailPage";
 import { notFound } from "next/navigation";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 120;
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;

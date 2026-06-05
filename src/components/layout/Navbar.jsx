@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Menu, X, ArrowRight } from 'lucide-react';
-import ThemeToggle from '@/components/ui/ThemeToggle';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Menu, X, ArrowRight } from "lucide-react";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -14,8 +14,8 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
@@ -23,12 +23,12 @@ const Navbar = () => {
   }, [pathname]);
 
   const navLinks = [
-    { href: '/', label: 'Home' },
-    { href: '/about', label: 'About' },
-    { href: '/services', label: 'Services' },
-    { href: '/portfolio', label: 'Portfolio' },
-    { href: '/blog', label: 'Blog' },
-    { href: '/contact', label: 'Contact' },
+    { href: "/", label: "Home" },
+    { href: "/about", label: "About" },
+    { href: "/services", label: "Services" },
+    { href: "/portfolio", label: "Portfolio" },
+    { href: "/blog", label: "Blog" },
+    { href: "/contact", label: "Contact" },
   ];
 
   return (
@@ -38,9 +38,9 @@ const Navbar = () => {
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled 
-            ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-soft border-b border-gray-100 dark:border-gray-800' 
-            : 'bg-transparent'
+          isScrolled
+            ? "bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-soft border-b border-gray-100 dark:border-gray-800"
+            : "bg-transparent"
         }`}
       >
         <div className="container mx-auto px-6 lg:px-8">
@@ -61,10 +61,11 @@ const Navbar = () => {
                 <Link
                   key={link.href}
                   href={link.href}
+                  prefetch={true}
                   className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                     pathname === link.href
-                      ? 'text-primary-600 bg-primary-50 dark:bg-primary-900/30'
-                      : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800'
+                      ? "text-primary-600 bg-primary-50 dark:bg-primary-900/30"
+                      : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800"
                   }`}
                 >
                   {link.label}
@@ -117,10 +118,11 @@ const Navbar = () => {
                   <Link
                     key={link.href}
                     href={link.href}
+                    prefetch={true}
                     className={`px-4 py-3 text-base font-medium rounded-lg transition-colors ${
                       pathname === link.href
-                        ? 'text-primary-600 bg-primary-50 dark:bg-primary-900/30'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                        ? "text-primary-600 bg-primary-50 dark:bg-primary-900/30"
+                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
                     }`}
                   >
                     {link.label}

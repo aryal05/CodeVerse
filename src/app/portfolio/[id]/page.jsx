@@ -2,7 +2,7 @@ import ProjectDetailPage from "@/components/pages/ProjectDetailPage";
 import { getDb } from "@/lib/api-helpers";
 import { notFound } from "next/navigation";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 120;
 
 export async function generateMetadata({ params }) {
   const { id } = await params;

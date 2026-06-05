@@ -1,9 +1,9 @@
 import PortfolioPage from "@/components/pages/PortfolioPage";
 import { getDb, safeImageUrl } from "@/lib/api-helpers";
 
-// force-dynamic prevents ISR snapshot generation.
-// ISR was failing because base64 images stored in DB made the snapshot > 43 MB.
-export const dynamic = "force-dynamic";
+// ISR: safe now that base64 images are stripped by safeImageUrl().
+// Snapshot is tiny (only text + URLs). Revalidates every 60 seconds.
+export const revalidate = 60;
 
 export const metadata = {
   title: "Our Portfolio - CodeVerse",

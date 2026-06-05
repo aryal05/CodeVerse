@@ -8,6 +8,12 @@ node_modules/
 /server/
 /api/
 
+# Windows reserved device names
+nul
+con
+prn
+aux
+
 # Testing
 coverage/
 

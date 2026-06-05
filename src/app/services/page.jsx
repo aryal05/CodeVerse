@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase";
 import { safeImageUrl } from "@/lib/api-helpers";
 import ServicesPage from "@/components/pages/ServicesPage";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 120;
 
 export const metadata = {
   title: "Our Services - CodeVerse",
