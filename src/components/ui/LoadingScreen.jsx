@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const LoadingScreen = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -38,8 +38,9 @@ const LoadingScreen = ({ children }) => {
               <motion.div
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full"
                 style={{
-                  background: 'radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 60%)',
-                  filter: 'blur(60px)'
+                  background:
+                    "radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 60%)",
+                  filter: "blur(60px)",
                 }}
                 animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
                 transition={{ duration: 3, repeat: Infinity }}
@@ -60,13 +61,14 @@ const LoadingScreen = ({ children }) => {
                   <motion.div
                     className="absolute inset-0 rounded-2xl"
                     style={{
-                      background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.4) 0%, rgba(139, 92, 246, 0.4) 100%)',
-                      filter: 'blur(30px)'
+                      background:
+                        "linear-gradient(135deg, rgba(212, 175, 55, 0.4) 0%, rgba(139, 92, 246, 0.4) 100%)",
+                      filter: "blur(30px)",
                     }}
                     animate={{ opacity: [0.5, 1, 0.5] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   />
-                  
+
                   {/* Logo */}
                   <div className="relative w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center">
                     <motion.span
@@ -74,7 +76,7 @@ const LoadingScreen = ({ children }) => {
                       animate={{ scale: [1, 1.1, 1] }}
                       transition={{ duration: 1.5, repeat: Infinity }}
                     >
-                      SE
+                      CV
                     </motion.span>
                   </div>
                 </div>
@@ -89,7 +91,9 @@ const LoadingScreen = ({ children }) => {
               >
                 <span className="text-3xl font-bold">
                   <span className="text-white">Site</span>
-                  <span className="bg-gradient-to-r from-amber-400 to-amber-500 bg-clip-text text-transparent">Era</span>
+                  <span className="bg-gradient-to-r from-amber-400 to-amber-500 bg-clip-text text-transparent">
+                    Era
+                  </span>
                 </span>
               </motion.div>
 
@@ -109,7 +113,7 @@ const LoadingScreen = ({ children }) => {
                 animate={{ opacity: [0.5, 1, 0.5] }}
                 transition={{ duration: 1.5, repeat: Infinity }}
               >
-                {progress < 100 ? 'Loading Experience...' : 'Welcome'}
+                {progress < 100 ? "Loading Experience..." : "Welcome"}
               </motion.p>
             </div>
 
