@@ -143,7 +143,7 @@ const Footer = () => {
         <div className="container mx-auto px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-gray-500 text-sm" suppressHydrationWarning>
-              © {new Date().getFullYear()} Codeverse. All rights reserved.
+              &copy; {new Date().getFullYear()} Codeverse. All rights reserved.
             </p>
 
             {/* Social Links */}

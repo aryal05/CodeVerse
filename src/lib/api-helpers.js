@@ -3,7 +3,7 @@ import { getSupabaseAdmin } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
-// Strip base64 data URIs — they make RSC payloads enormous (each can be 2-10MB).
+// Strip base64 data URIs - they make RSC payloads enormous (each can be 2-10MB).
 // For list/grid views, replace with null so the gradient placeholder shows instead.
 // The full detail page fetches fresh from the DB when the user navigates there.
 export function safeImageUrl(value) {

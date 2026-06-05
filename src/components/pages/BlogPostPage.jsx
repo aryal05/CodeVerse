@@ -62,7 +62,7 @@ const BlogPostPage = ({ post }) => {
 
             <div className="flex flex-wrap items-center gap-4 text-gray-600 dark:text-gray-400">
               {post.author?.name && <span>{post.author.name}</span>}
-              {post.author?.name && <span>•</span>}
+              {post.author?.name && <span aria-hidden="true">&bull;</span>}
               <span className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
                 {post.createdAt
@@ -71,7 +71,7 @@ const BlogPostPage = ({ post }) => {
               </span>
               {post.readTime && (
                 <>
-                  <span>•</span>
+                  <span aria-hidden="true">&bull;</span>
                   <span className="flex items-center gap-1">
                     <Clock className="w-4 h-4" />
                     {post.readTime}

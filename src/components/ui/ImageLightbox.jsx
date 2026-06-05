@@ -1,10 +1,15 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react";
 
-export default function ImageLightbox({ images, initialIndex = 0, isOpen, onClose }) {
+export default function ImageLightbox({
+  images,
+  initialIndex = 0,
+  isOpen,
+  onClose,
+}) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [zoom, setZoom] = useState(1);
 
@@ -16,24 +21,24 @@ export default function ImageLightbox({ images, initialIndex = 0, isOpen, onClos
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (!isOpen) return;
-      
-      if (e.key === 'Escape') onClose();
-      if (e.key === 'ArrowLeft') handlePrevious();
-      if (e.key === 'ArrowRight') handleNext();
+
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowLeft") handlePrevious();
+      if (e.key === "ArrowRight") handleNext();
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, currentIndex]);
 
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     }
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
   }, [isOpen]);
 
@@ -153,7 +158,7 @@ export default function ImageLightbox({ images, initialIndex = 0, isOpen, onClos
 
           {/* Instructions */}
           <div className="absolute bottom-4 left-4 text-white/60 text-sm hidden md:block">
-            <p>← → Navigate • Esc Close</p>
+            <p>&larr; &rarr; Navigate &bull; Esc Close</p>
           </div>
         </motion.div>
       )}

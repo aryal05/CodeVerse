@@ -1,49 +1,56 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { Globe, Database, Layout, Server, Check, TrendingUp } from 'lucide-react';
+import { motion } from "framer-motion";
+import {
+  Globe,
+  Database,
+  Layout,
+  Server,
+  Check,
+  TrendingUp,
+} from "lucide-react";
 
 const DashboardVisual = () => {
   const cards = [
     {
       icon: Globe,
-      title: 'Web Application',
-      status: 'Live',
+      title: "Web Application",
+      status: "Live",
       metrics: [
-        { label: 'VISITORS', value: '12.5K', trend: '+24%' },
-        { label: 'PERFORMANCE', value: '98%', trend: '+5%' },
+        { label: "VISITORS", value: "12.5K", trend: "+24%" },
+        { label: "PERFORMANCE", value: "98%", trend: "+5%" },
       ],
-      color: 'from-blue-500 to-cyan-500'
+      color: "from-blue-500 to-cyan-500",
     },
     {
       icon: Server,
-      title: 'API Backend',
-      status: 'Active',
+      title: "API Backend",
+      status: "Active",
       metrics: [
-        { label: 'REQUESTS', value: '1.2M', trend: '+18%' },
-        { label: 'UPTIME', value: '99.9%', trend: '' },
+        { label: "REQUESTS", value: "1.2M", trend: "+18%" },
+        { label: "UPTIME", value: "99.9%", trend: "" },
       ],
-      color: 'from-purple-500 to-pink-500'
+      color: "from-purple-500 to-pink-500",
     },
     {
       icon: Database,
-      title: 'Database',
-      status: 'Healthy',
+      title: "Database",
+      status: "Healthy",
       metrics: [
-        { label: 'QUERIES', value: '45K/s', trend: '+12%' },
-        { label: 'STORAGE', value: '2.4TB', trend: '' },
+        { label: "QUERIES", value: "45K/s", trend: "+12%" },
+        { label: "STORAGE", value: "2.4TB", trend: "" },
       ],
-      color: 'from-emerald-500 to-teal-500'
+      color: "from-emerald-500 to-teal-500",
     },
     {
       icon: Layout,
-      title: 'Mobile App',
-      status: 'Live',
+      title: "Mobile App",
+      status: "Live",
       metrics: [
-        { label: 'DOWNLOADS', value: '50K+', trend: '+32%' },
-        { label: 'RATING', value: '4.9★', trend: '' },
+        { label: "DOWNLOADS", value: "50K+", trend: "+32%" },
+        { label: "RATING", value: "4.9*", trend: "" },
       ],
-      color: 'from-orange-500 to-red-500'
+      color: "from-orange-500 to-red-500",
     },
   ];
 
@@ -51,8 +58,8 @@ const DashboardVisual = () => {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.15, delayChildren: 0.3 }
-    }
+      transition: { staggerChildren: 0.15, delayChildren: 0.3 },
+    },
   };
 
   const cardVariants = {
@@ -61,15 +68,15 @@ const DashboardVisual = () => {
       opacity: 1,
       y: 0,
       scale: 1,
-      transition: { duration: 0.5, ease: [0.25, 0.4, 0.25, 1] }
-    }
+      transition: { duration: 0.5, ease: [0.25, 0.4, 0.25, 1] },
+    },
   };
 
   return (
     <div className="relative w-full max-w-2xl mx-auto">
       {/* Background Glow */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary-500/20 via-purple-500/10 to-cyan-500/20 rounded-3xl blur-3xl" />
-      
+
       {/* Main Container */}
       <motion.div
         variants={containerVariants}
@@ -101,10 +108,14 @@ const DashboardVisual = () => {
               {/* Card Header */}
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${card.color} flex items-center justify-center`}>
+                  <div
+                    className={`w-8 h-8 rounded-lg bg-gradient-to-br ${card.color} flex items-center justify-center`}
+                  >
                     <card.icon className="w-4 h-4 text-white" />
                   </div>
-                  <span className="text-sm font-medium text-white">{card.title}</span>
+                  <span className="text-sm font-medium text-white">
+                    {card.title}
+                  </span>
                 </div>
                 <div className="flex items-center gap-1 text-emerald-400 text-xs">
                   <Check className="w-3 h-3" />
@@ -117,7 +128,9 @@ const DashboardVisual = () => {
                 {card.metrics.map((metric, i) => (
                   <div key={i}>
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-[10px] text-gray-500 font-mono tracking-wider">{metric.label}</span>
+                      <span className="text-[10px] text-gray-500 font-mono tracking-wider">
+                        {metric.label}
+                      </span>
                       {metric.trend && (
                         <span className="text-[10px] text-emerald-400 flex items-center gap-0.5">
                           <TrendingUp className="w-2.5 h-2.5" />
@@ -131,7 +144,11 @@ const DashboardVisual = () => {
                         className={`h-full bg-gradient-to-r ${card.color} rounded-full`}
                         initial={{ width: 0 }}
                         animate={{ width: `${60 + Math.random() * 35}%` }}
-                        transition={{ duration: 1.5, delay: 0.5 + index * 0.2, ease: "easeOut" }}
+                        transition={{
+                          duration: 1.5,
+                          delay: 0.5 + index * 0.2,
+                          ease: "easeOut",
+                        }}
                       />
                     </div>
                   </div>
@@ -166,7 +183,9 @@ const DashboardVisual = () => {
           </div>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-green-500" />
-            <span className="text-xs text-gray-400">All systems operational</span>
+            <span className="text-xs text-gray-400">
+              All systems operational
+            </span>
           </div>
         </motion.div>
       </motion.div>

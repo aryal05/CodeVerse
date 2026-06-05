@@ -29,7 +29,7 @@ export default async function Portfolio() {
       ...row,
       _id: row.id,
       createdAt: row.created_at,
-      // Replace base64 images with null — gradient placeholder shows instead.
+      // Replace base64 images with null - gradient placeholder shows instead.
       // Base64 strings are 2-10 MB each and make the page payload enormous.
       image: safeImageUrl(row.image),
     }));

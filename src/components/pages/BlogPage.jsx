@@ -135,7 +135,7 @@ const BlogPage = ({ initialPosts = [] }) => {
                     </p>
                     <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
                       <span>{featuredPost.author?.name || "Admin"}</span>
-                      <span>•</span>
+                      <span aria-hidden="true">&bull;</span>
                       <span className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
                         {new Date(featuredPost.createdAt).toLocaleDateString(
@@ -147,7 +147,7 @@ const BlogPage = ({ initialPosts = [] }) => {
                           },
                         )}
                       </span>
-                      <span>•</span>
+                      <span aria-hidden="true">&bull;</span>
                       <span className="flex items-center gap-1">
                         <Clock className="w-4 h-4" />
                         {featuredPost.readTime || "5 min read"}

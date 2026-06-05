@@ -1,24 +1,32 @@
-'use client';
+"use client";
 
-import { useState, useRef } from 'react';
-import { Image, X, Plus, Link2, AlertCircle, Upload, Loader2 } from 'lucide-react';
+import { useState, useRef } from "react";
+import {
+  Image,
+  X,
+  Plus,
+  Link2,
+  AlertCircle,
+  Upload,
+  Loader2,
+} from "lucide-react";
 
 /**
  * Reusable Image URL Input for admin forms.
  * Supports single image mode and gallery (multi-image) mode.
  * Allows both URL pasting and file browsing/uploading.
  */
-export default function ImageUrlInput({ 
-  label = 'Image URL', 
-  value = '', 
-  onChange, 
-  placeholder = 'https://example.com/image.jpg',
+export default function ImageUrlInput({
+  label = "Image URL",
+  value = "",
+  onChange,
+  placeholder = "https://example.com/image.jpg",
   gallery = false,
   galleryValues = [],
-  onGalleryChange
+  onGalleryChange,
 }) {
   const [imageError, setImageError] = useState(false);
-  const [galleryInput, setGalleryInput] = useState('');
+  const [galleryInput, setGalleryInput] = useState("");
   const [galleryErrors, setGalleryErrors] = useState({});
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef(null);
@@ -28,19 +36,19 @@ export default function ImageUrlInput({
   const fileToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       // Validate file type
-      if (!file.type.startsWith('image/')) {
-        reject(new Error('Please select an image file'));
+      if (!file.type.startsWith("image/")) {
+        reject(new Error("Please select an image file"));
         return;
       }
       // Limit to 5MB
       if (file.size > 5 * 1024 * 1024) {
-        reject(new Error('Image must be under 5MB'));
+        reject(new Error("Image must be under 5MB"));
         return;
       }
 
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result);
-      reader.onerror = () => reject(new Error('Failed to read file'));
+      reader.onerror = () => reject(new Error("Failed to read file"));
       reader.readAsDataURL(file);
     });
   };
@@ -60,7 +68,7 @@ export default function ImageUrlInput({
     } finally {
       setUploading(false);
       // Reset input so same file can be selected again
-      if (fileInputRef.current) fileInputRef.current.value = '';
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
@@ -72,14 +80,14 @@ export default function ImageUrlInput({
     setUploading(true);
     try {
       const base64Images = await Promise.all(
-        files.map(file => fileToBase64(file))
+        files.map((file) => fileToBase64(file)),
       );
       onGalleryChange([...galleryValues, ...base64Images]);
     } catch (err) {
       alert(err.message);
     } finally {
       setUploading(false);
-      if (galleryFileInputRef.current) galleryFileInputRef.current.value = '';
+      if (galleryFileInputRef.current) galleryFileInputRef.current.value = "";
     }
   };
 
@@ -97,10 +105,13 @@ export default function ImageUrlInput({
           {/* URL Input + Browse Button */}
           <div className="flex gap-2">
             <div className="relative flex-1">
-              <Link2 className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={16} />
+              <Link2
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"
+                size={16}
+              />
               <input
                 type="url"
-                value={value && !value.startsWith('data:') ? value : ''}
+                value={value && !value.startsWith("data:") ? value : ""}
                 onChange={(e) => {
                   onChange(e.target.value);
                   setImageError(false);
@@ -130,7 +141,7 @@ export default function ImageUrlInput({
               Browse
             </button>
           </div>
-          
+
           {/* Preview */}
           {value && (
             <div className="relative group">
@@ -153,14 +164,14 @@ export default function ImageUrlInput({
               <button
                 type="button"
                 onClick={() => {
-                  onChange('');
+                  onChange("");
                   setImageError(false);
                 }}
                 className="absolute top-2 right-2 w-8 h-8 bg-red-500/80 hover:bg-red-500 text-white rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
               >
                 <X size={14} />
               </button>
-              {value.startsWith('data:') && (
+              {value.startsWith("data:") && (
                 <span className="absolute bottom-2 left-2 text-xs bg-primary-600/80 text-white px-2 py-0.5 rounded">
                   Uploaded
                 </span>
@@ -176,7 +187,7 @@ export default function ImageUrlInput({
   const addGalleryImage = () => {
     if (galleryInput.trim()) {
       onGalleryChange([...galleryValues, galleryInput.trim()]);
-      setGalleryInput('');
+      setGalleryInput("");
     }
   };
 
@@ -196,17 +207,20 @@ export default function ImageUrlInput({
           {label}
         </span>
       </label>
-      
+
       {/* Add new image - URL input + Browse */}
       <div className="flex gap-2 mb-3">
         <div className="relative flex-1">
-          <Link2 className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={16} />
+          <Link2
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"
+            size={16}
+          />
           <input
             type="url"
             value={galleryInput}
             onChange={(e) => setGalleryInput(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') {
+              if (e.key === "Enter") {
                 e.preventDefault();
                 addGalleryImage();
               }
@@ -262,7 +276,9 @@ export default function ImageUrlInput({
                     src={url}
                     alt={`Gallery ${index + 1}`}
                     className="w-full h-full object-cover"
-                    onError={() => setGalleryErrors(prev => ({ ...prev, [index]: true }))}
+                    onError={() =>
+                      setGalleryErrors((prev) => ({ ...prev, [index]: true }))
+                    }
                   />
                 )}
               </div>
@@ -274,7 +290,7 @@ export default function ImageUrlInput({
                 <X size={12} />
               </button>
               <span className="absolute bottom-1.5 left-1.5 text-xs bg-black/60 text-white px-2 py-0.5 rounded">
-                {url.startsWith('data:') ? '📁' : '🔗'} {index + 1}
+                {url.startsWith("data:") ? "[img]" : "[url]"} {index + 1}
               </span>
             </div>
           ))}
@@ -282,7 +298,9 @@ export default function ImageUrlInput({
       )}
 
       {galleryValues.length === 0 && (
-        <p className="text-sm text-gray-600 italic">No gallery images added yet</p>
+        <p className="text-sm text-gray-600 italic">
+          No gallery images added yet
+        </p>
       )}
     </div>
   );

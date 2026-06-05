@@ -7,7 +7,7 @@ import Image from "next/image";
 import { ArrowUpRight, Expand, ExternalLink } from "lucide-react";
 import PageHeader from "@/components/ui/PageHeader";
 
-// Loaded only when user clicks expand — skips SSR entirely
+// Loaded only when user clicks expand - skips SSR entirely
 const ImageLightbox = dynamic(() => import("@/components/ui/ImageLightbox"), {
   ssr: false,
 });
@@ -51,7 +51,7 @@ const ProjectCard = ({ project, index, onExpand }) => {
           </div>
         )}
 
-        {/* Hover overlay — pure CSS, no framer-motion */}
+        {/* Hover overlay - pure CSS, no framer-motion */}
         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-3">
           <Link
             href={`/portfolio/${project.slug}`}
@@ -152,7 +152,7 @@ const PortfolioPage = ({ projects = [] }) => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
-      {/* Header — no framer-motion blocking paint */}
+      {/* Header - no framer-motion blocking paint */}
       <PageHeader
         badge="Our Portfolio"
         title="Projects That"
@@ -183,7 +183,7 @@ const PortfolioPage = ({ projects = [] }) => {
         </section>
       )}
 
-      {/* Grid — no stagger, instant render */}
+      {/* Grid - no stagger, instant render */}
       <section className="py-12 lg:py-20 bg-gray-50 dark:bg-gray-900">
         <div className="container mx-auto px-6 lg:px-8">
           {filteredProjects.length === 0 ? (
@@ -209,7 +209,7 @@ const PortfolioPage = ({ projects = [] }) => {
         </div>
       </section>
 
-      {/* Lightbox — only mounted when needed */}
+      {/* Lightbox - only mounted when needed */}
       {lightboxImages && (
         <ImageLightbox
           images={lightboxImages}
