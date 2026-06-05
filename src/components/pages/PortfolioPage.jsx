@@ -1,13 +1,16 @@
 "use client";
 
-import { useMemo, useState, lazy, Suspense } from "react";
+import { useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight, Expand, ExternalLink } from "lucide-react";
 import PageHeader from "@/components/ui/PageHeader";
 
-// Lazy-load lightbox — only needed when user clicks expand
-const ImageLightbox = lazy(() => import("@/components/ui/ImageLightbox"));
+// Loaded only when user clicks expand — skips SSR entirely
+const ImageLightbox = dynamic(() => import("@/components/ui/ImageLightbox"), {
+  ssr: false,
+});
 
 const COLORS = [
   "from-blue-500 to-indigo-600",
@@ -208,14 +211,12 @@ const PortfolioPage = ({ projects = [] }) => {
 
       {/* Lightbox — only mounted when needed */}
       {lightboxImages && (
-        <Suspense fallback={null}>
-          <ImageLightbox
-            images={lightboxImages}
-            initialIndex={lightboxIndex}
-            isOpen={true}
-            onClose={() => setLightboxImages(null)}
-          />
-        </Suspense>
+        <ImageLightbox
+          images={lightboxImages}
+          initialIndex={lightboxIndex}
+          isOpen={true}
+          onClose={() => setLightboxImages(null)}
+        />
       )}
 
       {/* CTA */}
