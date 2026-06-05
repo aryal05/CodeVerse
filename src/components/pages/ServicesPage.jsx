@@ -1,34 +1,35 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { 
-  Code2, Smartphone, Palette, ShoppingBag, Server, Rocket,
-  ArrowRight, CheckCircle2
-} from 'lucide-react';
-import PageHeader from '@/components/ui/PageHeader';
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import Image from "next/image";
+import {
+  Code2,
+  Smartphone,
+  Palette,
+  ShoppingBag,
+  Server,
+  Rocket,
+  ArrowRight,
+  CheckCircle2,
+} from "lucide-react";
+import PageHeader from "@/components/ui/PageHeader";
 
-const ServicesPage = () => {
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
+const ServicesPage = ({ initialServices }) => {
+  const [services, setServices] = useState(initialServices || []);
+  const [loading, setLoading] = useState(!initialServices?.length);
 
-  // Fetch services from API
+  // Fetch services from API (fallback when no initialServices provided)
   useEffect(() => {
+    if (initialServices?.length) return;
     const fetchServices = async () => {
       try {
-        const res = await fetch('/api/services');
+        const res = await fetch("/api/services");
         const data = await res.json();
-        console.log('Fetched services:', data);
-        console.log('Services with images:', data.filter(s => s.image).map(s => ({ 
-          title: s.title, 
-          hasImage: !!s.image,
-          imageType: s.image?.startsWith('data:') ? 'base64' : 'url',
-          imageLength: s.image?.length 
-        })));
         setServices(Array.isArray(data) ? data : []);
       } catch (error) {
-        console.error('Failed to fetch services:', error);
+        console.error("Failed to fetch services:", error);
         setServices([]);
       } finally {
         setLoading(false);
@@ -36,34 +37,34 @@ const ServicesPage = () => {
     };
 
     fetchServices();
-  }, []);
+  }, [initialServices]);
 
   // Icon mapping
   const iconMap = {
-    'code': Code2,
-    'smartphone': Smartphone,
-    'palette': Palette,
-    'shopping-bag': ShoppingBag,
-    'server': Server,
-    'rocket': Rocket,
+    code: Code2,
+    smartphone: Smartphone,
+    palette: Palette,
+    "shopping-bag": ShoppingBag,
+    server: Server,
+    rocket: Rocket,
   };
 
   // Color mapping based on index
   const colors = [
-    'from-blue-500 to-cyan-500',
-    'from-purple-500 to-pink-500',
-    'from-pink-500 to-rose-500',
-    'from-orange-500 to-red-500',
-    'from-cyan-500 to-teal-500',
-    'from-emerald-500 to-green-500',
+    "from-blue-500 to-cyan-500",
+    "from-purple-500 to-pink-500",
+    "from-pink-500 to-rose-500",
+    "from-orange-500 to-red-500",
+    "from-cyan-500 to-teal-500",
+    "from-emerald-500 to-green-500",
   ];
 
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.1 }
-    }
+      transition: { staggerChildren: 0.1 },
+    },
   };
 
   const itemVariants = {
@@ -71,8 +72,8 @@ const ServicesPage = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5 }
-    }
+      transition: { duration: 0.5 },
+    },
   };
 
   return (
@@ -90,11 +91,15 @@ const ServicesPage = () => {
           {loading ? (
             <div className="text-center py-20">
               <div className="inline-block w-12 h-12 border-4 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
-              <p className="mt-4 text-gray-600 dark:text-gray-400">Loading services...</p>
+              <p className="mt-4 text-gray-600 dark:text-gray-400">
+                Loading services...
+              </p>
             </div>
           ) : services.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-gray-600 dark:text-gray-400 text-lg">No services available yet. Add some from the admin panel!</p>
+              <p className="text-gray-600 dark:text-gray-400 text-lg">
+                No services available yet. Add some from the admin panel!
+              </p>
             </div>
           ) : (
             <motion.div
@@ -107,8 +112,10 @@ const ServicesPage = () => {
               {services.map((service, index) => {
                 const IconComponent = iconMap[service.icon] || Code2;
                 const color = colors[index % colors.length];
-                const featuresArray = Array.isArray(service.features) 
-                  ? service.features.map(f => typeof f === 'string' ? f : f.title || f.description)
+                const featuresArray = Array.isArray(service.features)
+                  ? service.features.map((f) =>
+                      typeof f === "string" ? f : f.title || f.description,
+                    )
                   : [];
 
                 return (
@@ -117,21 +124,31 @@ const ServicesPage = () => {
                     variants={itemVariants}
                     className="group"
                   >
-                    <div className={`bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-large transition-all overflow-hidden`}>
+                    <div
+                      className={`bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-large transition-all overflow-hidden`}
+                    >
                       {/* Show image banner if available */}
                       {service.image && (
                         <div className="w-full h-48 lg:h-56 overflow-hidden bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-                          <img
+                          <Image
                             src={service.image}
                             alt={service.title}
                             className="w-full h-full object-contain"
+                            width={800}
+                            height={600}
+                            loading="lazy"
+                            unoptimized
                           />
                         </div>
                       )}
-                      <div className={`grid ${!service.image ? 'lg:grid-cols-3' : 'lg:grid-cols-2'} gap-8 p-8 lg:p-10`}>
+                      <div
+                        className={`grid ${!service.image ? "lg:grid-cols-3" : "lg:grid-cols-2"} gap-8 p-8 lg:p-10`}
+                      >
                         {/* Left - Icon & Title */}
                         <div>
-                          <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
+                          <div
+                            className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}
+                          >
                             <IconComponent className="w-8 h-8 text-white" />
                           </div>
                           <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-primary-600 transition-colors">
@@ -151,7 +168,13 @@ const ServicesPage = () => {
                         </div>
 
                         {/* Right - Features & Technologies */}
-                        <div className={!service.image ? 'lg:col-span-2 grid lg:grid-cols-2 gap-8' : ''}>
+                        <div
+                          className={
+                            !service.image
+                              ? "lg:col-span-2 grid lg:grid-cols-2 gap-8"
+                              : ""
+                          }
+                        >
                           {featuresArray.length > 0 && (
                             <div>
                               <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
@@ -159,7 +182,10 @@ const ServicesPage = () => {
                               </h4>
                               <ul className="space-y-3">
                                 {featuresArray.slice(0, 6).map((feature, i) => (
-                                  <li key={i} className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                                  <li
+                                    key={i}
+                                    className="flex items-center gap-2 text-gray-700 dark:text-gray-300"
+                                  >
                                     <CheckCircle2 className="w-4 h-4 text-primary-500 flex-shrink-0" />
                                     <span className="text-sm">{feature}</span>
                                   </li>
@@ -168,23 +194,24 @@ const ServicesPage = () => {
                             </div>
                           )}
 
-                          {service.technologies && service.technologies.length > 0 && (
-                            <div>
-                              <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
-                                Technologies
-                              </h4>
-                              <div className="flex flex-wrap gap-2">
-                                {service.technologies.map((tech, i) => (
-                                  <span 
-                                    key={i}
-                                    className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm rounded-lg"
-                                  >
-                                    {tech}
-                                  </span>
-                                ))}
+                          {service.technologies &&
+                            service.technologies.length > 0 && (
+                              <div>
+                                <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
+                                  Technologies
+                                </h4>
+                                <div className="flex flex-wrap gap-2">
+                                  {service.technologies.map((tech, i) => (
+                                    <span
+                                      key={i}
+                                      className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm rounded-lg"
+                                    >
+                                      {tech}
+                                    </span>
+                                  ))}
+                                </div>
                               </div>
-                            </div>
-                          )}
+                            )}
                         </div>
                       </div>
                     </div>
@@ -199,7 +226,7 @@ const ServicesPage = () => {
       {/* CTA Section */}
       <section className="py-20 lg:py-28 bg-primary-600">
         <div className="container mx-auto px-6 lg:px-8">
-          <motion.div 
+          <motion.div
             className="max-w-4xl mx-auto text-center"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -210,7 +237,8 @@ const ServicesPage = () => {
               Ready to Get Started?
             </h2>
             <p className="text-primary-100 text-lg mb-10 max-w-2xl mx-auto">
-              Let&apos;s discuss your project and find the perfect solution for your business needs.
+              Let&apos;s discuss your project and find the perfect solution for
+              your business needs.
             </p>
             <Link href="/contact">
               <motion.button

@@ -1,4 +1,7 @@
 import PortfolioPage from "@/components/pages/PortfolioPage";
+import { getDb } from "@/lib/api-helpers";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Our Portfolio - CodeVerse",
@@ -6,22 +9,23 @@ export const metadata = {
     "Explore our portfolio of successful web and mobile app projects.",
 };
 
-async function getProjects() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-
-  try {
-    const res = await fetch(`${baseUrl}/api/projects`, {
-      next: { revalidate: 300 },
-    });
-
-    if (!res.ok) return [];
-    return res.json();
-  } catch {
-    return [];
-  }
-}
-
 export default async function Portfolio() {
-  const projects = await getProjects();
+  let projects = [];
+  try {
+    const db = getDb();
+    const { data } = await db
+      .from("projects")
+      .select("*")
+      .order("order", { ascending: true })
+      .order("created_at", { ascending: false });
+    projects = (data || []).map((row) => ({
+      ...row,
+      _id: row.id,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+    }));
+  } catch {
+    projects = [];
+  }
   return <PortfolioPage projects={projects} />;
 }

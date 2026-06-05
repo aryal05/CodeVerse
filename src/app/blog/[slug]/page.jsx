@@ -1,10 +1,11 @@
+import { cache } from "react";
 import { notFound } from "next/navigation";
 import BlogPostPage from "@/components/pages/BlogPostPage";
 import { getDb } from "@/lib/api-helpers";
 
 export const revalidate = 300;
 
-async function getBlogPost(slug) {
+const getBlogPost = cache(async function getBlogPost(slug) {
   try {
     const db = getDb();
 
@@ -51,10 +52,9 @@ async function getBlogPost(slug) {
       createdAt: data.created_at,
     };
   } catch (error) {
-    console.error("Failed to fetch blog post:", error);
     return null;
   }
-}
+});
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;

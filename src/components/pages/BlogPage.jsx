@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { Calendar, Clock, Search } from "lucide-react";
 import PageHeader from "@/components/ui/PageHeader";
 
@@ -99,10 +100,14 @@ const BlogPage = ({ initialPosts = [] }) => {
                 <div className="group grid lg:grid-cols-2 gap-8 bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700 hover:shadow-large transition-all">
                   <div className="h-64 relative overflow-hidden bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
                     {featuredPost.image ? (
-                      <img
+                      <Image
                         src={featuredPost.image}
                         alt={featuredPost.title}
                         className="w-full h-full object-contain"
+                        width={800}
+                        height={600}
+                        priority
+                        unoptimized
                       />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-primary-500 to-purple-600">
@@ -186,10 +191,14 @@ const BlogPage = ({ initialPosts = [] }) => {
                       <div className="group h-full bg-gray-50 dark:bg-gray-900 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-large transition-all">
                         <div className="h-48 relative overflow-hidden bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
                           {post.image ? (
-                            <img
+                            <Image
                               src={post.image}
                               alt={post.title}
                               className="w-full h-full object-contain"
+                              width={800}
+                              height={600}
+                              loading="lazy"
+                              unoptimized
                             />
                           ) : (
                             <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800">

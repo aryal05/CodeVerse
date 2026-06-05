@@ -103,11 +103,10 @@ const Portfolio = ({ projects = [] }) => {
                 return (
                   <motion.div
                     key={project.id}
-                    initial={{ opacity: 0, y: 30 }}
+                    initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -30 }}
-                    transition={{ duration: 0.4, delay: index * 0.08 }}
-                    layout
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.25, delay: index * 0.05 }}
                   >
                     <Link href={`/portfolio/${project.slug}`}>
                       <div className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700 hover:border-primary-200 dark:hover:border-primary-700 hover:shadow-large transition-all duration-300">

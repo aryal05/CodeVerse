@@ -1,28 +1,44 @@
 import ProjectDetailPage from "@/components/pages/ProjectDetailPage";
+import { getDb } from "@/lib/api-helpers";
+import { notFound } from "next/navigation";
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
-  return {
-    title: `Project Details - CodeVerse`,
-    description: `View project details and case study.`,
-  };
-}
-
-async function getProject(id) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-
+  const { id } = await params;
+  let title = "Project Details - CodeVerse";
   try {
-    const res = await fetch(`${baseUrl}/api/projects/${id}`, {
-      next: { revalidate: 300 },
-    });
-
-    if (!res.ok) return null;
-    return res.json();
-  } catch {
-    return null;
-  }
+    const db = getDb();
+    const { data } = await db
+      .from("projects")
+      .select("title, description")
+      .or(`id.eq.${id},slug.eq.${id}`)
+      .maybeSingle();
+    if (data?.title) title = `${data.title} - CodeVerse`;
+  } catch {}
+  return { title, description: "View project details and case study." };
 }
 
 export default async function ProjectDetail({ params }) {
-  const project = await getProject(params.id);
+  const { id } = await params;
+  let project = null;
+  try {
+    const db = getDb();
+    const { data } = await db
+      .from("projects")
+      .select("*")
+      .or(`id.eq.${id},slug.eq.${id}`)
+      .maybeSingle();
+    if (data) {
+      project = {
+        ...data,
+        _id: data.id,
+        createdAt: data.created_at,
+        updatedAt: data.updated_at,
+        fullDescription: data.full_description,
+      };
+    }
+  } catch {}
+  if (!project) notFound();
   return <ProjectDetailPage project={project} />;
 }

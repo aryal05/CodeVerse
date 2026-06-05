@@ -4,7 +4,10 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, ExternalLink, CheckCircle, Expand } from "lucide-react";
-import AnimatedGrid from "@/components/ui/AnimatedGrid";
+import dynamic from "next/dynamic";
+const AnimatedGrid = dynamic(() => import("@/components/ui/AnimatedGrid"), {
+  ssr: false,
+});
 import ImageLightbox from "@/components/ui/ImageLightbox";
 import { useMemo, useState } from "react";
 

@@ -1,27 +1,42 @@
-'use client';
+"use client";
 
-import { useParams } from 'next/navigation';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { ArrowLeft, CheckCircle, ArrowRight, Code, Smartphone, Palette, ShoppingCart, Database, Sparkles } from 'lucide-react';
-import AnimatedGrid from '@/components/ui/AnimatedGrid';
-import { useState, useEffect } from 'react';
+import { useParams } from "next/navigation";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import Image from "next/image";
+import {
+  ArrowLeft,
+  CheckCircle,
+  ArrowRight,
+  Code,
+  Smartphone,
+  Palette,
+  ShoppingCart,
+  Database,
+  Sparkles,
+} from "lucide-react";
+import dynamic from "next/dynamic";
+const AnimatedGrid = dynamic(() => import("@/components/ui/AnimatedGrid"), {
+  ssr: false,
+});
+import { useState, useEffect } from "react";
 
-const ServiceDetail = () => {
+const ServiceDetail = ({ initialService }) => {
   const params = useParams();
   const slug = params?.slug;
-  const [service, setService] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [service, setService] = useState(initialService || null);
+  const [loading, setLoading] = useState(!initialService);
 
   useEffect(() => {
+    // Skip fetch if data was provided server-side
+    if (initialService) return;
     const fetchService = async () => {
       try {
         const res = await fetch(`/api/services/${slug}`);
         const data = await res.json();
-        console.log('Fetched service data:', data);
         setService(data);
       } catch (error) {
-        console.error('Failed to fetch service:', error);
+        console.error("Failed to fetch service:", error);
       } finally {
         setLoading(false);
       }
@@ -30,14 +45,16 @@ const ServiceDetail = () => {
     if (slug) {
       fetchService();
     }
-  }, [slug]);
+  }, [slug, initialService]);
 
   if (loading) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-950 flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block w-12 h-12 border-4 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading service...</p>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">
+            Loading service...
+          </p>
         </div>
       </div>
     );
@@ -47,8 +64,13 @@ const ServiceDetail = () => {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-950 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Service Not Found</h2>
-          <Link href="/services" className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 text-white rounded-xl">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            Service Not Found
+          </h2>
+          <Link
+            href="/services"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 text-white rounded-xl"
+          >
             Back to Services
           </Link>
         </div>
@@ -57,8 +79,8 @@ const ServiceDetail = () => {
   }
 
   // Ensure service has required fields
-  const serviceName = service.name || service.title || 'Service';
-  const serviceDescription = service.description || '';
+  const serviceName = service.name || service.title || "Service";
+  const serviceDescription = service.description || "";
   const serviceTagline = service.tagline || null;
 
   const iconMap = {
@@ -67,22 +89,24 @@ const ServiceDetail = () => {
     Palette,
     ShoppingCart,
     Database,
-    Sparkles
+    Sparkles,
   };
 
   // Handle icon - it might be an object or string
-  const iconKey = typeof service.icon === 'string' ? service.icon : 'Code';
+  const iconKey = typeof service.icon === "string" ? service.icon : "Code";
   const ServiceIcon = iconMap[iconKey] || iconMap.Code;
 
   const colors = [
-    'from-blue-500 to-cyan-500',
-    'from-purple-500 to-pink-500',
-    'from-pink-500 to-rose-500',
-    'from-orange-500 to-red-500',
-    'from-cyan-500 to-teal-500',
-    'from-emerald-500 to-green-500'
+    "from-blue-500 to-cyan-500",
+    "from-purple-500 to-pink-500",
+    "from-pink-500 to-rose-500",
+    "from-orange-500 to-red-500",
+    "from-cyan-500 to-teal-500",
+    "from-emerald-500 to-green-500",
   ];
-  const colorIndex = service._id ? parseInt(service._id.slice(-1), 16) % colors.length : 0;
+  const colorIndex = service._id
+    ? parseInt(service._id.slice(-1), 16) % colors.length
+    : 0;
   const color = service.color || colors[colorIndex];
 
   return (
@@ -91,9 +115,12 @@ const ServiceDetail = () => {
       <section className="relative pt-32 pb-20 overflow-hidden">
         <AnimatedGrid />
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary-400/20 dark:bg-primary-600/10 rounded-full blur-3xl" />
-        
+
         <div className="container mx-auto px-6 lg:px-8 relative z-10">
-          <Link href="/services" className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-primary-600 transition-colors mb-8">
+          <Link
+            href="/services"
+            className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-primary-600 transition-colors mb-8"
+          >
             <ArrowLeft size={20} />
             <span>Back to Services</span>
           </Link>
@@ -106,14 +133,20 @@ const ServiceDetail = () => {
           >
             {service.image ? (
               <div className="w-20 h-20 mx-auto rounded-2xl overflow-hidden mb-6">
-                <img
+                <Image
                   src={service.image}
                   alt={serviceName}
                   className="w-full h-full object-cover"
+                  width={400}
+                  height={400}
+                  priority
+                  unoptimized
                 />
               </div>
             ) : (
-              <div className={`w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br ${color} flex items-center justify-center mb-6`}>
+              <div
+                className={`w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br ${color} flex items-center justify-center mb-6`}
+              >
                 <ServiceIcon className="text-white" size={40} />
               </div>
             )}
@@ -121,7 +154,9 @@ const ServiceDetail = () => {
               {serviceName}
             </h1>
             {serviceTagline && (
-              <p className="text-xl text-primary-600 font-medium mb-4">{serviceTagline}</p>
+              <p className="text-xl text-primary-600 font-medium mb-4">
+                {serviceTagline}
+              </p>
             )}
             <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
               {serviceDescription}
@@ -139,7 +174,10 @@ const ServiceDetail = () => {
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
               {service.features.map((feature, index) => {
-                const featureText = typeof feature === 'string' ? feature : feature.title || feature.description || String(feature);
+                const featureText =
+                  typeof feature === "string"
+                    ? feature
+                    : feature.title || feature.description || String(feature);
                 return (
                   <motion.div
                     key={index}
@@ -149,8 +187,13 @@ const ServiceDetail = () => {
                     transition={{ duration: 0.4, delay: index * 0.05 }}
                     className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700"
                   >
-                    <CheckCircle className="text-primary-500 flex-shrink-0" size={20} />
-                    <span className="text-gray-700 dark:text-gray-300 text-sm">{featureText}</span>
+                    <CheckCircle
+                      className="text-primary-500 flex-shrink-0"
+                      size={20}
+                    />
+                    <span className="text-gray-700 dark:text-gray-300 text-sm">
+                      {featureText}
+                    </span>
                   </motion.div>
                 );
               })}
@@ -176,11 +219,17 @@ const ServiceDetail = () => {
                   transition={{ duration: 0.4, delay: index * 0.1 }}
                   className="p-6 bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800"
                 >
-                  <div className={`text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r ${color} mb-3`}>
-                    {String(index + 1).padStart(2, '0')}
+                  <div
+                    className={`text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r ${color} mb-3`}
+                  >
+                    {String(index + 1).padStart(2, "0")}
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{step.step}</h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">{step.description}</p>
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                    {step.step}
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">
+                    {step.description}
+                  </p>
                 </motion.div>
               ))}
             </div>
@@ -226,7 +275,8 @@ const ServiceDetail = () => {
               Ready to Get Started?
             </h2>
             <p className="text-lg text-primary-100 mb-10 max-w-2xl mx-auto">
-              Let&apos;s discuss your project and create something amazing together.
+              Let&apos;s discuss your project and create something amazing
+              together.
             </p>
             <Link href="/contact">
               <motion.button
