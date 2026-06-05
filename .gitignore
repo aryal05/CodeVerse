@@ -3,10 +3,13 @@ node_modules/
 .pnp
 .pnp.js
 
-# Old root-level folders (to be deleted manually)
+# Old root-level folders and leftover files
 /client/
 /server/
 /api/
+*.md
+!README.md
+vercel-env-import.txt
 
 # Windows reserved device names
 nul
