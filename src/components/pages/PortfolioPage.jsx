@@ -1,49 +1,28 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowUpRight, ExternalLink, Expand } from "lucide-react";
 import PageHeader from "@/components/ui/PageHeader";
 import ImageLightbox from "@/components/ui/ImageLightbox";
 
-const PortfolioPage = () => {
+const PortfolioPage = ({ projects = [] }) => {
   const [activeFilter, setActiveFilter] = useState("All");
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [categories, setCategories] = useState(["All"]);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxImages, setLightboxImages] = useState([]);
   const [lightboxIndex, setLightboxIndex] = useState(0);
 
-  // Fetch projects from API
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const res = await fetch("/api/projects");
-        const data = await res.json();
-        setProjects(data);
+  const categories = useMemo(() => {
+    return ["All", ...new Set(projects.map((p) => p.category).filter(Boolean))];
+  }, [projects]);
 
-        // Extract unique categories
-        const uniqueCategories = [
-          "All",
-          ...new Set(data.map((p) => p.category)),
-        ];
-        setCategories(uniqueCategories);
-      } catch (error) {
-        console.error("Failed to fetch projects:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProjects();
-  }, []);
-
-  const filteredProjects =
-    activeFilter === "All"
+  const filteredProjects = useMemo(() => {
+    return activeFilter === "All"
       ? projects
       : projects.filter((p) => p.category === activeFilter);
+  }, [activeFilter, projects]);
 
   const openImageLightbox = (e, project) => {
     e.preventDefault();
@@ -64,16 +43,16 @@ const PortfolioPage = () => {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.1 },
+      transition: { staggerChildren: 0.08 },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 24 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5 },
+      transition: { duration: 0.45 },
     },
   };
 
@@ -86,7 +65,6 @@ const PortfolioPage = () => {
         description="Explore our collection of successful projects. Each one represents our commitment to excellence and our clients' trust in our capabilities."
       />
 
-      {/* Filters */}
       <section className="py-8 bg-white dark:bg-gray-950 border-b border-gray-100 dark:border-gray-800 sticky top-18 z-30 backdrop-blur-md bg-white/90 dark:bg-gray-950/90">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="flex flex-wrap justify-center gap-2">
@@ -109,17 +87,9 @@ const PortfolioPage = () => {
         </div>
       </section>
 
-      {/* Projects Grid */}
       <section className="py-16 lg:py-24 bg-gray-50 dark:bg-gray-900">
         <div className="container mx-auto px-6 lg:px-8">
-          {loading ? (
-            <div className="text-center py-20">
-              <div className="inline-block w-12 h-12 border-4 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
-              <p className="mt-4 text-gray-600 dark:text-gray-400">
-                Loading projects...
-              </p>
-            </div>
-          ) : filteredProjects.length === 0 ? (
+          {filteredProjects.length === 0 ? (
             <div className="text-center py-20">
               <p className="text-gray-600 dark:text-gray-400 text-lg">
                 No projects found. Add some from the admin panel!
@@ -143,28 +113,31 @@ const PortfolioPage = () => {
                     "from-pink-500 to-rose-600",
                   ];
                   const color = colors[index % colors.length];
-                  const year = new Date(project.createdAt).getFullYear();
+                  const year = project.createdAt
+                    ? new Date(project.createdAt).getFullYear()
+                    : "N/A";
 
                   return (
                     <motion.div
                       key={project.id}
                       variants={itemVariants}
                       layout
-                      initial={{ opacity: 0, scale: 0.9 }}
+                      initial={{ opacity: 0, scale: 0.96 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      transition={{ duration: 0.3 }}
+                      exit={{ opacity: 0, scale: 0.96 }}
+                      transition={{ duration: 0.25 }}
                     >
                       <div className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-large transition-all h-full">
-                        {/* Project Image */}
                         <div
                           className={`h-56 ${project.image ? "bg-gray-100 dark:bg-gray-800" : `bg-gradient-to-br ${color}`} relative overflow-hidden flex items-center justify-center`}
                         >
                           {project.image ? (
-                            <img
+                            <Image
                               src={project.image}
                               alt={project.title}
-                              className="w-full h-full object-contain"
+                              fill
+                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                              className="object-contain"
                             />
                           ) : (
                             <>
@@ -177,7 +150,6 @@ const PortfolioPage = () => {
                             </>
                           )}
 
-                          {/* Hover Overlay */}
                           <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
                             <Link href={`/portfolio/${project.slug}`}>
                               <motion.div
@@ -200,13 +172,11 @@ const PortfolioPage = () => {
                             )}
                           </div>
 
-                          {/* Year Badge */}
                           <div className="absolute top-4 right-4 px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-xs font-medium">
                             {year}
                           </div>
                         </div>
 
-                        {/* Content */}
                         <div className="p-6">
                           <div className="flex items-center justify-between mb-3">
                             <span className="text-xs font-medium text-primary-600 bg-primary-50 dark:bg-primary-900/30 px-2.5 py-1 rounded-full">
@@ -227,26 +197,25 @@ const PortfolioPage = () => {
                             {project.description}
                           </p>
 
-                          {project.technologies &&
-                            project.technologies.length > 0 && (
-                              <div className="flex flex-wrap gap-2">
-                                {project.technologies
-                                  .slice(0, 3)
-                                  .map((tag, i) => (
-                                    <span
-                                      key={i}
-                                      className="text-xs px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg"
-                                    >
-                                      {tag}
-                                    </span>
-                                  ))}
-                                {project.technologies.length > 3 && (
-                                  <span className="text-xs px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg">
-                                    +{project.technologies.length - 3}
+                          {project.technologies?.length > 0 && (
+                            <div className="flex flex-wrap gap-2">
+                              {project.technologies
+                                .slice(0, 3)
+                                .map((tag, i) => (
+                                  <span
+                                    key={i}
+                                    className="text-xs px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg"
+                                  >
+                                    {tag}
                                   </span>
-                                )}
-                              </div>
-                            )}
+                                ))}
+                              {project.technologies.length > 3 && (
+                                <span className="text-xs px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg">
+                                  +{project.technologies.length - 3}
+                                </span>
+                              )}
+                            </div>
+                          )}
                         </div>
                       </div>
                     </motion.div>
@@ -258,7 +227,6 @@ const PortfolioPage = () => {
         </div>
       </section>
 
-      {/* Image Lightbox */}
       <ImageLightbox
         images={lightboxImages}
         initialIndex={lightboxIndex}
@@ -266,7 +234,6 @@ const PortfolioPage = () => {
         onClose={() => setLightboxOpen(false)}
       />
 
-      {/* CTA Section */}
       <section className="py-20 lg:py-28 bg-primary-600">
         <div className="container mx-auto px-6 lg:px-8">
           <motion.div
