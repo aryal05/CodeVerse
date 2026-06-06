@@ -103,10 +103,8 @@ export default function EditServicePage() {
 
   const icons = [
     { value: 'code', label: 'Code (Web Dev)' },
-    { value: 'smartphone', label: 'Smartphone (Mobile)' },
     { value: 'palette', label: 'Palette (Design)' },
     { value: 'shopping-cart', label: 'Shopping Cart (E-Commerce)' },
-    { value: 'database', label: 'Database (Backend)' },
     { value: 'sparkles', label: 'Sparkles (Strategy)' },
   ];
 

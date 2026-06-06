@@ -77,7 +77,7 @@ export default function NewProjectPage() {
     router.push('/admin');
   };
 
-  const categories = ['Web App', 'Mobile App', 'E-Commerce', 'Dashboard', 'Landing Page', 'Other'];
+  const categories = ['Web App', 'E-Commerce', 'Dashboard', 'Landing Page', 'Other'];
 
   return (
     <div className="min-h-screen bg-gray-950 flex">

@@ -17,19 +17,15 @@ export default function ServicesPage() {
 
   const iconMap = {
     'web-development': Code,
-    'mobile-development': Smartphone,
     'ui-ux-design': Palette,
     'ecommerce': ShoppingCart,
-    'cloud-devops': Database,
     'digital-strategy': Sparkles,
   };
 
   const colorMap = {
     'web-development': 'from-blue-500 to-cyan-500',
-    'mobile-development': 'from-purple-500 to-pink-500',
     'ui-ux-design': 'from-pink-500 to-rose-500',
     'ecommerce': 'from-orange-500 to-red-500',
-    'cloud-devops': 'from-cyan-500 to-teal-500',
     'digital-strategy': 'from-emerald-500 to-green-500',
   };
 

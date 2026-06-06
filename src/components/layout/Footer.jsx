@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   ArrowUpRight,
   Mail,
@@ -13,6 +15,7 @@ import {
 } from "lucide-react";
 
 const Footer = () => {
+  const [showMaintenancePopup, setShowMaintenancePopup] = useState(false);
   const footerLinks = {
     company: [
       { label: "About Us", href: "/about" },
@@ -22,7 +25,6 @@ const Footer = () => {
     ],
     services: [
       { label: "Web Development", href: "/services/web-development" },
-      { label: "Mobile Apps", href: "/services/mobile-development" },
       { label: "UI/UX Design", href: "/services/ui-ux-design" },
       { label: "E-Commerce", href: "/services/ecommerce" },
     ],
@@ -149,16 +151,16 @@ const Footer = () => {
             {/* Social Links */}
             <div className="flex items-center gap-4">
               {socialLinks.map((social) => (
-                <a
+                <motion.button
                   key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  onClick={() => setShowMaintenancePopup(true)}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
                   className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary-600 hover:text-white transition-all"
                   aria-label={social.label}
                 >
                   <social.icon className="w-5 h-5" />
-                </a>
+                </motion.button>
               ))}
             </div>
 
@@ -180,6 +182,30 @@ const Footer = () => {
           </div>
         </div>
       </div>
+
+      {/* Maintenance Popup */}
+      {showMaintenancePopup && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full"
+          >
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+              Under Maintenance
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              Our social media pages are currently under maintenance. They will be available soon. Please check back later!
+            </p>
+            <button
+              onClick={() => setShowMaintenancePopup(false)}
+              className="w-full px-6 py-3 bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-colors font-medium"
+            >
+              Got it
+            </button>
+          </motion.div>
+        </div>
+      )}
     </footer>
   );
 };
