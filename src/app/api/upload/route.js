@@ -77,17 +77,25 @@ export async function POST(request) {
     });
 
     if (!uploadResponse.ok) {
-      const errorData = await uploadResponse.json();
-      console.error("Cloudinary upload error:", errorData);
+      const errorText = await uploadResponse.text();
+      console.error("Cloudinary upload error:", errorText);
       
-      // Provide user-friendly error messages
+      // Try to parse as JSON, fallback to text
+      let errorData;
       let errorMessage = "Failed to upload image to cloud storage";
-      if (errorData.error?.message) {
-        errorMessage = errorData.error.message;
+      
+      try {
+        errorData = JSON.parse(errorText);
+        if (errorData.error?.message) {
+          errorMessage = errorData.error.message;
+        }
+      } catch (e) {
+        // If not JSON, use the raw text
+        errorMessage = errorText || "Upload failed";
       }
       
       return NextResponse.json(
-        { error: errorMessage, details: errorData },
+        { error: errorMessage, details: errorData || errorText },
         { status: uploadResponse.status }
       );
     }

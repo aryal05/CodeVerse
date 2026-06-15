@@ -52,8 +52,18 @@ export default function ImageUrlInput({
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || "Upload failed");
+      const errorText = await response.text();
+      let errorMessage = "Upload failed";
+      
+      try {
+        const errorData = JSON.parse(errorText);
+        errorMessage = errorData.error || errorData.message || errorMessage;
+      } catch (e) {
+        // If not JSON, use the raw text
+        errorMessage = errorText || errorMessage;
+      }
+      
+      throw new Error(errorMessage);
     }
 
     const data = await response.json();
