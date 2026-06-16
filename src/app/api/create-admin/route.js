@@ -8,11 +8,12 @@ export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
     const forceReset = searchParams.get('forceReset') === 'true';
-    const password = searchParams.get('password') || 'admin123';
+    const username = searchParams.get('username') || 'codeversebuild';
+    const password = searchParams.get('password') || 'BuildWithCodeVerse@#$';
     
     // Create a mock request object for POST
     const mockRequest = {
-      json: async () => ({ forceReset, password })
+      json: async () => ({ forceReset, username, password })
     };
     
     return POST(mockRequest);
@@ -32,22 +33,24 @@ export async function POST(request) {
   try {
     const db = getDb();
     
-    // Try to get password from body, fallback to default
-    let password = "admin123";
+    // Try to get username and password from body, fallback to defaults
+    let username = "codeversebuild";
+    let password = "BuildWithCodeVerse@#$";
     let forceReset = false;
     try {
       const body = await request.json();
+      if (body.username) username = body.username;
       if (body.password) password = body.password;
       if (body.forceReset === true) forceReset = true;
     } catch {
-      // JSON parse failed, use default password
+      // JSON parse failed, use default credentials
     }
 
     // Check if admin already exists
     const { data: existing, error: checkError } = await db
       .from("users")
       .select("id, username, active")
-      .eq("username", "admin")
+      .eq("username", username)
       .maybeSingle();
 
     if (checkError) {
@@ -63,7 +66,7 @@ export async function POST(request) {
         const { error: updateError } = await db
           .from("users")
           .update({ password_hash, active: true })
-          .eq("username", "admin");
+          .eq("username", username);
         
         if (updateError) {
           console.error("Error updating password:", updateError);
@@ -74,7 +77,7 @@ export async function POST(request) {
           status: "success",
           message: "Admin password reset successfully! ✅",
           credentials: {
-            username: "admin",
+            username: username,
             password: password
           },
           loginUrl: "/admin",
@@ -90,7 +93,7 @@ export async function POST(request) {
         status: "info",
         message: "Admin user already exists",
         credentials: {
-          username: "admin",
+          username: username,
           note: "User already exists. Send POST with { forceReset: true, password: 'newpassword' } to reset password"
         },
         loginUrl: "/admin",
@@ -105,8 +108,8 @@ export async function POST(request) {
     const { data, error } = await db
       .from("users")
       .insert({
-        username: "admin",
-        email: "admin@codeverse.com",
+        username: username,
+        email: "codeversebuild@outlook.com",
         password_hash,
         role: "admin",
         active: true,
@@ -125,7 +128,7 @@ export async function POST(request) {
         status: "success",
         message: "Admin user created successfully! ✅",
         credentials: {
-          username: "admin",
+          username: username,
           password: password
         },
         loginUrl: "/admin",
