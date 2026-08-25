@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { TrendingUp, TrendingDown } from 'lucide-react';
+import { TrendingUp, TrendingDown, ArrowUpRight } from 'lucide-react';
 
 const StatsCard = ({ title, value, change, changeType, icon: Icon, color, delay = 0 }) => {
   const isPositive = changeType === 'positive';
@@ -20,21 +20,21 @@ const StatsCard = ({ title, value, change, changeType, icon: Icon, color, delay 
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
       whileHover={{ y: -4, transition: { duration: 0.2 } }}
-      className="bg-gray-900 border border-gray-800 rounded-2xl p-6 hover:border-gray-700 transition-all"
+      className="admin-stat-card"
     >
       <div className="flex items-start justify-between mb-4">
-        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${colorClasses[color] || colorClasses.blue} flex items-center justify-center shadow-lg`}>
+        <div className={`admin-stat-card__icon bg-gradient-to-br ${colorClasses[color] || colorClasses.blue}`}>
           <Icon size={24} className="text-white" />
         </div>
         {change && (
-          <div className={`flex items-center gap-1 text-sm ${isPositive ? 'text-emerald-400' : 'text-red-400'}`}>
+          <div className={`admin-stat-card__change ${isPositive ? 'is-positive' : 'is-negative'}`}>
             {isPositive ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
             <span>{change}</span>
           </div>
         )}
       </div>
       
-      <div>
+      <div className="admin-stat-card__value">
         <motion.h3
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -43,8 +43,9 @@ const StatsCard = ({ title, value, change, changeType, icon: Icon, color, delay 
         >
           {value}
         </motion.h3>
-        <p className="text-gray-500 text-sm">{title}</p>
+        <p>{title}</p>
       </div>
+      <ArrowUpRight className="admin-stat-card__arrow" size={17} />
     </motion.div>
   );
 };

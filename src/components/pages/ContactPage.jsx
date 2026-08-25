@@ -7,6 +7,7 @@ import {
   Linkedin, Twitter, Instagram, Github, MessageCircle
 } from 'lucide-react';
 import PageHeader from '@/components/ui/PageHeader';
+import { announceWhatsAppOpen, WHATSAPP_URL } from '@/lib/contact';
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -71,14 +72,20 @@ const ContactPage = () => {
     {
       icon: Mail,
       title: 'Email Us',
-      value: 'codeversebuild@outlook.com',
-      link: 'mailto:codeversebuild@outlook.com'
+      value: 'codeversebuild@gmail.com',
+      link: 'mailto:codeversebuild@gmail.com'
     },
     {
       icon: Phone,
       title: 'Call Us',
       value: '+977 976-245-4572',
       link: 'tel:+9779762454572'
+    },
+    {
+      icon: MessageCircle,
+      title: 'WhatsApp',
+      value: '+977 982-855-6757',
+      link: WHATSAPP_URL
     },
     {
       icon: MapPin,
@@ -134,6 +141,9 @@ const ContactPage = () => {
                     <motion.a
                       key={index}
                       href={info.link}
+                      target={info.link.startsWith('http') ? '_blank' : undefined}
+                      rel={info.link.startsWith('http') ? 'noopener noreferrer' : undefined}
+                      onClick={info.title === 'WhatsApp' ? announceWhatsAppOpen : undefined}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -168,9 +178,10 @@ const ContactPage = () => {
                       Call Now
                     </motion.a>
                     <motion.a
-                      href="https://wa.me/9779762454572"
+                      href={WHATSAPP_URL}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={announceWhatsAppOpen}
                       whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
                       className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-green-600 text-white font-semibold rounded-xl hover:bg-green-700 transition-all shadow-lg shadow-green-600/25"
@@ -241,7 +252,7 @@ const ContactPage = () => {
                           onChange={handleChange}
                           required
                           className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-                          placeholder="John Doe"
+                          placeholder="CodeVerse Build"
                         />
                       </div>
                       <div>
@@ -255,7 +266,7 @@ const ContactPage = () => {
                           onChange={handleChange}
                           required
                           className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-                          placeholder="john@example.com"
+                          placeholder="codeversebuild@gmail.com"
                         />
                       </div>
                     </div>
@@ -271,7 +282,7 @@ const ContactPage = () => {
                           value={formData.phone}
                           onChange={handleChange}
                           className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-                          placeholder="+977 98XXXXXXXX"
+                          placeholder="+977 982-855-6757"
                         />
                       </div>
                       <div>
@@ -284,7 +295,7 @@ const ContactPage = () => {
                           value={formData.company}
                           onChange={handleChange}
                           className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-                          placeholder="Your Company"
+                          placeholder="CodeVerse Build"
                         />
                       </div>
                     </div>
@@ -336,7 +347,7 @@ const ContactPage = () => {
                         required
                         rows={5}
                         className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all resize-none"
-                        placeholder="Tell us about your project..."
+                        placeholder="Tell CodeVerse Build about your project..."
                       />
                     </div>
 

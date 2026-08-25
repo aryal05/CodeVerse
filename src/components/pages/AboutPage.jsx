@@ -12,17 +12,11 @@ import {
   Rocket,
   Award,
   Heart,
-  Zap,
 } from "lucide-react";
 import PageHeader from "@/components/ui/PageHeader";
 
 const AboutPage = () => {
   const missionRef = useRef(null);
-  const timelineRef = useRef(null);
-  const isTimelineInView = useInView(timelineRef, {
-    once: true,
-    margin: "-80px",
-  });
   const isMissionInView = useInView(missionRef, {
     once: true,
     margin: "-100px",
@@ -56,39 +50,6 @@ const AboutPage = () => {
       description:
         "We never settle for good enough. Every deliverable meets our standards.",
       color: "from-emerald-500 to-teal-500",
-    },
-  ];
-
-  const milestones = [
-    {
-      year: "2015",
-      title: "Founded",
-      description: "Started with a vision to transform digital experiences",
-    },
-    {
-      year: "2017",
-      title: "First Major Client",
-      description: "Landed our first enterprise client",
-    },
-    {
-      year: "2019",
-      title: "50+ Projects",
-      description: "Reached milestone of 50 successful deliveries",
-    },
-    {
-      year: "2021",
-      title: "Team Expansion",
-      description: "Grew to a team of 15+ professionals",
-    },
-    {
-      year: "2023",
-      title: "100+ Projects",
-      description: "Celebrated 100+ successful projects",
-    },
-    {
-      year: "2024",
-      title: "Regional Recognition",
-      description: "Recognized as Nepal's top digital agency",
     },
   ];
 
@@ -252,62 +213,6 @@ const AboutPage = () => {
               </motion.div>
             ))}
           </motion.div>
-        </div>
-      </section>
-
-      {/* Timeline Section */}
-      <section className="py-20 lg:py-28 bg-white dark:bg-gray-950">
-        <div className="container mx-auto px-6 lg:px-8">
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-              Our Journey
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              From humble beginnings to becoming Nepal&apos;s trusted digital
-              partner
-            </p>
-          </motion.div>
-
-          <div ref={timelineRef} className="max-w-4xl mx-auto relative">
-            {/* Timeline Line */}
-            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gray-200 dark:bg-gray-800 -translate-x-1/2 hidden md:block" />
-
-            {milestones.map((milestone, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={isTimelineInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.4, delay: index * 0.08 }}
-                className={`flex items-center gap-8 mb-8 ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"}`}
-              >
-                <div
-                  className={`flex-1 ${index % 2 === 0 ? "md:text-right" : "md:text-left"}`}
-                >
-                  <div className="inline-block p-6 bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 hover:border-primary-200 dark:hover:border-primary-800 transition-colors">
-                    <span className="text-primary-600 font-bold text-lg">
-                      {milestone.year}
-                    </span>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mt-1">
-                      {milestone.title}
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-400 text-sm mt-2">
-                      {milestone.description}
-                    </p>
-                  </div>
-                </div>
-                <div className="hidden md:flex w-4 h-4 rounded-full bg-primary-500 flex-shrink-0 relative z-10">
-                  <div className="absolute inset-0 rounded-full bg-primary-500 animate-ping opacity-30" />
-                </div>
-                <div className="flex-1 hidden md:block" />
-              </motion.div>
-            ))}
-          </div>
         </div>
       </section>
 

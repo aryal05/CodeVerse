@@ -166,9 +166,9 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-950 flex">
+      <div className="admin-workspace">
         <AdminSidebar onLogout={handleLogout} />
-        <div className="flex-1 ml-[280px]">
+        <div className="admin-main">
           <AdminHeader title="Settings" onLogout={handleLogout} />
           <main className="p-6">
             <div className="max-w-4xl animate-pulse">
@@ -186,10 +186,10 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 flex">
+    <div className="admin-workspace">
       <AdminSidebar onLogout={handleLogout} />
       
-      <div className="flex-1 ml-[280px]">
+      <div className="admin-main">
         <AdminHeader title="Settings" onLogout={handleLogout} />
         
         <main className="p-6">

@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/lib/api-helpers";
+import { getSupabaseConfigStatus } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  const config = getSupabaseConfigStatus();
   const env = {
     NEXT_PUBLIC_SUPABASE_URL: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
@@ -11,6 +13,17 @@ export async function GET() {
     JWT_SECRET: !!process.env.JWT_SECRET,
     NEXT_PUBLIC_SITE_URL: !!process.env.NEXT_PUBLIC_SITE_URL,
   };
+
+  if (!config.serverConfigured) {
+    return NextResponse.json(
+      {
+        status: "configuration_required",
+        message: "Supabase server credentials are not configured.",
+        env,
+      },
+      { status: 503 },
+    );
+  }
 
   try {
     const db = getDb();

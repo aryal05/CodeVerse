@@ -16,13 +16,14 @@ import {
 import PageHeader from "@/components/ui/PageHeader";
 import OptimizedImage from "@/components/ui/OptimizedImage";
 
-const ServicesPage = ({ initialServices }) => {
+const ServicesPage = ({ initialServices = null }) => {
+  const hasInitialSnapshot = Array.isArray(initialServices);
   const [services, setServices] = useState(initialServices || []);
-  const [loading, setLoading] = useState(!initialServices?.length);
+  const [loading, setLoading] = useState(!hasInitialSnapshot);
 
   // Fetch services from API (fallback when no initialServices provided)
   useEffect(() => {
-    if (initialServices?.length) return;
+    if (hasInitialSnapshot) return;
     const fetchServices = async () => {
       try {
         const res = await fetch("/api/services");
@@ -37,7 +38,7 @@ const ServicesPage = ({ initialServices }) => {
     };
 
     fetchServices();
-  }, [initialServices]);
+  }, [hasInitialSnapshot]);
 
   // Icon mapping
   const iconMap = {

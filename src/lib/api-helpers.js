@@ -52,12 +52,18 @@ export function getDb() {
 
   if (!db) {
     throw new ApiError(
-      "Database not configured. Check Supabase environment variables in Vercel.",
-      500,
+      "Database is not configured. Add the required Supabase environment variables.",
+      503,
     );
   }
 
   return db;
+}
+
+// Public pages can render their designed empty states when Supabase is not
+// configured locally. Mutating API/admin paths should continue using getDb().
+export function getOptionalDb() {
+  return getSupabaseAdmin();
 }
 
 export class ApiError extends Error {

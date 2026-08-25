@@ -73,10 +73,10 @@ export default function MessagesPage() {
   const unreadCount = messages.filter(m => !m.read).length;
 
   return (
-    <div className="min-h-screen bg-gray-950 flex">
+    <div className="admin-workspace">
       <AdminSidebar onLogout={handleLogout} />
       
-      <div className="flex-1 ml-[280px]">
+      <div className="admin-main">
         <AdminHeader title="Messages" onLogout={handleLogout} />
         
         <main className="p-6">

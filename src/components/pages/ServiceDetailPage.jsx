@@ -15,10 +15,7 @@ import {
   Database,
   Sparkles,
 } from "lucide-react";
-import dynamic from "next/dynamic";
-const AnimatedGrid = dynamic(() => import("@/components/ui/AnimatedGrid"), {
-  ssr: false,
-});
+import AnimatedGrid from "@/components/ui/AnimatedGrid";
 import { useState, useEffect } from "react";
 
 const ServiceDetail = ({ initialService }) => {
@@ -104,9 +101,8 @@ const ServiceDetail = ({ initialService }) => {
     "from-cyan-500 to-teal-500",
     "from-emerald-500 to-green-500",
   ];
-  const colorIndex = service._id
-    ? parseInt(service._id.slice(-1), 16) % colors.length
-    : 0;
+  const parsedColorIndex = service._id ? parseInt(service._id.slice(-1), 16) : 0;
+  const colorIndex = Number.isFinite(parsedColorIndex) ? parsedColorIndex % colors.length : 0;
   const color = service.color || colors[colorIndex];
 
   return (

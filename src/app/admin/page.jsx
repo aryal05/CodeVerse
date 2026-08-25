@@ -78,7 +78,7 @@ export default function AdminLogin() {
             className="w-16 h-16 bg-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-primary-600/25 p-2"
           >
             <img 
-              src="/logo.jpeg" 
+              src="/logo_company.png"
               alt="CodeVerse Logo" 
               className="w-full h-full object-contain"
             />

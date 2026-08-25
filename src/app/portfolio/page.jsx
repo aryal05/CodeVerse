@@ -1,5 +1,5 @@
 import PortfolioPage from "@/components/pages/PortfolioPage";
-import { getDb } from "@/lib/api-helpers";
+import { getOptionalDb } from "@/lib/api-helpers";
 
 // Revalidate every 60 seconds - balances freshness with fast navigation
 export const revalidate = 60;
@@ -11,7 +11,13 @@ export const metadata = {
 };
 
 async function getProjects() {
-  const db = getDb();
+  const db = getOptionalDb();
+  if (!db) {
+    return {
+      projects: [],
+      loadError: "The project database is not configured.",
+    };
+  }
 
   // Optimized query: Fetch image URLs directly (Cloudinary only, no base64)
   const { data, error } = await db
@@ -23,14 +29,18 @@ async function getProjects() {
     .order("created_at", { ascending: false });
 
   if (error) {
-    console.error("Error fetching projects:", error);
-    return [];
+    return {
+      projects: [],
+      loadError: "We could not connect to the project database. Please try again shortly.",
+    };
   }
   
-  if (!data || data.length === 0) return [];
+  if (!data || data.length === 0) {
+    return { projects: [], loadError: null };
+  }
 
   // Filter and process: Only include Cloudinary URLs (skip base64)
-  return data.map((row) => {
+  const projects = data.map((row) => {
     let imageUrl = null;
     
     // Only include Cloudinary URLs for fast loading
@@ -49,15 +59,19 @@ async function getProjects() {
       image: imageUrl, // Cloudinary URL or null (gradient)
     };
   });
+
+  return { projects, loadError: null };
 }
 
 export default async function Portfolio() {
-  let projects = [];
+  let result;
   try {
-    projects = await getProjects();
-  } catch (err) {
-    console.error("Portfolio page error:", err);
-    projects = [];
+    result = await getProjects();
+  } catch {
+    result = {
+      projects: [],
+      loadError: "We could not connect to the project database. Please try again shortly.",
+    };
   }
-  return <PortfolioPage projects={projects} />;
+  return <PortfolioPage projects={result.projects} loadError={result.loadError} />;
 }

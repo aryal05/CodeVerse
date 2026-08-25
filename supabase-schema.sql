@@ -190,7 +190,7 @@ CREATE TABLE users (
     username VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL, -- Hashed password
     email VARCHAR(255) UNIQUE NOT NULL,
-    role VARCHAR(50) DEFAULT 'admin', -- 'admin', 'editor', 'viewer'
+    role VARCHAR(50) DEFAULT 'admin', -- 'super_admin', 'admin', 'editor', 'viewer'
     active BOOLEAN DEFAULT TRUE,
     last_login TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),

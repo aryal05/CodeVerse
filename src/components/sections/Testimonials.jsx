@@ -127,29 +127,6 @@ const Testimonials = ({ testimonials = [] }) => {
           </div>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="mt-16 text-center"
-        >
-          <p className="text-gray-500 text-sm mb-6">
-            Trusted by leading companies
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-8 lg:gap-16 opacity-50">
-            {[
-              "TechVentures",
-              "EcoStore",
-              "MedCare",
-              "PropertyHub",
-              "FinServe",
-            ].map((company, i) => (
-              <span key={i} className="text-xl font-semibold text-gray-400">
-                {company}
-              </span>
-            ))}
-          </div>
-        </motion.div>
       </div>
     </section>
   );

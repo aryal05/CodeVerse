@@ -10,7 +10,7 @@ export const metadata = {
   keywords: ['web development', 'mobile app', 'digital agency', 'react', 'next.js', 'codeverse'],
   authors: [{ name: 'CodeVerse' }],
   icons: {
-    icon: '/logo.jpeg',
+    icon: '/logo_company.png',
   },
   openGraph: {
     title: 'CodeVerse - Premium Web & Mobile App Development',

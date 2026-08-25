@@ -95,10 +95,10 @@ export default function EditProjectPage() {
   const categories = ['Web App', 'E-Commerce', 'Dashboard', 'Landing Page', 'Other'];
 
   return (
-    <div className="min-h-screen bg-gray-950 flex">
+    <div className="admin-workspace">
       <AdminSidebar onLogout={handleLogout} />
       
-      <div className="flex-1 ml-[280px]">
+      <div className="admin-main">
         <AdminHeader title="Edit Project" onLogout={handleLogout} />
         
         <main className="p-6">

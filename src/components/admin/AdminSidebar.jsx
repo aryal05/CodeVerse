@@ -1,128 +1,63 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  LayoutDashboard, FolderOpen, FileText, MessageSquare, 
-  Users, Settings, LogOut, ChevronLeft, ChevronRight,
-  Briefcase, Star, Bell, Search, BarChart3, DollarSign
-} from 'lucide-react';
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
+import { BarChart3, Briefcase, ChevronLeft, DollarSign, FileText, FolderKanban, LayoutDashboard, LogOut, MessageSquare, PanelLeftClose, Settings, Star, UserCog, Users, X } from "lucide-react";
 
-const AdminSidebar = ({ onLogout }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+const groups = [
+  { label: "Overview", items: [[LayoutDashboard,"Dashboard","/admin/dashboard"],[BarChart3,"Analytics","/admin/dashboard/analytics"]] },
+  { label: "Content", items: [[FolderKanban,"Projects","/admin/dashboard/projects"],[Briefcase,"Services","/admin/dashboard/services"],[DollarSign,"Pricing","/admin/dashboard/pricing"],[FileText,"Blog posts","/admin/dashboard/blog"]] },
+  { label: "People", items: [[UserCog,"Users & access","/admin/dashboard/users"],[Users,"Team","/admin/dashboard/team"],[Star,"Testimonials","/admin/dashboard/testimonials"],[MessageSquare,"Messages","/admin/dashboard/messages"]] },
+];
+
+export default function AdminSidebar({ onLogout }) {
   const pathname = usePathname();
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  const menuItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', href: '/admin/dashboard' },
-    { icon: BarChart3, label: 'Analytics', href: '/admin/dashboard/analytics' },
-    { icon: FolderOpen, label: 'Projects', href: '/admin/dashboard/projects' },
-    { icon: Briefcase, label: 'Services', href: '/admin/dashboard/services' },
-    { icon: DollarSign, label: 'Pricing', href: '/admin/dashboard/pricing' },
-    { icon: FileText, label: 'Blog Posts', href: '/admin/dashboard/blog' },
-    { icon: Users, label: 'Team', href: '/admin/dashboard/team' },
-    { icon: Star, label: 'Testimonials', href: '/admin/dashboard/testimonials' },
-    { icon: MessageSquare, label: 'Messages', href: '/admin/dashboard/messages' },
-    { icon: Settings, label: 'Settings', href: '/admin/dashboard/settings' },
-  ];
+  useEffect(() => {
+    const listener = () => setMobileOpen((value) => !value);
+    window.addEventListener("admin-sidebar-toggle", listener);
+    return () => window.removeEventListener("admin-sidebar-toggle", listener);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.style.setProperty("--admin-sidebar", collapsed ? "88px" : "272px");
+    return () => document.documentElement.style.removeProperty("--admin-sidebar");
+  }, [collapsed]);
+
+  useEffect(() => setMobileOpen(false), [pathname]);
 
   return (
-    <motion.aside
-      initial={false}
-      animate={{ width: isCollapsed ? 80 : 280 }}
-      transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-      className="h-screen bg-gray-900 border-r border-gray-800 flex flex-col fixed left-0 top-0 z-40"
-    >
-      {/* Logo */}
-      <div className="h-16 flex items-center justify-between px-4 border-b border-gray-800">
-        <AnimatePresence mode="wait">
-          {!isCollapsed && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex items-center gap-2"
-            >
-              <img 
-                src="/logo.jpeg" 
-                alt="CodeVerse Logo" 
-                className="w-8 h-8 object-contain rounded-lg"
-              />
-              <span className="text-lg font-semibold text-white">
-                Code<span className="text-primary-500">verse</span>
-              </span>
-            </motion.div>
-          )}
-        </AnimatePresence>
-        
-        <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="w-8 h-8 rounded-lg bg-gray-800 hover:bg-gray-700 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
-        >
-          {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
-        </button>
-      </div>
-
-      {/* Navigation */}
-      <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
-        {menuItems.map((item) => {
-          const isActive = pathname === item.href;
-          return (
-            <Link key={item.href} href={item.href}>
-              <motion.div
-                whileHover={{ x: 4 }}
-                whileTap={{ scale: 0.98 }}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all cursor-pointer ${
-                  isActive
-                    ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/25'
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800'
-                }`}
-              >
-                <item.icon size={20} className="flex-shrink-0" />
-                <AnimatePresence mode="wait">
-                  {!isCollapsed && (
-                    <motion.span
-                      initial={{ opacity: 0, width: 0 }}
-                      animate={{ opacity: 1, width: 'auto' }}
-                      exit={{ opacity: 0, width: 0 }}
-                      className="text-sm font-medium whitespace-nowrap"
-                    >
-                      {item.label}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            </Link>
-          );
-        })}
-      </nav>
-
-      {/* User & Logout */}
-      <div className="p-3 border-t border-gray-800">
-        <motion.button
-          whileHover={{ x: 4 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={onLogout}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all"
-        >
-          <LogOut size={20} className="flex-shrink-0" />
-          <AnimatePresence mode="wait">
-            {!isCollapsed && (
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="text-sm font-medium"
-              >
-                Logout
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </motion.button>
-      </div>
-    </motion.aside>
+    <>
+      {mobileOpen && <button className="admin-sidebar-backdrop" aria-label="Close navigation" onClick={() => setMobileOpen(false)} />}
+      <motion.aside className={`admin-sidebar ${collapsed ? "is-collapsed" : ""} ${mobileOpen ? "is-mobile-open" : ""}`} animate={{ width: collapsed ? 88 : 272 }} transition={{ duration: .25, ease: [0.22,1,0.36,1] }}>
+        <div className="admin-sidebar__brand">
+          <Link href="/admin/dashboard" className="admin-brand"><span className="admin-brand__logo"><img src="/logo_company.png" alt="CodeVerse" /></span>{!collapsed && <div>Command center<small>Website administration</small></div>}</Link>
+          <button className="admin-mobile-close" onClick={() => setMobileOpen(false)} aria-label="Close navigation"><X size={18} /></button>
+        </div>
+        <nav className="admin-sidebar__nav">
+          {groups.map((group) => (
+            <div className="admin-nav-group" key={group.label}>
+              {!collapsed && <p>{group.label}</p>}
+              {group.items.map(([Icon,label,href]) => {
+                const active = href === "/admin/dashboard" ? pathname === href : pathname.startsWith(href);
+                return <Link key={href} href={href} className={active ? "active" : ""} title={collapsed ? label : undefined}><Icon size={18} />{!collapsed && <span>{label}</span>}{active && <i />}</Link>;
+              })}
+            </div>
+          ))}
+          <div className="admin-nav-group admin-nav-group--settings">
+            <Link href="/admin/dashboard/settings" className={pathname.startsWith("/admin/dashboard/settings") ? "active" : ""}><Settings size={18} />{!collapsed && <span>Settings</span>}</Link>
+          </div>
+        </nav>
+        <div className="admin-sidebar__footer">
+          {!collapsed && <div className="admin-user"><span>RA</span><div><strong>Rajat Aryal</strong><small>Administrator</small></div></div>}
+          <button onClick={onLogout} className="admin-logout" title="Sign out"><LogOut size={18} />{!collapsed && <span>Sign out</span>}</button>
+          <button onClick={() => setCollapsed(!collapsed)} className="admin-collapse" aria-label="Collapse sidebar">{collapsed ? <PanelLeftClose size={18} className="rotate-180" /> : <><ChevronLeft size={17} /> Collapse</>}</button>
+        </div>
+      </motion.aside>
+    </>
   );
-};
-
-export default AdminSidebar;
+}

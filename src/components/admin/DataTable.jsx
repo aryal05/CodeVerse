@@ -48,12 +48,12 @@ const DataTable = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden"
+      className="admin-data-table"
     >
       {/* Header */}
-      <div className="p-6 border-b border-gray-800">
+      <div className="admin-data-table__head">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <h2 className="text-xl font-semibold text-white">{title}</h2>
+          <div><span>Content library</span><h2>{title}</h2></div>
           
           <div className="flex items-center gap-3">
             {/* Search */}
@@ -64,7 +64,7 @@ const DataTable = ({
                 placeholder={searchPlaceholder}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-64 bg-gray-800 border border-gray-700 rounded-xl pl-10 pr-4 py-2 text-sm text-white placeholder-gray-500 focus:border-primary-500 focus:outline-none"
+              className="admin-table-search"
               />
             </div>
             
@@ -75,7 +75,7 @@ const DataTable = ({
 
       {/* Table */}
       <div className="overflow-x-auto">
-        <table className="w-full">
+        <table className="admin-table">
           <thead>
             <tr className="border-b border-gray-800">
               {columns.map((column) => (

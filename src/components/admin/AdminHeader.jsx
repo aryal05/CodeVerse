@@ -1,137 +1,40 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Bell, User, ChevronDown, Settings, LogOut } from 'lucide-react';
+import { useState } from "react";
+import Link from "next/link";
+import { AnimatePresence, motion } from "framer-motion";
+import { Bell, ChevronDown, ExternalLink, LogOut, Menu, Search, Settings } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-const AdminHeader = ({ title, onLogout }) => {
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [showProfile, setShowProfile] = useState(false);
-
-  const notifications = [
-    { id: 1, title: 'New message received', time: '5 min ago', unread: true },
-    { id: 2, title: 'Project updated', time: '1 hour ago', unread: true },
-    { id: 3, title: 'New testimonial', time: '2 hours ago', unread: false },
-  ];
+export default function AdminHeader({ title, onLogout }) {
+  const [notifications, setNotifications] = useState(false);
+  const [profile, setProfile] = useState(false);
+  const today = new Intl.DateTimeFormat("en", { weekday: "short", month: "short", day: "numeric" }).format(new Date());
 
   return (
-    <header className="h-16 bg-gray-900/50 backdrop-blur-xl border-b border-gray-800 flex items-center justify-between px-6 sticky top-0 z-30">
-      {/* Title */}
-      <div>
-        <h1 className="text-xl font-semibold text-white">{title}</h1>
+    <header className="admin-header">
+      <div className="admin-header__title">
+        <Button variant="outline" size="icon" className="admin-header__mobile-menu" onClick={() => window.dispatchEvent(new Event("admin-sidebar-toggle"))} aria-label="Open navigation"><Menu size={20} /></Button>
+        <div><span>{today}</span><h1>{title}</h1></div>
       </div>
-
-      {/* Right Section */}
-      <div className="flex items-center gap-4">
-        {/* Search */}
-        <div className="relative hidden md:block">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
-          <input
-            type="text"
-            placeholder="Search..."
-            className="w-64 bg-gray-800 border border-gray-700 rounded-xl pl-10 pr-4 py-2 text-sm text-white placeholder-gray-500 focus:border-primary-500 focus:outline-none transition-colors"
-          />
+      <div className="admin-header__actions">
+        <label className="admin-search"><Search size={17} /><input type="search" placeholder="Search anything…" aria-label="Search dashboard" /><kbd>⌘ K</kbd></label>
+        <Link className="admin-icon-button admin-view-site" href="/" target="_blank" aria-label="View website"><ExternalLink size={18} /></Link>
+        <div className="admin-popover-wrap">
+          <Button variant="outline" size="icon" className="admin-icon-button" onClick={() => { setNotifications(!notifications); setProfile(false); }} aria-label="Notifications"><Bell size={18} /><i /></Button>
+          <AnimatePresence>{notifications && <motion.div className="admin-popover admin-notifications" initial={{ opacity:0,y:8,scale:.98 }} animate={{ opacity:1,y:0,scale:1 }} exit={{ opacity:0,y:8,scale:.98 }}>
+            <div className="admin-popover__head"><strong>Notifications</strong><span>2 new</span></div>
+            {["New project enquiry received","A testimonial is ready to review","Website content was updated"].map((item,index) => <button key={item}><i className={index < 2 ? "unread" : ""} /><span>{item}<small>{index === 0 ? "5 minutes ago" : index === 1 ? "2 hours ago" : "Yesterday"}</small></span></button>)}
+          </motion.div>}</AnimatePresence>
         </div>
-
-        {/* Notifications */}
-        <div className="relative">
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setShowNotifications(!showNotifications)}
-            className="relative w-10 h-10 rounded-xl bg-gray-800 hover:bg-gray-700 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
-          >
-            <Bell size={20} />
-            <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full" />
-          </motion.button>
-
-          <AnimatePresence>
-            {showNotifications && (
-              <motion.div
-                initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                transition={{ duration: 0.2 }}
-                className="absolute right-0 top-12 w-80 bg-gray-900 border border-gray-800 rounded-xl shadow-2xl overflow-hidden"
-              >
-                <div className="p-4 border-b border-gray-800">
-                  <h3 className="font-semibold text-white">Notifications</h3>
-                </div>
-                <div className="max-h-80 overflow-y-auto">
-                  {notifications.map((notif) => (
-                    <div
-                      key={notif.id}
-                      className={`p-4 border-b border-gray-800 hover:bg-gray-800/50 cursor-pointer transition-colors ${
-                        notif.unread ? 'bg-primary-500/5' : ''
-                      }`}
-                    >
-                      <div className="flex items-start gap-3">
-                        {notif.unread && (
-                          <span className="w-2 h-2 bg-primary-500 rounded-full mt-2 flex-shrink-0" />
-                        )}
-                        <div className={notif.unread ? '' : 'ml-5'}>
-                          <p className="text-sm text-white">{notif.title}</p>
-                          <p className="text-xs text-gray-500 mt-1">{notif.time}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="p-3 border-t border-gray-800">
-                  <button className="w-full text-center text-sm text-primary-500 hover:text-primary-400">
-                    View all notifications
-                  </button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {/* Profile */}
-        <div className="relative">
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setShowProfile(!showProfile)}
-            className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gray-800 transition-colors"
-          >
-            <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-purple-600 rounded-lg flex items-center justify-center">
-              <User size={16} className="text-white" />
-            </div>
-            <div className="hidden md:block text-left">
-              <p className="text-sm font-medium text-white">Admin</p>
-              <p className="text-xs text-gray-500">Administrator</p>
-            </div>
-            <ChevronDown size={16} className="text-gray-500 hidden md:block" />
-          </motion.button>
-
-          <AnimatePresence>
-            {showProfile && (
-              <motion.div
-                initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                transition={{ duration: 0.2 }}
-                className="absolute right-0 top-12 w-48 bg-gray-900 border border-gray-800 rounded-xl shadow-2xl overflow-hidden"
-              >
-                <div className="p-2">
-                  <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition-colors">
-                    <Settings size={16} />
-                    <span className="text-sm">Settings</span>
-                  </button>
-                  <button
-                    onClick={onLogout}
-                    className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors"
-                  >
-                    <LogOut size={16} />
-                    <span className="text-sm">Logout</span>
-                  </button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+        <div className="admin-popover-wrap">
+          <button className="admin-profile-button" onClick={() => { setProfile(!profile); setNotifications(false); }}><span>RA</span><div><strong>Rajat</strong><small>Admin</small></div><ChevronDown size={15} /></button>
+          <AnimatePresence>{profile && <motion.div className="admin-popover admin-profile-menu" initial={{ opacity:0,y:8,scale:.98 }} animate={{ opacity:1,y:0,scale:1 }} exit={{ opacity:0,y:8,scale:.98 }}>
+            <Link href="/admin/dashboard/settings"><Settings size={16} /> Settings</Link>
+            <button onClick={onLogout}><LogOut size={16} /> Sign out</button>
+          </motion.div>}</AnimatePresence>
         </div>
       </div>
     </header>
   );
-};
-
-export default AdminHeader;
+}

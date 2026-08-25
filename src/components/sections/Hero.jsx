@@ -1,152 +1,118 @@
 "use client";
 
-import { useRef } from "react";
-import dynamic from "next/dynamic";
-import { motion, useInView } from "framer-motion";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
-import { ArrowRight, Play, CheckCircle2, Sparkles } from "lucide-react";
+import dynamic from "next/dynamic";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
+import { motion } from "framer-motion";
+import { ArrowRight, Asterisk, Check, MousePointer2, Play } from "lucide-react";
+import AnimatedGrid from "@/components/ui/AnimatedGrid";
 
-const DashboardVisual = dynamic(
-  () => import("@/components/ui/DashboardVisual"),
-  {
-    ssr: false,
-  },
-);
+const DashboardVisual = dynamic(() => import("@/components/ui/DashboardVisual"), { ssr: false });
 
-const AnimatedGrid = dynamic(() => import("@/components/ui/AnimatedGrid"), {
-  ssr: false,
-});
+export default function Hero() {
+  const root = useRef(null);
 
-const Hero = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
+  useEffect(() => {
+    const element = root.current;
+    if (!element || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+    gsap.registerPlugin(ScrollTrigger, ScrambleTextPlugin);
 
-  const features = [
-    "Award-winning design team",
-    "Many successful projects",
-    "99% client satisfaction rate",
-  ];
+    const ctx = gsap.context(() => {
+      gsap.timeline({ defaults: { ease: "power3.out" } })
+        .from(".hero-kicker", { opacity: 0, y: 18, duration: .6 })
+        .from(".hero-line", { opacity: 0, yPercent: 105, rotateX: -18, stagger: .1, duration: .9 }, "-=.25")
+        .from(".hero-copy, .hero-actions, .hero-proof", { opacity: 0, y: 24, stagger: .12, duration: .65 }, "-=.45")
+        .from(".hero-visual", { opacity: 0, x: 55, scale: .96, duration: 1 }, "-=.8");
+      const studioLabel = element.querySelector("[data-gsap-scramble]");
+      if (studioLabel) {
+        gsap.to(studioLabel, {
+          duration: .82,
+          scrambleText: { text: studioLabel.textContent, chars: "upperCase", revealDelay: .08, speed: .45 },
+          ease: "none",
+          delay: .12,
+        });
+      }
+      gsap.to(".hero-orb-a", { x: 70, y: -35, duration: 8, repeat: -1, yoyo: true, ease: "sine.inOut" });
+      gsap.to(".hero-orb-b", { x: -45, y: 55, duration: 10, repeat: -1, yoyo: true, ease: "sine.inOut" });
+      gsap.timeline({ scrollTrigger: { trigger: element, start: "top top", end: "bottom top", scrub: 1.15 } })
+        .to(".hero-premium__copy", { y: -72, autoAlpha: .42, ease: "none" }, 0)
+        .to(".hero-visual", { y: 82, scale: .9, rotateY: -5, ease: "none" }, 0)
+        .to(".animated-grid__perspective", { scale: 1.12, y: 55, ease: "none" }, 0)
+        .to(".hero-marquee", { yPercent: 100, ease: "none" }, 0);
+    }, element);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.2 },
-    },
-  };
+    const visual = element.querySelector(".hero-visual__tilt");
+    const buttons = [...element.querySelectorAll(".hero-button")];
+    const onPointerMove = (event) => {
+      if (!element.isConnected || !visual) return;
+      const rect = element.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - .5;
+      const y = (event.clientY - rect.top) / rect.height - .5;
+      gsap.to(visual, { rotateY: x * 5, rotateX: y * -4, x: x * 10, y: y * 8, duration: .9, ease: "power3.out", overwrite: "auto" });
+      gsap.to(".hero-float-card--top", { x: x * 22, y: y * 18, duration: 1, ease: "power3.out" });
+      gsap.to(".hero-float-card--bottom", { x: x * -18, y: y * -14, duration: 1.1, ease: "power3.out" });
+    };
+    const onPointerLeave = () => gsap.to(visual, { rotateY: 0, rotateX: 0, x: 0, y: 0, duration: 1.1, ease: "elastic.out(1,.5)", overwrite: "auto" });
+    const magneticHandlers = buttons.map((button) => {
+      const move = (event) => {
+        const rect = button.getBoundingClientRect();
+        gsap.to(button, { x: (event.clientX - rect.left - rect.width / 2) * .16, y: (event.clientY - rect.top - rect.height / 2) * .2, duration: .35, ease: "power2.out" });
+      };
+      const leave = () => gsap.to(button, { x: 0, y: 0, duration: .7, ease: "elastic.out(1,.45)" });
+      button.addEventListener("pointermove", move);
+      button.addEventListener("pointerleave", leave);
+      return [button, move, leave];
+    });
+    element.addEventListener("pointermove", onPointerMove);
+    element.addEventListener("pointerleave", onPointerLeave);
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5, ease: [0.25, 0.4, 0.25, 1] },
-    },
-  };
+    return () => {
+      element.removeEventListener("pointermove", onPointerMove);
+      element.removeEventListener("pointerleave", onPointerLeave);
+      magneticHandlers.forEach(([button, move, leave]) => {
+        button.removeEventListener("pointermove", move);
+        button.removeEventListener("pointerleave", leave);
+      });
+      ctx.revert();
+    };
+  }, []);
 
   return (
-    <section
-      ref={ref}
-      className="relative min-h-screen flex items-center bg-white dark:bg-gray-950 overflow-hidden pt-20"
-    >
+    <section ref={root} className="hero-premium">
       <AnimatedGrid />
-
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-br from-primary-400/30 via-purple-400/20 to-transparent dark:from-primary-600/20 dark:via-purple-600/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-tr from-cyan-400/20 via-blue-400/10 to-transparent dark:from-cyan-600/10 dark:via-blue-600/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4" />
-
-      <div className="container mx-auto px-6 lg:px-8 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate={isInView ? "visible" : "hidden"}
-            className="max-w-2xl"
-          >
-            <motion.div
-              variants={itemVariants}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-primary-50 dark:bg-primary-900/30 border border-primary-100 dark:border-primary-800 rounded-full mb-6"
-            >
-              <Sparkles className="w-4 h-4 text-primary-600" />
-              <span className="text-sm font-medium text-primary-700 dark:text-primary-400">
-                Nepal&apos;s Leading Digital Agency
-              </span>
-            </motion.div>
-
-            <motion.h1
-              variants={itemVariants}
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white leading-[1.1] mb-6"
-            >
-              We build digital
-              <br />
-              products that
-              <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 via-purple-600 to-cyan-600">
-                drive growth
-              </span>
-            </motion.h1>
-
-            <motion.p
-              variants={itemVariants}
-              className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-lg"
-            >
-              Full-service digital agency specializing in web development,
-              mobile apps, and brand experiences for ambitious companies.
-            </motion.p>
-
-            <motion.div
-              variants={itemVariants}
-              className="flex flex-wrap gap-4 mb-10"
-            >
-              <Link href="/contact">
-                <motion.button
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="group inline-flex items-center gap-2 px-6 py-3.5 bg-primary-600 text-white font-medium rounded-xl hover:bg-primary-700 transition-all shadow-lg shadow-primary-600/25 hover:shadow-xl hover:shadow-primary-600/30"
-                >
-                  Start Your Project
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </motion.button>
-              </Link>
-              <Link href="/portfolio">
-                <motion.button
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="group inline-flex items-center gap-2 px-6 py-3.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
-                >
-                  <Play className="w-4 h-4" />
-                  View Our Work
-                </motion.button>
-              </Link>
-            </motion.div>
-
-            <motion.div variants={itemVariants} className="space-y-3">
-              {features.map((feature, index) => (
-                <motion.div
-                  key={index}
-                  className="flex items-center gap-2 text-gray-600 dark:text-gray-400"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={isInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ delay: 0.6 + index * 0.1 }}
-                >
-                  <CheckCircle2 className="w-5 h-5 text-primary-500" />
-                  <span className="text-sm">{feature}</span>
-                </motion.div>
-              ))}
-            </motion.div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="relative hidden lg:block"
-          >
+      <div className="hero-orb hero-orb-a" />
+      <div className="hero-orb hero-orb-b" />
+      <div className="container-custom hero-premium__inner">
+        <div className="hero-premium__copy">
+          <div className="hero-kicker"><span className="hero-kicker__dot" /><span data-gsap-scramble>Nepal&apos;s independent digital product studio</span></div>
+          <h1 className="hero-premium__title" aria-label="We build digital products that drive growth">
+            <span className="hero-line-wrap"><span className="hero-line">We build digital</span></span>
+            <span className="hero-line-wrap"><span className="hero-line hero-line--muted">products that</span></span>
+            <span className="hero-line-wrap"><span className="hero-line hero-line--accent">drive growth.</span></span>
+          </h1>
+          <p className="hero-copy">We design and engineer high-performing websites, apps and digital brands for ambitious companies—combining clear strategy with obsessive craft.</p>
+          <div className="hero-actions">
+            <Link href="/contact" className="hero-button hero-button--primary"><span>Start a project</span><ArrowRight size={18} /></Link>
+            <Link href="/portfolio" className="hero-button hero-button--ghost"><Play size={16} fill="currentColor" /><span>Explore our work</span></Link>
+          </div>
+          <div className="hero-proof">
+            <div className="hero-avatars" aria-hidden="true">{["RA","AS","NP"].map((name) => <span key={name}>{name}</span>)}</div>
+            <div><strong>Senior product team</strong><small><Check size={13} /> Strategy • design • engineering</small></div>
+          </div>
+        </div>
+        <div className="hero-visual">
+          <div className="hero-visual__tilt">
+            <div className="hero-visual__label"><Asterisk size={15} /> Live product telemetry</div>
             <DashboardVisual />
-          </motion.div>
+            <motion.div className="hero-float-card hero-float-card--top" whileHover={{ scale: 1.06 }} transition={{ type: "spring", stiffness: 320, damping: 20 }}><MousePointer2 size={16} /><span><strong>Conversion</strong><small>+38.2% this quarter</small></span></motion.div>
+            <motion.div className="hero-float-card hero-float-card--bottom" whileHover={{ scale: 1.06 }} transition={{ type: "spring", stiffness: 320, damping: 20 }}><span className="pulse-ring" /><span><strong>Build healthy</strong><small>Deployed 2m ago</small></span></motion.div>
+          </div>
         </div>
       </div>
+      <div className="hero-marquee" aria-hidden="true"><div>PRODUCT STRATEGY <Asterisk /> UI/UX DESIGN <Asterisk /> WEB DEVELOPMENT <Asterisk /> MOBILE PRODUCTS <Asterisk /> BRAND SYSTEMS <Asterisk /> PRODUCT STRATEGY <Asterisk /> UI/UX DESIGN <Asterisk /></div></div>
     </section>
   );
-};
-
-export default Hero;
+}

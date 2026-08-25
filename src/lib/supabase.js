@@ -1,4 +1,6 @@
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import dns from "node:dns";
+import { Agent } from "undici";
 
 const cleanEnvValue = (value, key) => {
   if (!value) return undefined;
@@ -25,6 +27,14 @@ const getEnvVars = () => ({
   ),
 });
 
+export const getSupabaseConfigStatus = () => {
+  const { url, anonKey, serviceKey } = getEnvVars();
+  return {
+    serverConfigured: Boolean(url && serviceKey),
+    browserConfigured: Boolean(url && anonKey),
+  };
+};
+
 // Server-side admin client
 // Cached at module scope so we reuse the same HTTP connection pool across
 // requests in the same server process (avoids a new TCP+TLS handshake per call).
@@ -35,6 +45,42 @@ let _adminClient = null;
 // large base64 image payloads causing ECONNRESET retry loops.
 const FETCH_TIMEOUT_MS = 30_000;
 
+// Some Windows DNS filters reject Supabase through getaddrinfo even though a
+// direct DNS query succeeds. Keep the normal system resolver first, then use
+// an IPv4 DNS query as a narrow server-side fallback.
+const supabaseDispatcher = new Agent({
+  connect: {
+    lookup(hostname, options, callback) {
+      dns.lookup(hostname, options, (lookupError, address, family) => {
+        if (!lookupError) {
+          callback(null, address, family);
+          return;
+        }
+
+        dns.resolve4(hostname, (resolveError, addresses) => {
+          if (resolveError || !addresses?.length) {
+            callback(lookupError);
+            return;
+          }
+
+          if (options?.all) {
+            callback(
+              null,
+              addresses.map((resolvedAddress) => ({
+                address: resolvedAddress,
+                family: 4,
+              })),
+            );
+            return;
+          }
+
+          callback(null, addresses[0], 4);
+        });
+      });
+    },
+  },
+});
+
 function fetchWithTimeout(url, options = {}) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
@@ -42,6 +88,7 @@ function fetchWithTimeout(url, options = {}) {
   return fetch(url, {
     ...options,
     signal: controller.signal,
+    dispatcher: supabaseDispatcher,
   }).finally(() => clearTimeout(timeoutId));
 }
 
@@ -50,10 +97,6 @@ export const getSupabaseAdmin = () => {
 
   const { url, serviceKey } = getEnvVars();
   if (!url || !serviceKey) {
-    console.error("Supabase admin env vars missing:", {
-      url: !!url,
-      serviceKey: !!serviceKey,
-    });
     return null;
   }
 
@@ -82,7 +125,6 @@ export const supabase =
     ? (() => {
         const { url, anonKey } = getEnvVars();
         if (!url || !anonKey) {
-          console.error("Missing Supabase browser env vars");
           return null;
         }
         return createSupabaseClient(url, anonKey);

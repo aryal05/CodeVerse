@@ -155,7 +155,7 @@ const ProjectCard = ({ project, index, onExpand }) => {
   );
 };
 
-const PortfolioPage = ({ projects = [] }) => {
+const PortfolioPage = ({ projects = [], loadError = null }) => {
   const [activeFilter, setActiveFilter] = useState("All");
   const [lightboxImages, setLightboxImages] = useState(null);
   const [lightboxIndex, setLightboxIndex] = useState(0);
@@ -193,7 +193,7 @@ const PortfolioPage = ({ projects = [] }) => {
 
       {/* Sticky filter bar */}
       {categories.length > 1 && (
-        <section className="py-5 bg-white/90 dark:bg-gray-950/90 border-b border-gray-100 dark:border-gray-800 sticky top-16 z-20 backdrop-blur-md">
+        <section className="py-5 bg-white dark:bg-gray-950 border-b border-gray-100 dark:border-gray-800">
           <div className="container mx-auto px-6 lg:px-8">
             <div className="flex flex-wrap justify-center gap-2">
               {categories.map((filter) => (
@@ -220,9 +220,9 @@ const PortfolioPage = ({ projects = [] }) => {
           {filteredProjects.length === 0 ? (
             <div className="text-center py-20">
               <p className="text-gray-500 dark:text-gray-400 text-lg">
-                {projects.length === 0
+                {loadError || (projects.length === 0
                   ? "No projects yet. Add some from the admin panel!"
-                  : "No projects in this category."}
+                  : "No projects in this category.")}
               </p>
             </div>
           ) : (

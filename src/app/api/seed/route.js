@@ -31,8 +31,9 @@ export async function POST() {
           value: {
             name: "Codeverse",
             tagline: "Premium Web & Mobile App Development",
-            email: "codeversebuild@outlook.com",
+            email: "codeversebuild@gmail.com",
             phone: "+977-9762454572",
+            phones: ["+977-9762454572", "+977-9828556757"],
             address: "Kathmandu, Nepal",
           },
         },

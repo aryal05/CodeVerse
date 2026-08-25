@@ -1,4 +1,4 @@
-import { getDb } from "@/lib/api-helpers";
+import { getOptionalDb } from "@/lib/api-helpers";
 import PageHeader from "@/components/ui/PageHeader";
 import Pricing from "@/components/sections/Pricing";
 import CTA from "@/components/sections/CTA";
@@ -20,7 +20,8 @@ export const metadata = {
 
 async function getPricingData() {
   try {
-    const db = getDb();
+    const db = getOptionalDb();
+    if (!db) return [];
 
     const { data, error } = await db
       .from("pricing_plans")
@@ -36,8 +37,7 @@ async function getPricingData() {
       highlighted_features: plan.highlighted_features || [],
       not_included: plan.not_included || [],
     }));
-  } catch (error) {
-    console.error("Failed to fetch pricing:", error);
+  } catch {
     return [];
   }
 }

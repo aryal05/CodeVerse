@@ -19,20 +19,12 @@ const Footer = () => {
   const footerLinks = {
     company: [
       { label: "About Us", href: "/about" },
-      { label: "Our Team", href: "/about#team" },
-      { label: "Careers", href: "/careers" },
       { label: "Contact", href: "/contact" },
     ],
     services: [
-      { label: "Web Development", href: "/services/web-development" },
-      { label: "UI/UX Design", href: "/services/ui-ux-design" },
-      { label: "E-Commerce", href: "/services/ecommerce" },
-    ],
-    resources: [
-      { label: "Blog", href: "/blog" },
-      { label: "Case Studies", href: "/portfolio" },
-      { label: "FAQ", href: "/faq" },
-      { label: "Support", href: "/support" },
+      { label: "Our Services", href: "/services" },
+      { label: "Portfolio", href: "/portfolio" },
+      { label: "Pricing", href: "/pricing" },
     ],
   };
 
@@ -47,12 +39,12 @@ const Footer = () => {
     <footer className="bg-gray-900 dark:bg-black text-gray-300">
       {/* Main Footer */}
       <div className="container mx-auto px-6 lg:px-8 py-16 lg:py-20">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand Column */}
           <div className="col-span-2 lg:col-span-2">
             <Link href="/" className="inline-flex items-center gap-2 mb-6">
               <img 
-                src="/logo.jpeg" 
+                src="/logo_company.png"
                 alt="CodeVerse Logo" 
                 className="w-10 h-10 object-contain rounded-xl"
               />
@@ -69,11 +61,11 @@ const Footer = () => {
             {/* Contact Info */}
             <div className="space-y-3">
               <a
-                href="mailto:codeversebuild@outlook.com"
+                href="mailto:codeversebuild@gmail.com"
                 className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors"
               >
                 <Mail className="w-5 h-5 text-primary-500" />
-                <span>codeversebuild@outlook.com</span>
+                <span>codeversebuild@gmail.com</span>
               </a>
               <a
                 href="tel:+9779762454572"
@@ -81,6 +73,13 @@ const Footer = () => {
               >
                 <Phone className="w-5 h-5 text-primary-500" />
                 <span>+977 976-245-4572</span>
+              </a>
+              <a
+                href="tel:+9779828556757"
+                className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors"
+              >
+                <Phone className="w-5 h-5 text-emerald-500" />
+                <span>+977 982-855-6757</span>
               </a>
               <div className="flex items-center gap-3 text-gray-400">
                 <MapPin className="w-5 h-5 text-primary-500" />
@@ -123,22 +122,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Resources Links */}
-          <div>
-            <h4 className="text-white font-semibold mb-4">Resources</h4>
-            <ul className="space-y-3">
-              {footerLinks.resources.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-gray-400 hover:text-white transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
       </div>
 
@@ -166,21 +149,6 @@ const Footer = () => {
               ))}
             </div>
 
-            {/* Legal Links */}
-            <div className="flex items-center gap-6 text-sm text-gray-500">
-              <Link
-                href="/privacy"
-                className="hover:text-white transition-colors"
-              >
-                Privacy Policy
-              </Link>
-              <Link
-                href="/terms"
-                className="hover:text-white transition-colors"
-              >
-                Terms of Service
-              </Link>
-            </div>
           </div>
         </div>
       </div>

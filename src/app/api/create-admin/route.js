@@ -109,7 +109,7 @@ export async function POST(request) {
       .from("users")
       .insert({
         username: username,
-        email: "codeversebuild@outlook.com",
+        email: "codeversebuild@gmail.com",
         password_hash,
         role: "admin",
         active: true,

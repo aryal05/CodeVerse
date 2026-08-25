@@ -65,15 +65,19 @@ const CTA = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-col md:flex-row items-center justify-center gap-8 text-primary-100"
+            className="flex flex-col md:flex-row md:flex-wrap items-center justify-center gap-6 lg:gap-8 text-primary-100"
           >
-            <a href="mailto:codeversebuild@outlook.com" className="flex items-center gap-2 hover:text-white transition-colors">
+            <a href="mailto:codeversebuild@gmail.com" className="flex items-center gap-2 hover:text-white transition-colors">
               <Mail className="w-5 h-5" />
-              <span>codeversebuild@outlook.com</span>
+              <span>codeversebuild@gmail.com</span>
             </a>
             <a href="tel:+9779762454572" className="flex items-center gap-2 hover:text-white transition-colors">
               <Phone className="w-5 h-5" />
               <span>+977 976-245-4572</span>
+            </a>
+            <a href="tel:+9779828556757" className="flex items-center gap-2 hover:text-white transition-colors">
+              <Phone className="w-5 h-5" />
+              <span>+977 982-855-6757</span>
             </a>
             <div className="flex items-center gap-2">
               <MapPin className="w-5 h-5" />

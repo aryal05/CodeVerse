@@ -6,13 +6,21 @@ import Pricing from "@/components/sections/Pricing";
 import Process from "@/components/sections/Process";
 import Testimonials from "@/components/sections/Testimonials";
 import CTA from "@/components/sections/CTA";
-import { getDb, safeImageUrl } from "@/lib/api-helpers";
+import { getOptionalDb, safeImageUrl } from "@/lib/api-helpers";
 
 export const revalidate = 60;
 
 async function getHomepageData() {
+  const emptyData = {
+    projects: [],
+    services: [],
+    testimonials: [],
+    pricing: [],
+  };
+
   try {
-    const db = getDb();
+    const db = getOptionalDb();
+    if (!db) return emptyData;
 
     const [projectsRes, servicesRes, testimonialsRes, pricingRes] = await Promise.all([
       db
@@ -93,7 +101,7 @@ async function getHomepageData() {
 
     return { projects, services, testimonials, pricing };
   } catch {
-    return { projects: [], services: [], testimonials: [], pricing: [] };
+    return emptyData;
   }
 }
 

@@ -72,10 +72,10 @@ export default function ServicesPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-950 flex">
+    <div className="admin-workspace">
       <AdminSidebar onLogout={handleLogout} />
       
-      <div className="flex-1 ml-[280px]">
+      <div className="admin-main">
         <AdminHeader title="Services" onLogout={handleLogout} />
         
         <main className="p-6">

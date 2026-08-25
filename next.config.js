@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Keep production tracing scoped to this app when a parent directory also has a lockfile.
+  outputFileTracingRoot: __dirname,
+  // Allows CI/diagnostic builds to avoid a development server's active .next directory.
+  distDir: process.env.NEXT_DIST_DIR || ".next",
 
   images: {
     remotePatterns: [{ protocol: "https", hostname: "**" }],
@@ -32,16 +36,6 @@ const nextConfig = {
             key: "Access-Control-Allow-Headers",
             value:
               "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization",
-          },
-        ],
-      },
-      {
-        // Cache static assets aggressively
-        source: "/_next/static/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
           },
         ],
       },

@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase";
+import { getOptionalDb } from "@/lib/api-helpers";
 import ServiceDetailPage from "@/components/pages/ServiceDetailPage";
 import { notFound } from "next/navigation";
 
@@ -16,14 +16,16 @@ export default async function ServiceSlugRoute({ params }) {
   const { slug } = await params;
   let service = null;
   try {
-    const supabase = createClient();
-    const { data } = await supabase
-      .from("services")
-      .select("*")
-      .eq("slug", slug)
-      .maybeSingle();
-    service = data;
-  } catch (e) {}
+    const supabase = getOptionalDb();
+    if (supabase) {
+      const { data } = await supabase
+        .from("services")
+        .select("*")
+        .eq("slug", slug)
+        .maybeSingle();
+      service = data;
+    }
+  } catch {}
   if (!service) return notFound();
   return <ServiceDetailPage initialService={service} />;
 }

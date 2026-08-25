@@ -4,11 +4,8 @@ import Link from "next/link";
 import { ArrowLeft, ExternalLink, CheckCircle, Expand, Github } from "lucide-react";
 import dynamic from "next/dynamic";
 import OptimizedImage from "@/components/ui/OptimizedImage";
+import AnimatedGrid from "@/components/ui/AnimatedGrid";
 
-const AnimatedGrid = dynamic(() => import("@/components/ui/AnimatedGrid"), {
-  ssr: false,
-  loading: () => null,
-});
 const ImageLightbox = dynamic(() => import("@/components/ui/ImageLightbox"), {
   ssr: false,
 });
@@ -60,9 +57,8 @@ const ProjectDetail = ({ project }) => {
     "from-pink-500 to-rose-600",
   ];
 
-  const colorIndex = project._id
-    ? parseInt(project._id.slice(-1), 16) % colors.length
-    : 0;
+  const parsedColorIndex = project._id ? parseInt(project._id.slice(-1), 16) : 0;
+  const colorIndex = Number.isFinite(parsedColorIndex) ? parsedColorIndex % colors.length : 0;
   const color = colors[colorIndex];
 
   return (

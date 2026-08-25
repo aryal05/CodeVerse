@@ -20,6 +20,8 @@ import {
 const Pricing = ({ plans = [] }) => {
   const [hoveredPlan, setHoveredPlan] = useState(null);
 
+  if (plans.length === 0) return null;
+
   // Icon mapping for plans
   const iconMap = {
     package: Package,
@@ -67,85 +69,6 @@ const Pricing = ({ plans = [] }) => {
       transition: { duration: 0.6, ease: "easeOut" },
     },
   };
-
-  // Default plans if none provided
-  const defaultPlans = [
-    {
-      id: "1",
-      name: "Basic",
-      tagline: "Perfect for Small Businesses",
-      price_display: "50K",
-      price_min: 50,
-      features: [
-        "5-7 Page Responsive Website",
-        "Mobile-Friendly Design",
-        "Basic SEO Setup",
-        "Contact Form Integration",
-        "1 Month Free Support",
-      ],
-      not_included: ["Custom Features", "E-commerce", "CMS Integration"],
-      is_popular: false,
-      is_featured: false,
-      icon: "package",
-      gradient_from: "blue-500",
-      gradient_to: "cyan-500",
-      button_text: "Get Started",
-      button_link: "/contact",
-    },
-    {
-      id: "2",
-      name: "Full Advanced",
-      tagline: "Most Popular Choice",
-      price_display: "75K - 95K",
-      price_min: 75,
-      price_max: 95,
-      badge: "Most Popular",
-      features: [
-        "10-15 Page Dynamic Website",
-        "Advanced UI/UX Design",
-        "Custom Animations & Effects",
-        "Full SEO Optimization",
-        "CMS Integration",
-        "3 Months Free Support",
-      ],
-      not_included: ["E-commerce Features", "Custom Backend"],
-      is_popular: true,
-      is_featured: true,
-      icon: "zap",
-      gradient_from: "purple-500",
-      gradient_to: "pink-500",
-      button_text: "Choose Plan",
-      button_link: "/contact",
-    },
-    {
-      id: "3",
-      name: "Custom Enterprise",
-      tagline: "For Large Scale Projects",
-      price_display: "95K - 150K+",
-      price_min: 95,
-      price_max: 150,
-      badge: "Enterprise",
-      features: [
-        "Unlimited Pages",
-        "Custom Design & Branding",
-        "E-commerce Integration",
-        "Custom Admin Dashboard",
-        "API Integrations",
-        "6 Months Free Support",
-        "Source Code Ownership",
-      ],
-      not_included: [],
-      is_popular: false,
-      is_featured: true,
-      icon: "crown",
-      gradient_from: "orange-500",
-      gradient_to: "red-500",
-      button_text: "Contact Us",
-      button_link: "/contact",
-    },
-  ];
-
-  const displayPlans = plans.length > 0 ? plans : defaultPlans;
 
   return (
     <section id="pricing" className="py-20 lg:py-28 bg-white dark:bg-gray-950 relative overflow-hidden">
@@ -195,7 +118,7 @@ const Pricing = ({ plans = [] }) => {
           viewport={{ once: true }}
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
         >
-          {displayPlans.map((plan, index) => {
+          {plans.map((plan) => {
             const IconComponent = iconMap[plan.icon] || Package;
             const isHovered = hoveredPlan === plan.id;
             const gradientFrom = gradientMap[plan.gradient_from] || "from-blue-500";

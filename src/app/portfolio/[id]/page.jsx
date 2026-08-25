@@ -1,5 +1,5 @@
 import ProjectDetailPage from "@/components/pages/ProjectDetailPage";
-import { getDb, isUuid, safeImageUrl } from "@/lib/api-helpers";
+import { getOptionalDb, isUuid } from "@/lib/api-helpers";
 import { notFound } from "next/navigation";
 
 // Revalidate every 60 seconds for fast repeat visits
@@ -31,7 +31,8 @@ const PROJECT_COLUMNS = `
 
 async function getProject(id) {
   try {
-    const db = getDb();
+    const db = getOptionalDb();
+    if (!db) return null;
     const query = isUuid(id)
       ? db.from("projects").select(PROJECT_COLUMNS).eq("id", id)
       : db.from("projects").select(PROJECT_COLUMNS).eq("slug", id);
