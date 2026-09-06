@@ -120,8 +120,8 @@ const Portfolio = ({ projects = [] }) => {
                                 fill
                                 sizes="(max-width: 768px) 100vw, 50vw"
                                 className="object-cover"
-                                loading={index < 4 ? "eager" : "lazy"}
-                                priority={index < 2}
+                                loading="lazy"
+                                priority={false}
                                 quality="auto"
                               />
                             ) : (

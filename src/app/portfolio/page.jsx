@@ -5,9 +5,10 @@ import { getOptionalDb } from "@/lib/api-helpers";
 export const revalidate = 60;
 
 export const metadata = {
-  title: "Our Portfolio - CodeVerse",
+  title: "Web & App Development Portfolio",
   description:
-    "Explore our portfolio of successful web and mobile app projects.",
+    "Explore websites, mobile apps, and digital products delivered by CodeVerse Build, an IT company based in Kathmandu, Nepal.",
+  alternates: { canonical: "/portfolio" },
 };
 
 async function getProjects() {

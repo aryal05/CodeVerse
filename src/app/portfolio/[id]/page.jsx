@@ -53,9 +53,14 @@ async function getProject(id) {
 export async function generateMetadata({ params }) {
   const { id } = await params;
   const project = await getProject(id);
+  const title = project?.meta_title || (project?.title ? `${project.title} Case Study` : "Digital Project Case Study");
+  const description = project?.meta_description || project?.description || "View a CodeVerse Build web or mobile development project from Nepal.";
+  const canonicalId = project?.slug || id;
   return {
-    title: project?.title ? `${project.title} - CodeVerse` : "Project Details - CodeVerse",
-    description: project?.description || "View project details and case study.",
+    title,
+    description,
+    alternates: { canonical: `/portfolio/${canonicalId}` },
+    openGraph: { title, description, url: `/portfolio/${canonicalId}`, images: project?.image ? [project.image] : undefined, type: "article" },
   };
 }
 

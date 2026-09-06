@@ -4,9 +4,10 @@ import ServicesPage from "@/components/pages/ServicesPage";
 export const revalidate = 120;
 
 export const metadata = {
-  title: "Our Services - CodeVerse",
+  title: "IT Services in Nepal",
   description:
-    "Web Development, Mobile Apps, UI/UX Design, and more. Explore our premium digital services.",
+    "Explore web development, mobile app development, UI/UX design, and digital product services from our Kathmandu-based IT team.",
+  alternates: { canonical: "/services" },
 };
 
 export default async function ServicesRoute() {

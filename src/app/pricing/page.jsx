@@ -6,7 +6,7 @@ import CTA from "@/components/sections/CTA";
 export const revalidate = 60;
 
 export const metadata = {
-  title: "Pricing - CodeVerse | Web Development Packages",
+  title: "Web Development Pricing in Nepal",
   description:
     "Transparent pricing for web development services. From basic websites to enterprise solutions. Find the perfect package for your project.",
   keywords: [
@@ -16,6 +16,7 @@ export const metadata = {
     "nepal web development",
     "affordable website",
   ],
+  alternates: { canonical: "/pricing" },
 };
 
 async function getPricingData() {

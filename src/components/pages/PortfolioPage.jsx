@@ -50,8 +50,8 @@ const ProjectCard = ({ project, index, onExpand }) => {
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover transition-transform duration-300 group-hover:scale-105"
-            loading={index < 6 ? "eager" : "lazy"}
-            priority={index < 3}
+            loading={index < 3 ? "eager" : "lazy"}
+            priority={false}
             quality="auto"
           />
         ) : (

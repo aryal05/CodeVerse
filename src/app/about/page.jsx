@@ -1,8 +1,9 @@
 import AboutPage from '@/components/pages/AboutPage';
 
 export const metadata = {
-  title: 'About Us - CodeVerse',
-  description: 'Learn about CodeVerse - Premium Web & Mobile App Development Company based in Nepal.',
+  title: 'About Our Nepal IT Company',
+  description: 'Meet CodeVerse Build, a Kathmandu-based IT company helping organizations turn ideas into effective websites, apps, and digital products.',
+  alternates: { canonical: '/about' },
 };
 
 export default function About() {

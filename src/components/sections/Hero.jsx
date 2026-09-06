@@ -88,9 +88,9 @@ export default function Hero() {
       <div className="container-custom hero-premium__inner">
         <div className="hero-premium__copy">
           <div className="hero-kicker"><span className="hero-kicker__dot" /><span data-gsap-scramble>Nepal&apos;s independent digital product studio</span></div>
-          <h1 className="hero-premium__title" aria-label="We build digital products that drive growth">
-            <span className="hero-line-wrap"><span className="hero-line">We build digital</span></span>
-            <span className="hero-line-wrap"><span className="hero-line hero-line--muted">products that</span></span>
+          <h1 className="hero-premium__title" aria-label="IT company in Nepal building digital products that drive growth">
+            <span className="hero-line-wrap"><span className="hero-line">Nepal&apos;s IT company</span></span>
+            <span className="hero-line-wrap"><span className="hero-line hero-line--muted">for products that</span></span>
             <span className="hero-line-wrap"><span className="hero-line hero-line--accent">drive growth.</span></span>
           </h1>
           <p className="hero-copy">We design and engineer high-performing websites, apps and digital brands for ambitious companies—combining clear strategy with obsessive craft.</p>

@@ -8,10 +8,19 @@ const nextConfig = {
 
   images: {
     remotePatterns: [{ protocol: "https", hostname: "**" }],
+    formats: ["image/webp"],
+    minimumCacheTTL: 2592000,
+    qualities: [75],
   },
 
   async redirects() {
     return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.codeversebuild.com" }],
+        destination: "https://codeversebuild.com/:path*",
+        permanent: true,
+      },
       // Browsers auto-request favicon.ico - redirect to our SVG icon
       {
         source: "/favicon.ico",
@@ -23,6 +32,14 @@ const nextConfig = {
 
   async headers() {
     return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+        ],
+      },
       {
         source: "/api/:path*",
         headers: [
