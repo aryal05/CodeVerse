@@ -45,9 +45,9 @@ const Services = ({ services = [] }) => {
   return (
     <section
       id="services"
-      className="py-20 lg:py-28 bg-gray-50 dark:bg-gray-900"
+      className="premium-section premium-section--tint"
     >
-      <div className="container mx-auto px-6 lg:px-8">
+      <div className="container-custom">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -101,7 +101,7 @@ const Services = ({ services = [] }) => {
                 <motion.div
                   key={service.id}
                   variants={itemVariants}
-                  className="group bg-white dark:bg-gray-800 rounded-2xl p-8 border border-gray-100 dark:border-gray-700 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-large transition-all"
+                  className="premium-card premium-card--service group"
                 >
                   <div
                     className={`w-16 h-16 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}

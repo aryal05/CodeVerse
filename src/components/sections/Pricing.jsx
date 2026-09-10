@@ -148,7 +148,7 @@ const Pricing = ({ plans = [] }) => {
                 <motion.div
                   whileHover={{ y: -8, scale: 1.02 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                  className={`h-full bg-white dark:bg-gray-900 rounded-3xl border-2 transition-all duration-300 overflow-hidden ${
+                  className={`premium-card h-full border-2 ${
                     plan.is_popular
                       ? "border-primary-500 shadow-2xl shadow-primary-500/20"
                       : "border-gray-100 dark:border-gray-800 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-xl"
@@ -309,7 +309,7 @@ const Pricing = ({ plans = [] }) => {
           transition={{ delay: 0.5 }}
           className="mt-16 text-center"
         >
-          <div className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-3xl p-8 md:p-12 border border-gray-100 dark:border-gray-800">
+          <div className="premium-card premium-custom-quote p-8 md:p-12">
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
               Have a unique project in mind?
             </h3>

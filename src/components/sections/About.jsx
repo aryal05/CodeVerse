@@ -40,8 +40,8 @@ const About = () => {
   ];
 
   return (
-    <section ref={ref} className="py-24 lg:py-32 bg-white dark:bg-gray-950">
-      <div className="container mx-auto px-6 lg:px-8">
+    <section ref={ref} className="premium-section premium-section--light">
+      <div className="container-custom">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           {/* Left Content */}
           <div>
@@ -111,14 +111,14 @@ const About = () => {
           </div>
 
           {/* Right - Values Grid */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="premium-bento grid grid-cols-2 gap-4">
             {values.map((value, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
-                className="p-6 bg-gray-50 rounded-2xl hover:bg-primary-50 hover:border-primary-100 border border-transparent transition-all group"
+                className="premium-card premium-card--compact group"
               >
                 <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-4 shadow-soft group-hover:bg-primary-100 transition-colors">
                   <value.icon className="w-6 h-6 text-primary-600" />

@@ -3,6 +3,19 @@
 import { useState } from 'react';
 import Image from 'next/image';
 
+// Cloudinary already provides a global image CDN and on-the-fly transforms.
+// Sending its large source PNGs through Next's optimizer adds a second network
+// hop and can hit Next's upstream timeout. A custom loader lets the browser
+// request a correctly sized WebP/AVIF-capable asset from Cloudinary directly.
+const cloudinaryLoader = ({ src, width, quality }) => {
+  if (!src?.includes('res.cloudinary.com') || !src.includes('/image/upload/')) {
+    return src;
+  }
+
+  const transformation = `f_auto,q_${quality || 'auto'},w_${width},c_limit,dpr_auto`;
+  return src.replace('/image/upload/', `/image/upload/${transformation}/`);
+};
+
 /**
  * Optimized Image Component with Cloudinary support
  * Automatically optimizes images for fast loading
@@ -64,6 +77,9 @@ export default function OptimizedImage({
     onError: handleError,
     onClick,
     quality: typeof quality === 'number' ? quality : 75,
+    ...(String(src).includes('res.cloudinary.com')
+      ? { loader: cloudinaryLoader }
+      : {}),
     ...(fill ? { fill: true, sizes: sizes || '100vw' } : { width, height }),
     ...(priority ? { priority: true } : { loading }),
   };

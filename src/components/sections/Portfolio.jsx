@@ -31,8 +31,8 @@ const Portfolio = ({ projects = [] }) => {
   ];
 
   return (
-    <section ref={ref} className="py-24 lg:py-32 bg-gray-50 dark:bg-gray-900">
-      <div className="container mx-auto px-6 lg:px-8">
+    <section ref={ref} className="premium-section premium-section--tint">
+      <div className="container-custom">
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-12">
           <div>
             <motion.div
@@ -108,7 +108,7 @@ const Portfolio = ({ projects = [] }) => {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.25, delay: index * 0.05 }}
                   >
-                      <div className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700 hover:border-primary-200 dark:hover:border-primary-700 hover:shadow-large transition-all duration-300 flex flex-col">
+                      <div className="premium-card premium-card--project group flex flex-col">
                         <Link href={`/portfolio/${project.slug}`} className="block">
                           <div
                             className={`h-64 ${project.image ? "bg-gray-100 dark:bg-gray-800" : `bg-gradient-to-br ${color}`} relative overflow-hidden flex items-center justify-center`}

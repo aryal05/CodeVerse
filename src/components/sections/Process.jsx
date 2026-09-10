@@ -47,8 +47,8 @@ const Process = () => {
   ];
 
   return (
-    <section ref={ref} className="py-24 lg:py-32 bg-gray-900">
-      <div className="container mx-auto px-6 lg:px-8">
+    <section ref={ref} className="premium-section premium-section--dark">
+      <div className="container-custom">
         {/* Header */}
         <div className="text-center mb-16">
           <motion.div
@@ -92,7 +92,7 @@ const Process = () => {
                 initial={{ opacity: 0, y: 30 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.5, delay: 0.1 * index }}
-                className="relative text-center"
+                className="process-card relative text-center"
               >
                 {/* Icon */}
                 <div className="relative inline-flex mb-6">

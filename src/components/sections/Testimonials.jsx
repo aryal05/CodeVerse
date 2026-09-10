@@ -20,8 +20,8 @@ const Testimonials = ({ testimonials = [] }) => {
   }
 
   return (
-    <section ref={ref} className="py-24 lg:py-32 bg-white dark:bg-gray-950">
-      <div className="container mx-auto px-6 lg:px-8">
+    <section ref={ref} className="premium-section premium-section--light">
+      <div className="container-custom">
         <div className="text-center mb-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -50,7 +50,7 @@ const Testimonials = ({ testimonials = [] }) => {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="max-w-4xl mx-auto"
         >
-          <div className="bg-gray-50 dark:bg-gray-900 rounded-3xl p-8 lg:p-12 relative border border-gray-100 dark:border-gray-800">
+          <div className="premium-card premium-testimonial p-8 lg:p-12 relative">
             <div className="absolute top-8 left-8 lg:top-12 lg:left-12">
               <Quote className="w-12 h-12 text-primary-200" />
             </div>
@@ -100,6 +100,8 @@ const Testimonials = ({ testimonials = [] }) => {
                   <button
                     key={index}
                     onClick={() => setCurrent(index)}
+                    aria-label={`Show testimonial ${index + 1}`}
+                    aria-current={index === current ? "true" : undefined}
                     className={`h-2 rounded-full transition-all ${
                       index === current
                         ? "w-8 bg-primary-600"
@@ -112,12 +114,14 @@ const Testimonials = ({ testimonials = [] }) => {
               <div className="flex gap-2">
                 <button
                   onClick={prev}
+                  aria-label="Previous testimonial"
                   className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:border-primary-600 hover:text-primary-600 transition-colors"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
                 <button
                   onClick={next}
+                  aria-label="Next testimonial"
                   className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:border-primary-600 hover:text-primary-600 transition-colors"
                 >
                   <ChevronRight className="w-5 h-5" />
