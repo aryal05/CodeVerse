@@ -54,14 +54,14 @@ export default function Hero() {
             trigger: element,
             start: "top top",
             end: "bottom top",
-            scrub: 1.15,
+            scrub: 0.85,
           },
         })
-        .to(".hero-premium__copy", { y: -72, autoAlpha: 0.42, ease: "none" }, 0)
-        .to(".hero-visual", { y: 82, scale: 0.9, rotateY: -5, ease: "none" }, 0)
-        .to(".animated-grid", { y: 92, scale: 1.08, ease: "none" }, 0)
-        .to(".hero-wave-field", { y: 64, scale: 1.04, ease: "none" }, 0)
-        .to(".hero-marquee", { yPercent: 100, ease: "none" }, 0);
+        .to(".hero-premium__copy", { y: 86, autoAlpha: 0.46, ease: "none" }, 0)
+        .to(".hero-visual", { y: 126, scale: 0.93, rotateY: -4, autoAlpha: 0.62, ease: "none" }, 0)
+        .to(".animated-grid", { y: 72, scale: 1.055, ease: "none" }, 0)
+        .to(".hero-wave-field", { y: 102, scale: 1.035, ease: "none" }, 0)
+        .to(".hero-marquee", { y: 28, ease: "none" }, 0);
     }, element);
 
     const visual = element.querySelector(".hero-visual__tilt");

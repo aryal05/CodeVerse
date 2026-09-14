@@ -3,6 +3,7 @@ import {
   getOptionalDb,
   isUuid,
   mapProject,
+  mapService,
   safeImageUrl,
 } from "@/lib/api-helpers";
 import { PUBLIC_CACHE_TAGS } from "@/lib/cache-tags";
@@ -62,7 +63,7 @@ async function loadHomepageData() {
       createdAt: row.created_at,
       technologies: [],
     })),
-    services: servicesRes.data || [],
+    services: (servicesRes.data || []).map(mapService),
     testimonials: testimonialsRes.data || [],
     pricing: (pricingRes.data || []).map(normalizePricingPlan),
   };
@@ -76,7 +77,10 @@ async function loadServices() {
     .eq("active", true)
     .order("order", { ascending: true });
   if (error) throw error;
-  return (data || []).map((row) => ({ ...row, image: safeImageUrl(row.image) }));
+  return (data || []).map((row) => ({
+    ...mapService(row),
+    image: safeImageUrl(row.image),
+  }));
 }
 
 async function loadService(slug) {
@@ -84,7 +88,7 @@ async function loadService(slug) {
   if (!db) return null;
   const { data, error } = await db.from("services").select("*").eq("slug", slug).maybeSingle();
   if (error) throw error;
-  return data || null;
+  return data ? { ...mapService(data), image: safeImageUrl(data.image) } : null;
 }
 
 async function loadProjects() {

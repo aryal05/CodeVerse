@@ -133,6 +133,10 @@ export function mapProject(row) {
   return {
     ...row,
     _id: row.id,
+    gallery: arrayValue(row.gallery),
+    technologies: arrayValue(row.technologies),
+    features: Array.isArray(row.features) ? row.features.filter(Boolean) : [],
+    results: Array.isArray(row.results) ? row.results.filter(Boolean) : [],
     fullDescription: row.full_description,
     metaTitle: row.meta_title,
     metaDescription: row.meta_description,
@@ -170,10 +174,15 @@ export function projectPayload(input = {}, { insert = false } = {}) {
 
 export function mapService(row) {
   if (!row) return null;
+  const name = row.name || row.title || "Service";
   return {
     ...row,
     _id: row.id,
-    name: row.title,
+    name,
+    title: row.title || name,
+    features: Array.isArray(row.features) ? row.features.filter(Boolean) : [],
+    process: Array.isArray(row.process) ? row.process.filter(Boolean) : [],
+    technologies: arrayValue(row.technologies),
     shortDescription: row.short_description,
     metaTitle: row.meta_title,
     metaDescription: row.meta_description,

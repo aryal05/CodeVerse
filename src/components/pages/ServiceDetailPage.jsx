@@ -257,9 +257,9 @@ const ServiceDetail = ({ initialService }) => {
 
       <PremiumPageCTA
         eyebrow="Turn capability into momentum"
-        title={`Ready to invest in ${service.name}`}
+        title={`Ready to invest in ${serviceName}`}
         highlight="that performs?"
-        description={`Let's shape a focused ${service.name.toLowerCase()} engagement around your goals, users, and growth.`}
+        description={`Let's shape a focused ${serviceName.toLowerCase()} engagement around your goals, users, and growth.`}
         primaryLabel="Start your project"
         secondaryLabel="Explore our work"
         secondaryHref="/portfolio"
