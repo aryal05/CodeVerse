@@ -1,7 +1,7 @@
-import { getOptionalDb, safeImageUrl } from "@/lib/api-helpers";
+import { getServices } from "@/lib/public-data";
 import ServicesPage from "@/components/pages/ServicesPage";
 
-export const revalidate = 120;
+export const revalidate = 600;
 
 export const metadata = {
   title: "IT Services in Nepal",
@@ -13,20 +13,7 @@ export const metadata = {
 export default async function ServicesRoute() {
   let services = [];
   try {
-    const supabase = getOptionalDb();
-    if (!supabase) return <ServicesPage initialServices={[]} />;
-    const { data, error } = await supabase
-      .from("services")
-      .select(
-        'id, title, slug, short_description, description, icon, image, technologies, featured, active, "order", created_at',
-      )
-      .eq("active", true)
-      .order("order", { ascending: true });
-    if (error) throw error;
-    services = (data || []).map((row) => ({
-      ...row,
-      image: safeImageUrl(row.image),
-    }));
+    services = await getServices();
   } catch {
     services = [];
   }

@@ -6,6 +6,7 @@ import {
   notFound,
   testimonialPayload,
 } from "@/lib/api-helpers";
+import { invalidatePublicContent, PUBLIC_CACHE_TAGS } from "@/lib/cache-invalidation";
 
 export const dynamic = "force-dynamic";
 
@@ -22,6 +23,8 @@ export async function GET(_request, context) {
 
     if (error) throw error;
     if (!data) return notFound("Testimonial");
+
+    invalidatePublicContent(PUBLIC_CACHE_TAGS.testimonials);
 
     return NextResponse.json(mapTestimonial(data));
   } catch (error) {
@@ -59,6 +62,8 @@ export async function DELETE(_request, context) {
 
     const { error } = await db.from("testimonials").delete().eq("id", id);
     if (error) throw error;
+
+    invalidatePublicContent(PUBLIC_CACHE_TAGS.testimonials);
 
     return NextResponse.json({ success: true });
   } catch (error) {

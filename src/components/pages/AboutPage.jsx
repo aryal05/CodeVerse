@@ -2,80 +2,37 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import Link from "next/link";
-import {
-  Target,
-  Lightbulb,
-  Users,
-  Trophy,
-  ArrowRight,
-  Rocket,
-  Award,
-  Heart,
-} from "lucide-react";
+import { Award, Heart, Lightbulb, Rocket, Target, Trophy, Users } from "lucide-react";
 import PageHeader from "@/components/ui/PageHeader";
+import PremiumPageCTA from "@/components/ui/PremiumPageCTA";
 
-const AboutPage = () => {
+const values = [
+  { icon: Target, title: "Mission-Driven", description: "Every pixel serves a purpose. We build with intention and focus on outcomes that matter.", accent: "56, 189, 248" },
+  { icon: Lightbulb, title: "Innovation First", description: "We stay curious, challenge assumptions, and use technology where it creates real value.", accent: "167, 139, 250" },
+  { icon: Users, title: "Client-Centric", description: "Your success is our success. Open communication turns projects into lasting partnerships.", accent: "251, 146, 60" },
+  { icon: Trophy, title: "Excellence Always", description: "We never settle for good enough. Every detail must earn its place and meet our standard.", accent: "45, 212, 191" },
+];
+
+const stats = [
+  { value: "15+", label: "Successful projects" },
+  { value: "50+", label: "Happy clients" },
+  { value: "9+", label: "Years of experience" },
+  { value: "15+", label: "Team members" },
+];
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.09 } },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 22 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+};
+
+export default function AboutPage() {
   const missionRef = useRef(null);
-  const isMissionInView = useInView(missionRef, {
-    once: true,
-    margin: "-100px",
-  });
-
-  const values = [
-    {
-      icon: Target,
-      title: "Mission-Driven",
-      description:
-        "Every pixel serves a purpose. We build with intention, focusing on outcomes that matter.",
-      color: "from-blue-500 to-cyan-500",
-    },
-    {
-      icon: Lightbulb,
-      title: "Innovation First",
-      description:
-        "We stay ahead of the curve, implementing cutting-edge solutions.",
-      color: "from-purple-500 to-pink-500",
-    },
-    {
-      icon: Users,
-      title: "Client-Centric",
-      description:
-        "Your success is our success. We build lasting partnerships.",
-      color: "from-orange-500 to-red-500",
-    },
-    {
-      icon: Trophy,
-      title: "Excellence Always",
-      description:
-        "We never settle for good enough. Every deliverable meets our standards.",
-      color: "from-emerald-500 to-teal-500",
-    },
-  ];
-
-  const stats = [
-    { value: "15+", label: "Successful Projects" },
-    { value: "50+", label: "Happy Clients" },
-    { value: "9+", label: "Years Experience" },
-    { value: "15+", label: "Team Members" },
-  ];
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5 },
-    },
-  };
+  const isMissionInView = useInView(missionRef, { once: true, margin: "-100px" });
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
@@ -86,168 +43,92 @@ const AboutPage = () => {
         description="Founded in 2015, CodeVerse has grown from a small team of passionate developers into Nepal's leading digital agency. We combine creativity with technology to deliver exceptional digital experiences."
       />
 
-      {/* Stats Section */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-900">
-        <div className="container mx-auto px-6 lg:px-8">
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-2 lg:grid-cols-4 gap-6"
-          >
+      <section className="about-metrics" aria-label="CodeVerse at a glance">
+        <div className="container-custom">
+          <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }} className="about-metrics__grid">
             {stats.map((stat, index) => (
-              <motion.div
-                key={index}
-                variants={itemVariants}
-                className="text-center p-8 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 hover:shadow-large transition-shadow"
-              >
-                <div className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-purple-600 mb-2">
-                  {stat.value}
-                </div>
-                <div className="text-gray-600 dark:text-gray-400">
-                  {stat.label}
-                </div>
+              <motion.div key={stat.label} variants={itemVariants} className="about-metric">
+                <span>0{index + 1}</span>
+                <strong>{stat.value}</strong>
+                <p>{stat.label}</p>
               </motion.div>
             ))}
           </motion.div>
         </div>
       </section>
 
-      {/* Mission & Vision */}
-      <section
-        ref={missionRef}
-        className="py-20 lg:py-28 bg-white dark:bg-gray-950"
-      >
-        <div className="container mx-auto px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={isMissionInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6 }}
-              className="group p-8 lg:p-10 bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 hover:border-primary-200 dark:hover:border-primary-800 transition-all"
-            >
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <Rocket className="w-7 h-7 text-white" />
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                Our Mission
-              </h2>
-              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                To empower businesses with innovative digital solutions that
-                drive growth, enhance user experiences, and create lasting
-                impact. We believe in building technology that serves people and
-                solves real problems.
-              </p>
-            </motion.div>
+      <section ref={missionRef} className="about-direction">
+        <div className="container-custom about-direction__layout">
+          <motion.header
+            initial={{ opacity: 0, x: -24 }}
+            animate={isMissionInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6 }}
+            className="about-direction__intro"
+          >
+            <span>Why we exist</span>
+            <h2>Purpose before <em>pixels.</em></h2>
+            <p>Good digital work starts with a clear reason to exist. Our mission guides what we build; our vision shapes how far we take it.</p>
+          </motion.header>
 
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={isMissionInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="group p-8 lg:p-10 bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 hover:border-purple-200 dark:hover:border-purple-800 transition-all"
+          <div className="about-direction__cards">
+            <motion.article
+              initial={{ opacity: 0, y: 26 }}
+              animate={isMissionInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.08 }}
+              className="about-direction-card about-direction-card--mission"
             >
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <Award className="w-7 h-7 text-white" />
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                Our Vision
-              </h2>
-              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                To be the most trusted digital partner for businesses in South
-                Asia, known for our innovation, quality, and commitment to
-                client success. We envision a future where every business has
-                access to world-class digital solutions.
-              </p>
-            </motion.div>
+              <div><span>01 / Mission</span><i><Rocket aria-hidden="true" /></i></div>
+              <h3>Build technology that moves businesses forward.</h3>
+              <p>We empower ambitious teams with digital solutions that drive growth, improve experiences, and solve meaningful problems for real people.</p>
+            </motion.article>
+
+            <motion.article
+              initial={{ opacity: 0, y: 26 }}
+              animate={isMissionInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.18 }}
+              className="about-direction-card about-direction-card--vision"
+            >
+              <div><span>02 / Vision</span><i><Award aria-hidden="true" /></i></div>
+              <h3>Make world-class digital craft accessible across South Asia.</h3>
+              <p>We aim to become the region&apos;s most trusted digital partner—known for thoughtful innovation, reliable delivery, and long-term client success.</p>
+            </motion.article>
           </div>
         </div>
       </section>
 
-      {/* Values Section */}
-      <section className="py-20 lg:py-28 bg-gray-50 dark:bg-gray-900">
-        <div className="container mx-auto px-6 lg:px-8">
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-50 dark:bg-primary-900/30 border border-primary-100 dark:border-primary-800 rounded-full mb-4">
-              <Heart className="w-4 h-4 text-primary-600" />
-              <span className="text-sm font-medium text-primary-700 dark:text-primary-400">
-                Our Values
-              </span>
+      <section className="about-values">
+        <div className="about-values__glow" aria-hidden="true" />
+        <div className="container-custom">
+          <motion.header initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.55 }} className="about-values__header">
+            <div>
+              <span><Heart aria-hidden="true" /> Our values</span>
+              <h2>The principles behind <em>every decision.</em></h2>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white">
-              What We Stand For
-            </h2>
-          </motion.div>
+            <p>Not posters on a wall—these are the standards we use to make the work better.</p>
+          </motion.header>
 
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
-          >
-            {values.map((value, index) => (
-              <motion.div
-                key={index}
-                variants={itemVariants}
-                whileHover={{ y: -5 }}
-                className="group p-8 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 hover:shadow-large transition-all text-center"
-              >
-                <div
-                  className={`w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br ${value.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}
-                >
-                  <value.icon className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-primary-600 transition-colors">
-                  {value.title}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-                  {value.description}
-                </p>
-              </motion.div>
+          <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }} className="about-values__grid">
+            {values.map(({ icon: Icon, ...value }, index) => (
+              <motion.article key={value.title} variants={itemVariants} className="about-value-card" style={{ "--value-accent": value.accent }}>
+                <div className="about-value-card__top"><span>0{index + 1}</span><i><Icon aria-hidden="true" /></i></div>
+                <h3>{value.title}</h3>
+                <p>{value.description}</p>
+              </motion.article>
             ))}
           </motion.div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 lg:py-28 bg-primary-600">
-        <div className="container mx-auto px-6 lg:px-8">
-          <motion.div
-            className="max-w-4xl mx-auto text-center"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
-              Ready to Work With Us?
-            </h2>
-            <p className="text-primary-100 text-lg mb-10 max-w-2xl mx-auto">
-              Let&apos;s discuss how we can help transform your digital presence
-              and achieve your business goals.
-            </p>
-            <Link href="/contact">
-              <motion.button
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center gap-3 px-8 py-4 bg-white text-primary-600 rounded-xl text-lg font-semibold shadow-lg hover:shadow-xl transition-all"
-              >
-                <span>Start a Conversation</span>
-                <ArrowRight className="w-5 h-5" />
-              </motion.button>
-            </Link>
-          </motion.div>
-        </div>
-      </section>
+      <PremiumPageCTA
+        eyebrow="Build with CodeVerse"
+        title="Ready to work with a team that"
+        highlight="cares about the outcome?"
+        description="Bring us the challenge. We'll bring honest thinking, thoughtful craft, and a clear path from conversation to launch."
+        primaryLabel="Start a conversation"
+        secondaryLabel="Explore our services"
+        secondaryHref="/services"
+        accent="96, 165, 250"
+      />
     </div>
   );
-};
-
-export default AboutPage;
+}

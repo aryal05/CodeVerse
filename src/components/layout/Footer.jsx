@@ -4,172 +4,224 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
+  ArrowRight,
   ArrowUpRight,
-  Mail,
-  Phone,
-  MapPin,
-  Linkedin,
-  Twitter,
-  Instagram,
   Github,
+  Instagram,
+  Linkedin,
+  Mail,
+  MapPin,
+  Phone,
+  Sparkles,
+  Twitter,
 } from "lucide-react";
 
-const Footer = () => {
-  const [showMaintenancePopup, setShowMaintenancePopup] = useState(false);
-  const footerLinks = {
-    company: [
-      { label: "About Us", href: "/about" },
-      { label: "Contact", href: "/contact" },
-    ],
-    services: [
-      { label: "Our Services", href: "/services" },
-      { label: "Portfolio", href: "/portfolio" },
-      { label: "Pricing", href: "/pricing" },
-    ],
-  };
+const footerLinks = {
+  company: [
+    { label: "About us", href: "/about" },
+    { label: "Contact", href: "/contact" },
+  ],
+  services: [
+    { label: "Our services", href: "/services" },
+    { label: "Selected work", href: "/portfolio" },
+    { label: "Pricing", href: "/pricing" },
+  ],
+};
 
-  const socialLinks = [
-    { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
-    { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
-    { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
-    { icon: Github, href: "https://github.com", label: "GitHub" },
-  ];
+const contactItems = [
+  {
+    icon: Mail,
+    label: "Email",
+    value: "codeversebuild@gmail.com",
+    href: "mailto:codeversebuild@gmail.com",
+  },
+  {
+    icon: Phone,
+    label: "Call",
+    value: "+977 976-245-4572",
+    href: "tel:+9779762454572",
+  },
+  {
+    icon: Phone,
+    label: "WhatsApp",
+    value: "+977 982-855-6757",
+    href: "tel:+9779828556757",
+  },
+  { icon: MapPin, label: "Studio", value: "Kathmandu, Nepal" },
+];
+
+const socialLinks = [
+  { icon: Linkedin, label: "LinkedIn" },
+  { icon: Twitter, label: "Twitter" },
+  { icon: Instagram, label: "Instagram" },
+  { icon: Github, label: "GitHub" },
+];
+
+export default function Footer() {
+  const [showMaintenancePopup, setShowMaintenancePopup] = useState(false);
 
   return (
-    <footer className="bg-gray-900 dark:bg-black text-gray-300">
-      {/* Main Footer */}
-      <div className="container mx-auto px-6 lg:px-8 py-16 lg:py-20">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-          {/* Brand Column */}
-          <div className="col-span-2 lg:col-span-2">
-            <Link href="/" className="inline-flex items-center gap-2 mb-6">
-              <img 
-                src="/logo_company.png"
-                alt="CodeVerse Logo" 
-                className="w-10 h-10 object-contain rounded-xl"
-              />
-              <span className="text-xl font-semibold text-white">
-                Code<span className="text-primary-400">verse</span>
+    <footer className="premium-footer">
+      <div className="premium-footer__mesh" aria-hidden="true" />
+      <div
+        className="premium-footer__orb premium-footer__orb--blue"
+        aria-hidden="true"
+      />
+      <div
+        className="premium-footer__orb premium-footer__orb--violet"
+        aria-hidden="true"
+      />
+
+      <div className="container-custom premium-footer__inner">
+        <div className="premium-footer__cta">
+          <div className="premium-footer__cta-copy">
+            <span className="premium-footer__eyebrow">
+              <Sparkles /> Available for new projects
+            </span>
+            <h2>Let&apos;s build something people remember.</h2>
+            <p>
+              Strategy, design, and development—handled by one focused team.
+            </p>
+          </div>
+          <Link href="/contact" className="premium-footer__cta-button">
+            Start a project <ArrowRight aria-hidden="true" />
+          </Link>
+        </div>
+
+        <div className="premium-footer__grid">
+          <div className="premium-footer__brand">
+            <Link
+              href="/"
+              className="premium-footer__logo"
+              aria-label="CodeVerse home"
+            >
+              <span className="premium-footer__logo-frame">
+                <img src="/logo_company.png" alt="" />
+              </span>
+              <span>
+                Code<strong>verse</strong>
               </span>
             </Link>
-
-            <p className="text-gray-400 mb-6 max-w-sm leading-relaxed">
-              A full-service digital agency crafting exceptional digital
-              experiences for ambitious companies since 2015.
+            <p>
+              Digital products with sharp strategy, thoughtful design, and
+              reliable engineering from Kathmandu to the world.
             </p>
+            <span className="premium-footer__status">
+              <i aria-hidden="true" /> Replies within one business day
+            </span>
+          </div>
 
-            {/* Contact Info */}
-            <div className="space-y-3">
-              <a
-                href="mailto:codeversebuild@gmail.com"
-                className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors"
-              >
-                <Mail className="w-5 h-5 text-primary-500" />
-                <span>codeversebuild@gmail.com</span>
-              </a>
-              <a
-                href="tel:+9779762454572"
-                className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors"
-              >
-                <Phone className="w-5 h-5 text-primary-500" />
-                <span>+977 976-245-4572</span>
-              </a>
-              <a
-                href="tel:+9779828556757"
-                className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors"
-              >
-                <Phone className="w-5 h-5 text-emerald-500" />
-                <span>+977 982-855-6757</span>
-              </a>
-              <div className="flex items-center gap-3 text-gray-400">
-                <MapPin className="w-5 h-5 text-primary-500" />
-                <span>Kathmandu, Nepal</span>
-              </div>
+          {Object.entries(footerLinks).map(([title, links]) => (
+            <nav
+              key={title}
+              className="premium-footer__links"
+              aria-label={`${title} footer links`}
+            >
+              <h3>{title}</h3>
+              <ul>
+                {links.map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href}>
+                      {link.label} <ArrowUpRight aria-hidden="true" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ))}
+
+          <div className="premium-footer__contact">
+            <h3>Get in touch</h3>
+            <div className="premium-footer__contact-list">
+              {contactItems.map(({ icon: Icon, label, value, href }) => {
+                const content = (
+                  <>
+                    <span className="premium-footer__contact-icon">
+                      <Icon aria-hidden="true" />
+                    </span>
+                    <span>
+                      <small>{label}</small>
+                      <strong>{value}</strong>
+                    </span>
+                  </>
+                );
+
+                return href ? (
+                  <a
+                    key={`${label}-${value}`}
+                    href={href}
+                    className="premium-footer__contact-row"
+                  >
+                    {content}
+                  </a>
+                ) : (
+                  <div
+                    key={`${label}-${value}`}
+                    className="premium-footer__contact-row"
+                  >
+                    {content}
+                  </div>
+                );
+              })}
             </div>
           </div>
-
-          {/* Company Links */}
-          <div>
-            <h4 className="text-white font-semibold mb-4">Company</h4>
-            <ul className="space-y-3">
-              {footerLinks.company.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-gray-400 hover:text-white transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Services Links */}
-          <div>
-            <h4 className="text-white font-semibold mb-4">Services</h4>
-            <ul className="space-y-3">
-              {footerLinks.services.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-gray-400 hover:text-white transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
         </div>
-      </div>
 
-      {/* Bottom Bar */}
-      <div className="border-t border-gray-800">
-        <div className="container mx-auto px-6 lg:px-8 py-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-gray-500 text-sm" suppressHydrationWarning>
-              &copy; {new Date().getFullYear()} Codeverse. All rights reserved.
-            </p>
+        <div className="premium-footer__wordmark" aria-hidden="true">
+          <span>CodeVerse</span>
+          <strong>Build</strong>
+        </div>
 
-            {/* Social Links */}
-            <div className="flex items-center gap-4">
-              {socialLinks.map((social) => (
-                <motion.button
-                  key={social.label}
-                  onClick={() => setShowMaintenancePopup(true)}
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary-600 hover:text-white transition-all"
-                  aria-label={social.label}
-                >
-                  <social.icon className="w-5 h-5" />
-                </motion.button>
-              ))}
-            </div>
-
+        <div className="premium-footer__bottom">
+          <p suppressHydrationWarning>
+            &copy; {new Date().getFullYear()} CodeVerse. All rights reserved.
+          </p>
+          <p>Design. Develop. Deliver.</p>
+          <div className="premium-footer__socials" aria-label="Social media">
+            {socialLinks.map(({ icon: Icon, label }) => (
+              <motion.button
+                key={label}
+                type="button"
+                onClick={() => setShowMaintenancePopup(true)}
+                whileHover={{ y: -3 }}
+                whileTap={{ scale: 0.94 }}
+                aria-label={label}
+              >
+                <Icon aria-hidden="true" />
+              </motion.button>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Maintenance Popup */}
       {showMaintenancePopup && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div
+          className="premium-footer__modal-backdrop"
+          role="presentation"
+          onClick={() => setShowMaintenancePopup(false)}
+        >
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="social-maintenance-title"
+            initial={{ opacity: 0, scale: 0.94, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            className="premium-footer__modal"
+            onClick={(event) => event.stopPropagation()}
           >
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              Under Maintenance
+            <span className="premium-footer__modal-icon">
+              <Sparkles aria-hidden="true" />
+            </span>
+            <h3 id="social-maintenance-title">
+              We&apos;re polishing our socials
             </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Our social media pages are currently under maintenance. They will be available soon. Please check back later!
+            <p>
+              Those channels are being refreshed. You can reach us directly from
+              the contact options below.
             </p>
             <button
+              type="button"
               onClick={() => setShowMaintenancePopup(false)}
-              className="w-full px-6 py-3 bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-colors font-medium"
             >
               Got it
             </button>
@@ -178,6 +230,4 @@ const Footer = () => {
       )}
     </footer>
   );
-};
-
-export default Footer;
+}

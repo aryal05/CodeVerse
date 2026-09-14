@@ -8,6 +8,7 @@ import {
   projectPayload,
   safeImageUrl,
 } from "@/lib/api-helpers";
+import { invalidatePublicContent, PUBLIC_CACHE_TAGS } from "@/lib/cache-invalidation";
 
 export const dynamic = "force-dynamic";
 
@@ -49,7 +50,7 @@ export async function GET(_request, context) {
 
     return NextResponse.json(mapProject(data), {
       headers: {
-        "Cache-Control": "s-maxage=300, stale-while-revalidate=86400",
+        "Cache-Control": "public, max-age=0, s-maxage=600, stale-while-revalidate=86400",
       },
     });
   } catch (error) {
@@ -72,6 +73,8 @@ export async function PUT(request, context) {
     if (error) throw error;
     if (!data) return notFound("Project");
 
+    invalidatePublicContent(PUBLIC_CACHE_TAGS.projects);
+
     return NextResponse.json(mapProject(data));
   } catch (error) {
     return handleApiError(error, "Failed to update project");
@@ -85,6 +88,8 @@ export async function DELETE(_request, context) {
 
     const { error } = await byIdOrSlug(db.from("projects").delete(), id);
     if (error) throw error;
+
+    invalidatePublicContent(PUBLIC_CACHE_TAGS.projects);
 
     return NextResponse.json({ success: true });
   } catch (error) {

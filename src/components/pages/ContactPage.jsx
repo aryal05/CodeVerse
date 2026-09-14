@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
+import {
   Mail, Phone, MapPin, Send, Clock, CheckCircle,
-  Linkedin, Twitter, Instagram, Github, MessageCircle
+  Linkedin, Twitter, Instagram, Github, MessageCircle, UserRound,
+  Building2, Layers3, WalletCards, MessageSquareText
 } from 'lucide-react';
 import PageHeader from '@/components/ui/PageHeader';
 import { announceWhatsAppOpen, WHATSAPP_URL } from '@/lib/contact';
@@ -109,7 +110,7 @@ const ContactPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950">
+    <div className="contact-page min-h-screen bg-white dark:bg-gray-950">
       <PageHeader
         badge="Contact Us"
         title="Let's Build Something"
@@ -118,15 +119,16 @@ const ContactPage = () => {
       />
 
       {/* Contact Section */}
-      <section className="py-16 lg:py-24 bg-gray-50 dark:bg-gray-900">
+      <section className="contact-workspace py-16 lg:py-24 bg-gray-50 dark:bg-gray-900">
         <div className="container mx-auto px-6 lg:px-8">
-          <div className="grid lg:grid-cols-5 gap-12 lg:gap-16">
+          <div className="contact-workspace__grid grid lg:grid-cols-5 gap-12 lg:gap-16">
             {/* Contact Info */}
             <div className="lg:col-span-2">
               <motion.div
                 initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6 }}
+                className="contact-info-panel"
               >
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
                   Get in Touch
@@ -136,7 +138,7 @@ const ContactPage = () => {
                   We look forward to hearing from you.
                 </p>
 
-                <div className="space-y-6 mb-10">
+                <div className="contact-info-list space-y-6 mb-10">
                   {contactInfo.map((info, index) => (
                     <motion.a
                       key={index}
@@ -147,7 +149,7 @@ const ContactPage = () => {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: index * 0.1 }}
-                      className="flex items-start gap-4 group"
+                      className="contact-info-item flex items-start gap-4 group"
                     >
                       <div className="w-12 h-12 bg-primary-50 dark:bg-primary-900/30 rounded-xl flex items-center justify-center group-hover:bg-primary-100 dark:group-hover:bg-primary-900/50 transition-colors">
                         <info.icon className="w-5 h-5 text-primary-600" />
@@ -167,7 +169,7 @@ const ContactPage = () => {
                   <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
                     Quick Contact
                   </h3>
-                  <div className="flex gap-3 mb-8">
+                  <div className="contact-quick-actions flex gap-3 mb-8">
                     <motion.a
                       href="tel:+9779762454572"
                       whileHover={{ scale: 1.05, y: -2 }}
@@ -197,7 +199,7 @@ const ContactPage = () => {
                   <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
                     Follow Us
                   </h3>
-                  <div className="flex gap-3">
+                  <div className="contact-socials flex gap-3">
                     {socialLinks.map((social, index) => (
                       <motion.button
                         key={index}
@@ -221,7 +223,14 @@ const ContactPage = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="lg:col-span-3"
             >
-              <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-8 lg:p-10">
+              <div className="contact-form-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-8 lg:p-10">
+                {!isSubmitted && (
+                  <div className="contact-form-card__header">
+                    <span>Project brief / 01</span>
+                    <h2>Tell us what you&apos;re building.</h2>
+                    <p>A few useful details help us prepare the right questions before our first conversation.</p>
+                  </div>
+                )}
                 {isSubmitted ? (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
@@ -241,114 +250,149 @@ const ContactPage = () => {
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid md:grid-cols-2 gap-6">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <div className="contact-field">
+                        <label htmlFor="contact-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                           Full Name *
                         </label>
-                        <input
-                          type="text"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleChange}
-                          required
-                          className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-                          placeholder="CodeVerse Build"
-                        />
+                        <div className="contact-input-shell">
+                          <span className="contact-input-glow" aria-hidden="true" />
+                          <span className="contact-input-icon" aria-hidden="true"><UserRound /></span>
+                          <input
+                            id="contact-name"
+                            type="text"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            required
+                            className="contact-input-control"
+                            placeholder="CodeVerse Build"
+                          />
+                        </div>
                       </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <div className="contact-field">
+                        <label htmlFor="contact-email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                           Email Address *
                         </label>
-                        <input
-                          type="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          required
-                          className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-                          placeholder="codeversebuild@gmail.com"
-                        />
+                        <div className="contact-input-shell">
+                          <span className="contact-input-glow" aria-hidden="true" />
+                          <span className="contact-input-icon" aria-hidden="true"><Mail /></span>
+                          <input
+                            id="contact-email"
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            required
+                            className="contact-input-control"
+                            placeholder="codeversebuild@gmail.com"
+                          />
+                        </div>
                       </div>
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-6">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <div className="contact-field">
+                        <label htmlFor="contact-phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                           Phone Number
                         </label>
-                        <input
-                          type="tel"
-                          name="phone"
-                          value={formData.phone}
-                          onChange={handleChange}
-                          className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-                          placeholder="+977 982-855-6757"
-                        />
+                        <div className="contact-input-shell">
+                          <span className="contact-input-glow" aria-hidden="true" />
+                          <span className="contact-input-icon" aria-hidden="true"><Phone /></span>
+                          <input
+                            id="contact-phone"
+                            type="tel"
+                            name="phone"
+                            value={formData.phone}
+                            onChange={handleChange}
+                            className="contact-input-control"
+                            placeholder="+977 982-855-6757"
+                          />
+                        </div>
                       </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <div className="contact-field">
+                        <label htmlFor="contact-company" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                           Company
                         </label>
-                        <input
-                          type="text"
-                          name="company"
-                          value={formData.company}
-                          onChange={handleChange}
-                          className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-                          placeholder="CodeVerse Build"
-                        />
+                        <div className="contact-input-shell">
+                          <span className="contact-input-glow" aria-hidden="true" />
+                          <span className="contact-input-icon" aria-hidden="true"><Building2 /></span>
+                          <input
+                            id="contact-company"
+                            type="text"
+                            name="company"
+                            value={formData.company}
+                            onChange={handleChange}
+                            className="contact-input-control"
+                            placeholder="CodeVerse Build"
+                          />
+                        </div>
                       </div>
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-6">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <div className="contact-field">
+                        <label htmlFor="contact-service" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                           Service Interested In
                         </label>
-                        <select
-                          name="service"
-                          value={formData.service}
-                          onChange={handleChange}
-                          className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-                        >
-                          <option value="">Select a service</option>
-                          <option value="web">Web Development</option>
-                          <option value="design">UI/UX Design</option>
-                          <option value="ecommerce">E-Commerce</option>
-                          <option value="other">Other</option>
-                        </select>
+                        <div className="contact-input-shell">
+                          <span className="contact-input-glow" aria-hidden="true" />
+                          <span className="contact-input-icon" aria-hidden="true"><Layers3 /></span>
+                          <select
+                            id="contact-service"
+                            name="service"
+                            value={formData.service}
+                            onChange={handleChange}
+                            className="contact-input-control contact-input-select"
+                          >
+                            <option value="">Select a service</option>
+                            <option value="web">Web Development</option>
+                            <option value="design">UI/UX Design</option>
+                            <option value="ecommerce">E-Commerce</option>
+                            <option value="other">Other</option>
+                          </select>
+                        </div>
                       </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <div className="contact-field">
+                        <label htmlFor="contact-budget" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                           Budget Range
                         </label>
-                        <select
-                          name="budget"
-                          value={formData.budget}
-                          onChange={handleChange}
-                          className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-                        >
-                          <option value="">Select budget</option>
-                          <option value="base-50k">Base Package - NPR 50K</option>
-                          <option value="advanced-75k-95k">Advanced - NPR 75K to 95K</option>
-                          <option value="custom-95k-150k">Custom - NPR 95K to 150K</option>
-                        </select>
+                        <div className="contact-input-shell">
+                          <span className="contact-input-glow" aria-hidden="true" />
+                          <span className="contact-input-icon" aria-hidden="true"><WalletCards /></span>
+                          <select
+                            id="contact-budget"
+                            name="budget"
+                            value={formData.budget}
+                            onChange={handleChange}
+                            className="contact-input-control contact-input-select"
+                          >
+                            <option value="">Select budget</option>
+                            <option value="base-50k">Base Package - NPR 50K</option>
+                            <option value="advanced-75k-95k">Advanced - NPR 75K to 95K</option>
+                            <option value="custom-95k-150k">Custom - NPR 95K to 150K</option>
+                          </select>
+                        </div>
                       </div>
                     </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <div className="contact-field">
+                      <label htmlFor="contact-message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Project Details *
                       </label>
-                      <textarea
-                        name="message"
-                        value={formData.message}
-                        onChange={handleChange}
-                        required
-                        rows={5}
-                        className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all resize-none"
-                        placeholder="Tell CodeVerse Build about your project..."
-                      />
+                      <div className="contact-input-shell contact-input-shell--textarea">
+                        <span className="contact-input-glow" aria-hidden="true" />
+                        <span className="contact-input-icon" aria-hidden="true"><MessageSquareText /></span>
+                        <textarea
+                          id="contact-message"
+                          name="message"
+                          value={formData.message}
+                          onChange={handleChange}
+                          required
+                          rows={5}
+                          className="contact-input-control"
+                          placeholder="Tell CodeVerse Build about your project..."
+                        />
+                      </div>
                     </div>
 
                     <motion.button

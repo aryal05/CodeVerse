@@ -1,19 +1,24 @@
-import { getOptionalDb } from "@/lib/api-helpers";
+import { getService, getServices } from "@/lib/public-data";
 import ServiceDetailPage from "@/components/pages/ServiceDetailPage";
 import { notFound } from "next/navigation";
 
-export const revalidate = 120;
+export const revalidate = 600;
+
+export async function generateStaticParams() {
+  try {
+    const services = await getServices();
+    return services.filter((service) => service.slug).map((service) => ({ slug: service.slug }));
+  } catch {
+    return [];
+  }
+}
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const readableName = slug.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
   let service = null;
   try {
-    const db = getOptionalDb();
-    if (db) {
-      const { data } = await db.from("services").select("title,short_description,description,image").eq("slug", slug).maybeSingle();
-      service = data;
-    }
+    service = await getService(slug);
   } catch {}
   const title = `${service?.title || readableName} Services in Nepal`;
   const description = service?.short_description || service?.description?.slice(0, 155) || `Professional ${readableName.toLowerCase()} services from CodeVerse Build in Kathmandu, Nepal.`;
@@ -29,15 +34,7 @@ export default async function ServiceSlugRoute({ params }) {
   const { slug } = await params;
   let service = null;
   try {
-    const supabase = getOptionalDb();
-    if (supabase) {
-      const { data } = await supabase
-        .from("services")
-        .select("*")
-        .eq("slug", slug)
-        .maybeSingle();
-      service = data;
-    }
+    service = await getService(slug);
   } catch {}
   if (!service) return notFound();
   return <ServiceDetailPage initialService={service} />;

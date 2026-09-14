@@ -3,139 +3,102 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowRight, Award, Users, Target, Zap } from 'lucide-react';
+import { ArrowRight, Award, Sparkles, Target, Users, Zap } from 'lucide-react';
 
-const About = () => {
+const stats = [
+  { value: '9+', label: 'Years of experience' },
+  { value: '15+', label: 'Successful projects' },
+  { value: '50+', label: 'Happy clients' },
+  { value: '99%', label: 'Client satisfaction' },
+];
+
+const principles = [
+  { icon: Award, title: 'Quality first', description: 'Craft that holds up beyond launch.', accent: '96, 165, 250' },
+  { icon: Users, title: 'Client focused', description: 'Your goals guide every decision.', accent: '167, 139, 250' },
+  { icon: Target, title: 'Results driven', description: 'Outcomes matter more than output.', accent: '244, 114, 182' },
+  { icon: Zap, title: 'Always evolving', description: 'Modern tools, applied with purpose.', accent: '45, 212, 191' },
+];
+
+export default function About() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
-  const stats = [
-    { value: '9+', label: 'Years Experience' },
-    { value: '15+', label: 'Successful Projects' },
-    { value: '50+', label: 'Happy Clients' },
-    { value: '99%', label: 'Client Satisfaction' },
-  ];
-
-  const values = [
-    {
-      icon: Award,
-      title: 'Quality First',
-      description: 'We never compromise on the quality of our deliverables.'
-    },
-    {
-      icon: Users,
-      title: 'Client Focused',
-      description: 'Your success is our primary measure of achievement.'
-    },
-    {
-      icon: Target,
-      title: 'Results Driven',
-      description: 'We focus on outcomes that matter to your business.'
-    },
-    {
-      icon: Zap,
-      title: 'Innovation',
-      description: 'We stay ahead with cutting-edge technologies.'
-    },
-  ];
+  const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   return (
-    <section ref={ref} className="premium-section premium-section--light">
+    <section ref={ref} className="home-about">
+      <div className="home-about__wash" aria-hidden="true" />
       <div className="container-custom">
-        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-          {/* Left Content */}
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
+        <div className="home-about__layout">
+          <div className="home-about__story">
+            <motion.span
+              initial={{ opacity: 0, y: 16 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-primary-50 border border-primary-100 rounded-full mb-4"
+              transition={{ duration: 0.45 }}
+              className="home-about__eyebrow"
             >
-              <span className="text-sm font-medium text-primary-700">About Us</span>
-            </motion.div>
-            
+              <Sparkles aria-hidden="true" /> About CodeVerse
+            </motion.span>
             <motion.h2
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 22 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6"
+              transition={{ duration: 0.58, delay: 0.07 }}
             >
-              A team dedicated to
-              <br />
-              <span className="text-primary-600">your success</span>
+              A focused team for <em>ambitious ideas.</em>
             </motion.h2>
-            
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 22 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="space-y-4 text-gray-600 dark:text-gray-400 text-lg mb-8"
+              transition={{ duration: 0.58, delay: 0.14 }}
+              className="home-about__copy"
             >
-              <p>
-                Founded in 2015, CodeVerse has grown from a small team of passionate 
-                developers into Nepal&apos;s leading digital agency.
-              </p>
-              <p>
-                We combine strategic thinking with technical excellence to deliver 
-                digital solutions that drive real business results.
-              </p>
+              <p>Founded in 2015, CodeVerse grew from a small group of passionate developers into a multidisciplinary digital team in Nepal.</p>
+              <p>We connect strategic thinking, expressive design, and dependable engineering to create work that delivers real business value.</p>
             </motion.div>
-
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 18 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.3 }}
+              transition={{ duration: 0.5, delay: 0.22 }}
             >
-              <Link href="/about">
-                <button className="group inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 transition-all">
-                  Learn More About Us
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
+              <Link href="/about" className="home-about__action">
+                Discover our story <ArrowRight aria-hidden="true" />
               </Link>
             </motion.div>
+          </div>
 
-            {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-12 pt-12 border-t border-gray-100"
-            >
-              {stats.map((stat, index) => (
-                <div key={index}>
-                  <div className="text-3xl font-bold text-gray-900">{stat.value}</div>
-                  <div className="text-sm text-gray-500">{stat.label}</div>
+          <motion.aside
+            initial={{ opacity: 0, x: 28 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.65, delay: 0.12 }}
+            className="home-about__principles"
+            aria-label="How CodeVerse works"
+          >
+            <div className="home-about__principles-head">
+              <span>How we show up</span>
+              <strong>Principles, not promises.</strong>
+            </div>
+            <div className="home-about__principles-list">
+              {principles.map(({ icon: Icon, ...principle }, index) => (
+                <div key={principle.title} className="home-about-principle" style={{ '--principle-accent': principle.accent }}>
+                  <span className="home-about-principle__number">0{index + 1}</span>
+                  <i><Icon aria-hidden="true" /></i>
+                  <div><h3>{principle.title}</h3><p>{principle.description}</p></div>
                 </div>
               ))}
-            </motion.div>
-          </div>
-
-          {/* Right - Values Grid */}
-          <div className="premium-bento grid grid-cols-2 gap-4">
-            {values.map((value, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
-                className="premium-card premium-card--compact group"
-              >
-                <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-4 shadow-soft group-hover:bg-primary-100 transition-colors">
-                  <value.icon className="w-6 h-6 text-primary-600" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  {value.title}
-                </h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  {value.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
+            </div>
+          </motion.aside>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 22 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.55, delay: 0.32 }}
+          className="home-about__stats"
+          aria-label="Company highlights"
+        >
+          {stats.map((stat, index) => (
+            <div key={stat.label}><span>0{index + 1}</span><strong>{stat.value}</strong><p>{stat.label}</p></div>
+          ))}
+        </motion.div>
       </div>
     </section>
   );
-};
-
-export default About;
+}

@@ -16,29 +16,48 @@ export default function AnimatedGrid({ dark = false }) {
     const perspective = element.querySelector(".animated-grid__perspective");
     const spotlight = element.querySelector(".animated-grid__spotlight");
     let disposed = false;
+    let isVisible = true;
+    let gridTweens = [];
 
     const ctx = gsap.context(() => {
-      gsap.fromTo(".grid-beam-x--one", { x: 0 }, { x: () => window.innerWidth * 1.55, duration: 6.5, repeat: -1, ease: "none", repeatRefresh: true });
-      gsap.fromTo(".grid-beam-x--two", { x: 0 }, { x: () => window.innerWidth * 1.55, duration: 9, delay: 2.4, repeat: -1, ease: "none", repeatRefresh: true });
-      gsap.fromTo(".grid-beam-y--one", { y: 0 }, { y: () => element.offsetHeight * 1.55, duration: 8, delay: 1, repeat: -1, ease: "none", repeatRefresh: true });
-      gsap.fromTo(".grid-beam-y--two", { y: 0 }, { y: () => element.offsetHeight * 1.55, duration: 11, delay: 4.2, repeat: -1, ease: "none", repeatRefresh: true });
-      gsap.to(".grid-node", { opacity: .95, scale: 2.5, duration: 1.4, repeat: -1, yoyo: true, stagger: { each: .28, from: "random" }, ease: "sine.inOut" });
-      gsap.to(".grid-runner", { backgroundPosition: "200% 0", duration: 2.8, repeat: -1, stagger: .35, ease: "none" });
-      gsap.to(".animated-grid__plane", { backgroundPosition: "64px 64px", duration: 8, repeat: -1, ease: "none" });
+      gridTweens = [
+        gsap.fromTo(".grid-beam-x--one", { x: 0 }, { x: () => window.innerWidth * 1.55, duration: 6.5, repeat: -1, ease: "none", repeatRefresh: true }),
+        gsap.fromTo(".grid-beam-x--two", { x: 0 }, { x: () => window.innerWidth * 1.55, duration: 9, delay: 2.4, repeat: -1, ease: "none", repeatRefresh: true }),
+        gsap.fromTo(".grid-beam-y--one", { y: 0 }, { y: () => element.offsetHeight * 1.55, duration: 8, delay: 1, repeat: -1, ease: "none", repeatRefresh: true }),
+        gsap.fromTo(".grid-beam-y--two", { y: 0 }, { y: () => element.offsetHeight * 1.55, duration: 11, delay: 4.2, repeat: -1, ease: "none", repeatRefresh: true }),
+        gsap.to(".grid-node", { opacity: .95, scale: 2.5, duration: 1.4, repeat: -1, yoyo: true, stagger: { each: .28, from: "random" }, ease: "sine.inOut" }),
+        gsap.to(".grid-runner", { backgroundPosition: "200% 0", duration: 2.8, repeat: -1, stagger: .35, ease: "none" }),
+        gsap.to(".animated-grid__plane", { backgroundPosition: "64px 64px", duration: 8, repeat: -1, ease: "none" }),
+      ];
     }, element);
 
+    const setGridX = gsap.quickTo(perspective, "x", { duration: 1.1, ease: "power3.out" });
+    const setGridY = gsap.quickTo(perspective, "y", { duration: 1.1, ease: "power3.out" });
+    const setLightX = gsap.quickTo(spotlight, "x", { duration: .8, ease: "power3.out" });
+    const setLightY = gsap.quickTo(spotlight, "y", { duration: .8, ease: "power3.out" });
+
+    const observer = new IntersectionObserver(([entry]) => {
+      isVisible = entry.isIntersecting;
+      gridTweens.forEach((tween) => tween.paused(!isVisible));
+    }, { threshold: .02 });
+    observer.observe(element);
+
     const move = (event) => {
-      if (disposed || !element.isConnected || !perspective || !spotlight) return;
+      if (disposed || !isVisible || !element.isConnected || !perspective || !spotlight) return;
       const x = (event.clientX / window.innerWidth - .5) * 20;
       const y = (event.clientY / window.innerHeight - .5) * 14;
-      gsap.to(perspective, { x, y, duration: 1.1, ease: "power3.out", overwrite: "auto" });
-      gsap.to(spotlight, { x: event.clientX, y: event.clientY, duration: .8, ease: "power3.out", overwrite: "auto" });
+      setGridX(x);
+      setGridY(y);
+      setLightX(event.clientX);
+      setLightY(event.clientY);
     };
     window.addEventListener("pointermove", move, { passive: true });
 
     return () => {
       disposed = true;
       window.removeEventListener("pointermove", move);
+      observer.disconnect();
+      gsap.killTweensOf([perspective, spotlight]);
       ctx.revert();
     };
   }, []);

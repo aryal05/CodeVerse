@@ -5,6 +5,7 @@ import {
   mapTestimonial,
   testimonialPayload,
 } from "@/lib/api-helpers";
+import { invalidatePublicContent, PUBLIC_CACHE_TAGS } from "@/lib/cache-invalidation";
 
 export const dynamic = "force-dynamic";
 
@@ -44,7 +45,7 @@ export async function GET(request) {
 
     return NextResponse.json((data || []).map(mapTestimonial), {
       headers: {
-        "Cache-Control": "s-maxage=300, stale-while-revalidate=86400",
+        "Cache-Control": "public, max-age=0, s-maxage=600, stale-while-revalidate=86400",
       },
     });
   } catch (error) {
@@ -65,6 +66,8 @@ export async function POST(request) {
       .single();
 
     if (error) throw error;
+
+    invalidatePublicContent(PUBLIC_CACHE_TAGS.testimonials);
 
     return NextResponse.json(mapTestimonial(data), { status: 201 });
   } catch (error) {

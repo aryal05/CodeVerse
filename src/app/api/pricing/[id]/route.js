@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getDb, handleApiError, verifyAuth } from "@/lib/api-helpers";
+import { invalidatePublicContent, PUBLIC_CACHE_TAGS } from "@/lib/cache-invalidation";
 
 export const dynamic = "force-dynamic";
 
@@ -88,6 +89,8 @@ export async function PUT(request, { params }) {
       );
     }
 
+    invalidatePublicContent(PUBLIC_CACHE_TAGS.pricing);
+
     return NextResponse.json(data);
   } catch (error) {
     return handleApiError(error, "Failed to update pricing plan");
@@ -111,6 +114,8 @@ export async function DELETE(request, { params }) {
       .eq("id", id);
 
     if (error) throw error;
+
+    invalidatePublicContent(PUBLIC_CACHE_TAGS.pricing);
 
     return NextResponse.json({ success: true, message: "Pricing plan deleted" });
   } catch (error) {

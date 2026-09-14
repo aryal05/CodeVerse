@@ -20,6 +20,7 @@ const links = [
   { href: "/services", label: "Expertise", icon: Layers3 },
   { href: "/portfolio", label: "Work", icon: Briefcase },
   { href: "/pricing", label: "Pricing", icon: BadgeDollarSign },
+  { href: "/contact", label: "Contact", icon: PhoneCall },
 ];
 
 const subscribeToScroll = (callback) => {

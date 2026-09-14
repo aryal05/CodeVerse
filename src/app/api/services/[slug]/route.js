@@ -7,6 +7,7 @@ import {
   notFound,
   servicePayload,
 } from "@/lib/api-helpers";
+import { invalidatePublicContent, PUBLIC_CACHE_TAGS } from "@/lib/cache-invalidation";
 
 export const dynamic = "force-dynamic";
 
@@ -23,7 +24,11 @@ export async function GET(_request, context) {
     if (error) throw error;
     if (!data) return notFound("Service");
 
-    return NextResponse.json(mapService(data));
+    return NextResponse.json(mapService(data), {
+      headers: {
+        "Cache-Control": "public, max-age=0, s-maxage=600, stale-while-revalidate=86400",
+      },
+    });
   } catch (error) {
     return handleApiError(error, "Failed to fetch service");
   }
@@ -44,6 +49,8 @@ export async function PUT(request, context) {
     if (error) throw error;
     if (!data) return notFound("Service");
 
+    invalidatePublicContent(PUBLIC_CACHE_TAGS.services);
+
     return NextResponse.json(mapService(data));
   } catch (error) {
     return handleApiError(error, "Failed to update service");
@@ -57,6 +64,8 @@ export async function DELETE(_request, context) {
 
     const { error } = await byIdOrSlug(db.from("services").delete(), slug);
     if (error) throw error;
+
+    invalidatePublicContent(PUBLIC_CACHE_TAGS.services);
 
     return NextResponse.json({ success: true });
   } catch (error) {

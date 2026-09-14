@@ -2,122 +2,139 @@
 
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Search, Lightbulb, PenTool, Code2, Rocket } from 'lucide-react';
+import { Search, Lightbulb, PenTool, Code2, Rocket, Sparkles } from 'lucide-react';
 
-const Process = () => {
+const steps = [
+  {
+    icon: Search,
+    number: '01',
+    phase: 'Listen',
+    title: 'Discovery',
+    description: 'We uncover your goals, users, market, and constraints before defining the real problem to solve.',
+    outcome: 'Aligned scope',
+    accent: '96, 165, 250',
+  },
+  {
+    icon: Lightbulb,
+    number: '02',
+    phase: 'Plan',
+    title: 'Strategy',
+    description: 'Insights become a focused roadmap with priorities, milestones, and a clear measure of success.',
+    outcome: 'Actionable roadmap',
+    accent: '167, 139, 250',
+  },
+  {
+    icon: PenTool,
+    number: '03',
+    phase: 'Shape',
+    title: 'Design',
+    description: 'We turn the strategy into intuitive journeys and polished interfaces that feel true to your brand.',
+    outcome: 'Validated experience',
+    accent: '244, 114, 182',
+  },
+  {
+    icon: Code2,
+    number: '04',
+    phase: 'Build',
+    title: 'Development',
+    description: 'Production-ready code brings the experience to life with performance, security, and scale built in.',
+    outcome: 'Quality release',
+    accent: '251, 146, 60',
+  },
+  {
+    icon: Rocket,
+    number: '05',
+    phase: 'Grow',
+    title: 'Launch & Support',
+    description: 'We launch carefully, measure the result, and stay close as your product evolves after release.',
+    outcome: 'Long-term momentum',
+    accent: '74, 222, 128',
+  },
+];
+
+export default function Process() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
-  const steps = [
-    {
-      icon: Search,
-      number: '01',
-      title: 'Discovery',
-      description: 'We dive deep into understanding your business, goals, target audience, and competition to create a solid foundation.',
-      color: 'bg-blue-500'
-    },
-    {
-      icon: Lightbulb,
-      number: '02',
-      title: 'Strategy',
-      description: 'Based on our findings, we develop a comprehensive strategy and roadmap tailored to your specific needs.',
-      color: 'bg-purple-500'
-    },
-    {
-      icon: PenTool,
-      number: '03',
-      title: 'Design',
-      description: 'Our designers create intuitive, beautiful interfaces that align with your brand and delight your users.',
-      color: 'bg-pink-500'
-    },
-    {
-      icon: Code2,
-      number: '04',
-      title: 'Development',
-      description: 'We build your solution using modern technologies, ensuring scalability, security, and performance.',
-      color: 'bg-orange-500'
-    },
-    {
-      icon: Rocket,
-      number: '05',
-      title: 'Launch & Support',
-      description: 'After thorough testing, we deploy your project and provide ongoing support and maintenance.',
-      color: 'bg-green-500'
-    }
-  ];
+  const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   return (
-    <section ref={ref} className="premium-section premium-section--dark">
+    <section ref={ref} className="process-showcase">
+      <div className="process-showcase__glow" aria-hidden="true" />
       <div className="container-custom">
-        {/* Header */}
-        <div className="text-center mb-16">
+        <div className="process-showcase__header">
+          <div>
+            <motion.span
+              initial={{ opacity: 0, y: 16 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.45 }}
+              className="process-showcase__eyebrow"
+            >
+              <Sparkles aria-hidden="true" /> Our process
+            </motion.span>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.55, delay: 0.08 }}
+            >
+              From first idea to<br /><em>lasting impact.</em>
+            </motion.h2>
+          </div>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 border border-white/20 rounded-full mb-4"
+            transition={{ duration: 0.55, delay: 0.16 }}
+            className="process-showcase__intro"
           >
-            <span className="text-sm font-medium text-white">Our Process</span>
+            <span>01—05</span>
+            <p>A transparent, collaborative system that keeps decisions clear and every project moving forward.</p>
           </motion.div>
-          
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4"
-          >
-            How We Work
-          </motion.h2>
-          
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-lg text-gray-400 max-w-2xl mx-auto"
-          >
-            A proven methodology that delivers results. Every project follows our 
-            refined process to ensure success.
-          </motion.p>
         </div>
 
-        {/* Process Steps */}
-        <div className="relative">
-          {/* Connection Line - Desktop */}
-          <div className="hidden lg:block absolute top-24 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-gray-700 to-transparent" />
-          
-          <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-8">
-            {steps.map((step, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: 0.1 * index }}
-                className="process-card relative text-center"
-              >
-                {/* Icon */}
-                <div className="relative inline-flex mb-6">
-                  <div className={`w-16 h-16 ${step.color} rounded-2xl flex items-center justify-center shadow-lg`}>
-                    <step.icon className="w-8 h-8 text-white" />
-                  </div>
-                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-gray-800 border-2 border-gray-700 rounded-full flex items-center justify-center">
-                    <span className="text-xs font-bold text-white">{step.number}</span>
-                  </div>
-                </div>
-
-                {/* Content */}
-                <h3 className="text-xl font-semibold text-white mb-3">
-                  {step.title}
-                </h3>
-                <p className="text-gray-400 text-sm leading-relaxed">
-                  {step.description}
-                </p>
-              </motion.div>
-            ))}
+        <div className="process-flow">
+          <div className="process-flow__rail" aria-hidden="true">
+            <motion.span
+              initial={{ scaleX: 0 }}
+              animate={isInView ? { scaleX: 1 } : {}}
+              transition={{ duration: 1.2, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            />
           </div>
+
+          <ol className="process-flow__steps">
+            {steps.map(({ icon: Icon, ...step }, index) => (
+              <motion.li
+                key={step.number}
+                initial={{ opacity: 0, y: 34 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.55, delay: 0.16 + index * 0.09 }}
+                className="process-step"
+                style={{ '--step-accent': step.accent }}
+              >
+                <div className="process-step__top">
+                  <span className="process-step__number">{step.number}</span>
+                  <span className="process-step__phase">{step.phase}</span>
+                </div>
+                <span className="process-step__icon"><Icon aria-hidden="true" /></span>
+                <h3>{step.title}</h3>
+                <p>{step.description}</p>
+                <div className="process-step__outcome">
+                  <span>Outcome</span>
+                  <strong>{step.outcome}</strong>
+                </div>
+              </motion.li>
+            ))}
+          </ol>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.6, delay: 0.75 }}
+          className="process-showcase__promise"
+        >
+          <span>One clear owner</span><i aria-hidden="true" />
+          <span>Weekly progress</span><i aria-hidden="true" />
+          <span>Support after launch</span>
+        </motion.div>
       </div>
     </section>
   );
-};
-
-export default Process;
+}

@@ -2,83 +2,60 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import {
-  Code2,
-  Smartphone,
-  Palette,
-  ShoppingBag,
-  Server,
-  Rocket,
-  ArrowRight,
-} from "lucide-react";
+import { ArrowRight, Code2, Palette, Rocket, Server, ShoppingBag, Smartphone, Sparkles } from "lucide-react";
 
-const Services = ({ services = [] }) => {
-  const iconMap = {
-    code: Code2,
-    smartphone: Smartphone,
-    palette: Palette,
-    "shopping-bag": ShoppingBag,
-    "shopping-cart": ShoppingBag,
-    server: Server,
-    rocket: Rocket,
-    database: Server,
-    sparkles: Rocket,
-  };
+const iconMap = {
+  code: Code2,
+  smartphone: Smartphone,
+  palette: Palette,
+  "shopping-bag": ShoppingBag,
+  "shopping-cart": ShoppingBag,
+  server: Server,
+  rocket: Rocket,
+  database: Server,
+  sparkles: Rocket,
+};
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 },
-    },
-  };
+const accents = ["56, 189, 248", "167, 139, 250", "244, 114, 182"];
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5 },
-    },
-  };
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.52 } },
+};
+
+export default function Services({ services = [] }) {
+  const featuredServices = services.slice(0, 3);
 
   return (
-    <section
-      id="services"
-      className="premium-section premium-section--tint"
-    >
+    <section id="services" className="home-services">
+      <div className="home-services__glow" aria-hidden="true" />
       <div className="container-custom">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
+        <motion.header
+          initial={{ opacity: 0, y: 22 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-3xl mx-auto mb-16"
+          transition={{ duration: 0.58 }}
+          className="home-services__header"
         >
-          <span className="text-sm font-semibold tracking-wider text-primary-600 uppercase">
-            Our Services
-          </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mt-4 mb-6">
-            What We{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-purple-600">
-              Offer
-            </span>
-          </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-400">
-            Comprehensive digital solutions tailored to elevate your business
-          </p>
-        </motion.div>
+          <div>
+            <span className="home-services__eyebrow"><Sparkles aria-hidden="true" /> Our services</span>
+            <h2>Built for where your business is <em>going.</em></h2>
+          </div>
+          <div className="home-services__intro">
+            <p>Strategy, design, and technology working together—not as separate handoffs.</p>
+            <Link href="/services">View every capability <ArrowRight aria-hidden="true" /></Link>
+          </div>
+        </motion.header>
 
-        {services.length === 0 ? (
-          <div className="text-center py-16">
-            <p className="text-gray-600 dark:text-gray-400 text-lg mb-6">
-              No services available yet. Add some from the admin panel!
-            </p>
-            <Link href="/services">
-              <button className="px-6 py-3 bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-colors">
-                View All Services
-              </button>
-            </Link>
+        {featuredServices.length === 0 ? (
+          <div className="home-services__empty">
+            <p>No services available yet.</p>
+            <Link href="/services">View all services <ArrowRight aria-hidden="true" /></Link>
           </div>
         ) : (
           <motion.div
@@ -86,75 +63,35 @@ const Services = ({ services = [] }) => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+            className="home-services__grid"
           >
-            {services.slice(0, 3).map((service, index) => {
-              const IconComponent = iconMap[service.icon] || Code2;
-              const colors = [
-                "from-blue-500 to-cyan-500",
-                "from-purple-500 to-pink-500",
-                "from-pink-500 to-rose-500",
-              ];
-              const color = colors[index % colors.length];
-
+            {featuredServices.map((service, index) => {
+              const Icon = iconMap[service.icon] || Code2;
               return (
-                <motion.div
-                  key={service.id}
+                <motion.article
+                  key={service.id || service.slug || index}
                   variants={itemVariants}
-                  className="premium-card premium-card--service group"
+                  className={`home-service-card ${index === 0 ? "home-service-card--featured" : ""}`}
+                  style={{ "--home-service-accent": accents[index % accents.length] }}
                 >
-                  <div
-                    className={`w-16 h-16 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}
-                  >
-                    <IconComponent className="w-8 h-8 text-white" />
+                  <span className="home-service-card__watermark" aria-hidden="true">0{index + 1}</span>
+                  <div className="home-service-card__top">
+                    <span>Capability / 0{index + 1}</span>
+                    <i><Icon aria-hidden="true" /></i>
                   </div>
-
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-primary-600 transition-colors">
-                    {service.title}
-                  </h3>
-
-                  <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
-                    {service.short_description || service.description}
-                  </p>
-
-                  <Link href={`/services/${service.slug}`}>
-                    <motion.button
-                      whileHover={{ x: 5 }}
-                      className="inline-flex items-center gap-2 text-primary-600 font-medium"
-                    >
-                      Learn More
-                      <ArrowRight className="w-4 h-4" />
-                    </motion.button>
+                  <div className="home-service-card__body">
+                    <h3>{service.title}</h3>
+                    <p>{service.short_description || service.description}</p>
+                  </div>
+                  <Link href={`/services/${service.slug}`} className="home-service-card__action" aria-label={`Explore ${service.title}`}>
+                    Explore service <ArrowRight aria-hidden="true" />
                   </Link>
-                </motion.div>
+                </motion.article>
               );
             })}
-          </motion.div>
-        )}
-
-        {services.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-center mt-16"
-          >
-            <Link href="/services">
-              <motion.button
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center gap-3 px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-lg font-semibold shadow-lg hover:shadow-xl transition-all"
-              >
-                <span>View All Services</span>
-                <ArrowRight className="w-5 h-5" />
-              </motion.button>
-            </Link>
           </motion.div>
         )}
       </div>
     </section>
   );
-};
-
-export default Services;
+}

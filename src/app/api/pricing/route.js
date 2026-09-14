@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getDb, handleApiError, verifyAuth } from "@/lib/api-helpers";
+import { invalidatePublicContent, PUBLIC_CACHE_TAGS } from "@/lib/cache-invalidation";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +33,13 @@ export async function GET(request) {
       not_included: plan.not_included || [],
     }));
 
-    return NextResponse.json(plans);
+    return NextResponse.json(plans, {
+      headers: {
+        "Cache-Control": all
+          ? "private, no-store"
+          : "public, max-age=0, s-maxage=600, stale-while-revalidate=86400",
+      },
+    });
   } catch (error) {
     return handleApiError(error, "Failed to fetch pricing plans");
   }
@@ -85,6 +92,8 @@ export async function POST(request) {
       .single();
 
     if (error) throw error;
+
+    invalidatePublicContent(PUBLIC_CACHE_TAGS.pricing);
 
     return NextResponse.json(data, { status: 201 });
   } catch (error) {

@@ -65,7 +65,10 @@ export default function OptimizedImage({
   const imgStyle = {
     ...style,
     opacity: isLoading ? 0 : 1,
-    transition: 'opacity 300ms',
+    // Keep the fade inline only while the image is loading. Once loaded, remove
+    // the inline transition so component CSS (for example card zoom easing)
+    // can control transforms without being overridden.
+    transition: isLoading ? 'opacity 300ms' : style?.transition,
   };
 
   const imageProps = {

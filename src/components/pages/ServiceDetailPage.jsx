@@ -7,7 +7,6 @@ import Image from "next/image";
 import {
   ArrowLeft,
   CheckCircle,
-  ArrowRight,
   Code,
   Smartphone,
   Palette,
@@ -15,7 +14,7 @@ import {
   Database,
   Sparkles,
 } from "lucide-react";
-import AnimatedGrid from "@/components/ui/AnimatedGrid";
+import PremiumPageCTA from "@/components/ui/PremiumPageCTA";
 import { useState, useEffect } from "react";
 
 const ServiceDetail = ({ initialService }) => {
@@ -106,11 +105,9 @@ const ServiceDetail = ({ initialService }) => {
   const color = service.color || colors[colorIndex];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950">
+    <div className="detail-page detail-page--service min-h-screen bg-white dark:bg-gray-950">
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden">
-        <AnimatedGrid />
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary-400/20 dark:bg-primary-600/10 rounded-full blur-3xl" />
+      <section className="detail-hero detail-hero--service">
 
         <div className="container mx-auto px-6 lg:px-8 relative z-10">
           <Link
@@ -125,7 +122,7 @@ const ServiceDetail = ({ initialService }) => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center max-w-4xl mx-auto"
+            className="detail-hero__copy text-center max-w-4xl mx-auto"
           >
             {service.image ? (
               <div className="w-20 h-20 mx-auto rounded-2xl overflow-hidden mb-6">
@@ -258,35 +255,16 @@ const ServiceDetail = ({ initialService }) => {
         </section>
       )}
 
-      {/* CTA */}
-      <section className="py-20 bg-primary-600">
-        <div className="container mx-auto px-6 lg:px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
-              Ready to Get Started?
-            </h2>
-            <p className="text-lg text-primary-100 mb-10 max-w-2xl mx-auto">
-              Let&apos;s discuss your project and create something amazing
-              together.
-            </p>
-            <Link href="/contact">
-              <motion.button
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center gap-2 px-8 py-4 bg-white text-primary-600 rounded-xl text-lg font-semibold shadow-lg"
-              >
-                <span>Contact Us</span>
-                <ArrowRight size={20} />
-              </motion.button>
-            </Link>
-          </motion.div>
-        </div>
-      </section>
+      <PremiumPageCTA
+        eyebrow="Turn capability into momentum"
+        title={`Ready to invest in ${service.name}`}
+        highlight="that performs?"
+        description={`Let's shape a focused ${service.name.toLowerCase()} engagement around your goals, users, and growth.`}
+        primaryLabel="Start your project"
+        secondaryLabel="Explore our work"
+        secondaryHref="/portfolio"
+        accent="167, 139, 250"
+      />
     </div>
   );
 };

@@ -4,13 +4,13 @@ import Link from "next/link";
 import { ArrowLeft, ExternalLink, CheckCircle, Expand, Github } from "lucide-react";
 import dynamic from "next/dynamic";
 import OptimizedImage from "@/components/ui/OptimizedImage";
-import AnimatedGrid from "@/components/ui/AnimatedGrid";
+import PremiumPageCTA from "@/components/ui/PremiumPageCTA";
 
 const ImageLightbox = dynamic(() => import("@/components/ui/ImageLightbox"), {
   ssr: false,
 });
 
-import { useMemo, useState, Suspense } from "react";
+import { useMemo, useState } from "react";
 
 const ProjectDetail = ({ project }) => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -62,10 +62,8 @@ const ProjectDetail = ({ project }) => {
   const color = colors[colorIndex];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950">
-      <section className="relative pt-32 pb-20 overflow-hidden">
-        <AnimatedGrid />
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary-400/20 dark:bg-primary-600/10 rounded-full blur-3xl" />
+    <div className="detail-page detail-page--project min-h-screen bg-white dark:bg-gray-950">
+      <section className="detail-hero detail-hero--project">
 
         <div className="container mx-auto px-6 lg:px-8 relative z-10">
           <Link
@@ -76,7 +74,7 @@ const ProjectDetail = ({ project }) => {
             <span>Back to Portfolio</span>
           </Link>
 
-          <div className="max-w-4xl animate-fade-in-up">
+          <div className="detail-hero__copy max-w-4xl animate-fade-in-up">
             <span className="text-sm font-medium text-primary-600 bg-primary-50 dark:bg-primary-900/30 px-3 py-1 rounded-full">
               {project.category}
             </span>
@@ -89,7 +87,7 @@ const ProjectDetail = ({ project }) => {
               {project.description || ""}
             </p>
 
-            <div className="flex flex-wrap items-center gap-6 text-gray-600 dark:text-gray-400">
+            <div className="detail-hero__meta flex flex-wrap items-center gap-6 text-gray-600 dark:text-gray-400">
               {project.client && (
                 <div>
                   <span className="text-sm text-gray-500 dark:text-gray-500">
@@ -151,7 +149,7 @@ const ProjectDetail = ({ project }) => {
         </div>
       </section>
 
-      <section className="py-8">
+      <section className="project-detail-cover py-8">
         <div className="container mx-auto px-6 lg:px-8">
           <div
             className={`h-[400px] lg:h-[500px] ${project.image ? "bg-gray-100 dark:bg-gray-800" : `bg-gradient-to-br ${color}`} rounded-2xl overflow-hidden flex items-center justify-center relative group cursor-pointer animate-fade-in`}
@@ -299,22 +297,16 @@ const ProjectDetail = ({ project }) => {
         </section>
       )}
 
-      <section className="py-20 bg-primary-600">
-        <div className="container mx-auto px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Have a Similar Project?
-          </h2>
-          <p className="text-primary-100 mb-8 max-w-2xl mx-auto">
-            Let&apos;s discuss how we can help bring your vision to life.
-          </p>
-          <Link
-            href="/contact"
-            className="inline-block px-8 py-4 bg-white text-primary-600 rounded-xl font-semibold hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
-          >
-            Start Your Project
-          </Link>
-        </div>
-      </section>
+      <PremiumPageCTA
+        eyebrow="Build the next success story"
+        title="Have a similar project"
+        highlight="in mind?"
+        description="Let's turn the opportunity into a focused digital product with measurable outcomes."
+        primaryLabel="Start your project"
+        secondaryLabel="View more work"
+        secondaryHref="/portfolio"
+        accent="96, 165, 250"
+      />
     </div>
   );
 };

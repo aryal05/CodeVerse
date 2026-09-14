@@ -35,7 +35,7 @@ const PageHeader = ({ badge, title, titleHighlight, description }) => {
   }, []);
 
   return (
-    <section ref={root} className="pt-32 pb-16 lg:pt-40 lg:pb-20 bg-white dark:bg-gray-950 relative overflow-hidden">
+    <section ref={root} className="page-header pt-32 pb-16 lg:pt-40 lg:pb-20 bg-white dark:bg-gray-950 relative overflow-hidden">
       <AnimatedGrid />
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary-400/20 dark:bg-primary-600/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple-400/20 dark:bg-purple-600/10 rounded-full blur-3xl pointer-events-none" />

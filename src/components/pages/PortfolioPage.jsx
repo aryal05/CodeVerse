@@ -3,155 +3,139 @@
 import { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { ArrowUpRight, Expand, ExternalLink } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Expand,
+  ExternalLink,
+  Layers3,
+} from "lucide-react";
 import PageHeader from "@/components/ui/PageHeader";
 import OptimizedImage from "@/components/ui/OptimizedImage";
+import PremiumPageCTA from "@/components/ui/PremiumPageCTA";
 
-// Lazy load lightbox - only when needed
 const ImageLightbox = dynamic(() => import("@/components/ui/ImageLightbox"), {
   ssr: false,
   loading: () => null,
 });
 
-const COLORS = [
-  "from-blue-500 to-indigo-600",
-  "from-green-500 to-emerald-600",
-  "from-purple-500 to-violet-600",
-  "from-orange-500 to-red-600",
-  "from-cyan-500 to-blue-600",
-  "from-pink-500 to-rose-600",
+const PROJECT_ACCENTS = [
+  "96, 165, 250",
+  "167, 139, 250",
+  "244, 114, 182",
+  "251, 146, 60",
+  "45, 212, 191",
 ];
 
-const ProjectCard = ({ project, index, onExpand }) => {
-  const color = COLORS[index % COLORS.length];
+const ProjectFeature = ({ project, index, onExpand }) => {
   const year = project.createdAt
     ? new Date(project.createdAt).getFullYear()
     : "";
-  const router = useRouter();
-
-  const handleCardClick = () => {
-    router.push(`/portfolio/${project.slug}`);
-  };
+  const accent = PROJECT_ACCENTS[index % PROJECT_ACCENTS.length];
+  const projectNumber = String(index + 1).padStart(2, "0");
 
   return (
-    <div 
-      onClick={handleCardClick}
-      className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-xl transition-all duration-200 h-full cursor-pointer"
+    <article
+      className="portfolio-case-study"
+      style={{ "--project-accent": accent }}
     >
-      {/* Image */}
-      <div
-        className={`h-52 relative overflow-hidden ${project.image ? "bg-gray-100 dark:bg-gray-700" : `bg-gradient-to-br ${color}`}`}
-      >
+      <div className="portfolio-case-study__media">
         {project.image ? (
           <OptimizedImage
             src={project.image}
             alt={project.title}
             fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
-            loading={index < 3 ? "eager" : "lazy"}
+            sizes="(max-width: 800px) 100vw, 64vw"
+            className="portfolio-case-study__image"
+            loading={index < 2 ? "eager" : "lazy"}
             priority={false}
             quality="auto"
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-white/20 text-7xl font-bold select-none">
-              {project.title?.charAt(0)}
-            </span>
+          <div className="portfolio-case-study__placeholder">
+            <span>{project.title?.charAt(0)}</span>
           </div>
         )}
 
-        {/* Hover overlay - pure CSS, no framer-motion */}
-        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-3">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleCardClick();
-            }}
-            className="w-11 h-11 bg-white rounded-full flex items-center justify-center hover:scale-110 transition-transform"
-          >
-            <ArrowUpRight className="w-5 h-5 text-gray-900" />
-          </button>
-          {project.image && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onExpand(project);
-              }}
-              className="w-11 h-11 bg-white rounded-full flex items-center justify-center hover:scale-110 transition-transform"
-            >
-              <Expand className="w-5 h-5 text-gray-900" />
-            </button>
-          )}
+        <div className="portfolio-case-study__shade" aria-hidden="true" />
+        <Link
+          href={`/portfolio/${project.slug}`}
+          className="portfolio-case-study__media-link"
+          aria-label={`View ${project.title} case study`}
+        />
+
+        <div className="portfolio-case-study__badges">
+          <span>{project.category || "Featured work"}</span>
+          {year && <span>{year}</span>}
         </div>
 
-        {year && (
-          <div className="absolute top-3 right-3 px-2.5 py-1 bg-black/30 backdrop-blur-sm rounded-full text-white text-xs font-medium">
-            {year}
-          </div>
+        {project.image && (
+          <button
+            type="button"
+            onClick={() => onExpand(project)}
+            className="portfolio-case-study__expand"
+            aria-label={`Expand ${project.title} images`}
+          >
+            <Expand aria-hidden="true" />
+          </button>
         )}
+
+        <span className="portfolio-case-study__number" aria-hidden="true">
+          {projectNumber}
+        </span>
       </div>
 
-      {/* Content */}
-      <div className="p-5 flex flex-col flex-1">
-        <div className="flex items-center justify-between mb-2">
-          {project.category && (
-            <span className="text-xs font-medium text-primary-600 bg-primary-50 dark:bg-primary-900/30 px-2.5 py-1 rounded-full">
-              {project.category}
-            </span>
-          )}
+      <div className="portfolio-case-study__content">
+        <div>
+          <div className="portfolio-case-study__eyebrow">
+            <span>Selected project</span>
+            <span>{projectNumber}</span>
+          </div>
+
+          <h2>{project.title}</h2>
+          <p className="portfolio-case-study__description">
+            {project.description}
+          </p>
+
           {project.client && (
-            <span className="text-xs text-gray-400 dark:text-gray-500 truncate ml-2">
-              {project.client}
-            </span>
+            <div className="portfolio-case-study__client">
+              <span>Built for</span>
+              <strong>{project.client}</strong>
+            </div>
+          )}
+
+          {project.technologies?.length > 0 && (
+            <div className="portfolio-case-study__technologies">
+              {project.technologies.slice(0, 5).map((technology) => (
+                <span key={technology}>{technology}</span>
+              ))}
+            </div>
           )}
         </div>
 
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1.5 group-hover:text-primary-600 transition-colors line-clamp-1">
-          {project.title}
-        </h3>
-
-        <p className="text-gray-500 dark:text-gray-400 text-sm line-clamp-2 mb-3">
-          {project.description}
-        </p>
-
-        <div className="flex items-center justify-between mt-auto pt-1">
-          {project.technologies?.length > 0 ? (
-            <div className="flex flex-wrap gap-1.5">
-              {project.technologies.slice(0, 3).map((tag, i) => (
-                <span
-                  key={i}
-                  className="text-xs px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded"
-                >
-                  {tag}
-                </span>
-              ))}
-              {project.technologies.length > 3 && (
-                <span className="text-xs px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-500 rounded">
-                  +{project.technologies.length - 3}
-                </span>
-              )}
-            </div>
-          ) : (
-            <div />
-          )}
+        <div className="portfolio-case-study__actions">
+          <Link
+            href={`/portfolio/${project.slug}`}
+            className="portfolio-case-study__primary"
+          >
+            View case study
+            <ArrowRight aria-hidden="true" />
+          </Link>
 
           {project.link && (
             <a
               href={project.link}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary-600 text-white text-xs font-medium rounded-lg hover:bg-primary-700 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 flex-shrink-0"
+              className="portfolio-case-study__secondary"
             >
-              <ExternalLink className="w-3.5 h-3.5" />
-              Live
+              Live site
+              <ExternalLink aria-hidden="true" />
             </a>
           )}
         </div>
       </div>
-    </div>
+    </article>
   );
 };
 
@@ -161,7 +145,7 @@ const PortfolioPage = ({ projects = [], loadError = null }) => {
   const [lightboxIndex, setLightboxIndex] = useState(0);
 
   const categories = useMemo(
-    () => ["All", ...new Set(projects.map((p) => p.category).filter(Boolean))],
+    () => ["All", ...new Set(projects.map((project) => project.category).filter(Boolean))],
     [projects],
   );
 
@@ -169,7 +153,7 @@ const PortfolioPage = ({ projects = [], loadError = null }) => {
     () =>
       activeFilter === "All"
         ? projects
-        : projects.filter((p) => p.category === activeFilter),
+        : projects.filter((project) => project.category === activeFilter),
     [activeFilter, projects],
   );
 
@@ -183,7 +167,6 @@ const PortfolioPage = ({ projects = [], loadError = null }) => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
-      {/* Header - no framer-motion blocking paint */}
       <PageHeader
         badge="Our Portfolio"
         title="Projects That"
@@ -191,44 +174,59 @@ const PortfolioPage = ({ projects = [], loadError = null }) => {
         description="Explore our collection of successful projects built for ambitious companies."
       />
 
-      {/* Sticky filter bar */}
       {categories.length > 1 && (
-        <section className="py-5 bg-white dark:bg-gray-950 border-b border-gray-100 dark:border-gray-800">
+        <section className="portfolio-filter" aria-label="Project filters">
           <div className="container mx-auto px-6 lg:px-8">
-            <div className="flex flex-wrap justify-center gap-2">
-              {categories.map((filter) => (
-                <button
-                  key={filter}
-                  onClick={() => setActiveFilter(filter)}
-                  className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
-                    activeFilter === filter
-                      ? "bg-primary-600 text-white shadow-md"
-                      : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
-                  }`}
-                >
-                  {filter}
-                </button>
-              ))}
+            <div className="portfolio-filter__inner">
+              <div className="portfolio-filter__label">
+                <Layers3 aria-hidden="true" />
+                <span>Filter work</span>
+              </div>
+              <div className="portfolio-filter__options">
+                {categories.map((filter) => (
+                  <button
+                    key={filter}
+                    type="button"
+                    onClick={() => setActiveFilter(filter)}
+                    className={activeFilter === filter ? "active" : ""}
+                    aria-pressed={activeFilter === filter}
+                  >
+                    {filter}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </section>
       )}
 
-      {/* Grid - no stagger, instant render */}
-      <section className="py-12 lg:py-20 bg-gray-50 dark:bg-gray-900">
+      <section className="portfolio-gallery">
         <div className="container mx-auto px-6 lg:px-8">
+          <div className="portfolio-gallery__intro">
+            <div>
+              <span>Featured case studies</span>
+              <h2>Selected work, built to make an impact.</h2>
+            </div>
+            <p>
+              {String(filteredProjects.length).padStart(2, "0")} projects
+              <ArrowUpRight aria-hidden="true" />
+            </p>
+          </div>
+
           {filteredProjects.length === 0 ? (
-            <div className="text-center py-20">
-              <p className="text-gray-500 dark:text-gray-400 text-lg">
-                {loadError || (projects.length === 0
-                  ? "No projects yet. Add some from the admin panel!"
-                  : "No projects in this category.")}
+            <div className="portfolio-gallery__empty">
+              <Layers3 aria-hidden="true" />
+              <p>
+                {loadError ||
+                  (projects.length === 0
+                    ? "No projects yet. Add some from the admin panel!"
+                    : "No projects in this category.")}
               </p>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-7">
+            <div className="portfolio-case-study-list">
               {filteredProjects.map((project, index) => (
-                <ProjectCard
+                <ProjectFeature
                   key={project.id}
                   project={project}
                   index={index}
@@ -240,7 +238,6 @@ const PortfolioPage = ({ projects = [], loadError = null }) => {
         </div>
       </section>
 
-      {/* Lightbox - only mounted when needed */}
       {lightboxImages && (
         <ImageLightbox
           images={lightboxImages}
@@ -250,24 +247,16 @@ const PortfolioPage = ({ projects = [], loadError = null }) => {
         />
       )}
 
-      {/* CTA */}
-      <section className="py-20 bg-primary-600">
-        <div className="container mx-auto px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Have a Project in Mind?
-          </h2>
-          <p className="text-primary-100 text-lg mb-8 max-w-xl mx-auto">
-            Let&apos;s create something amazing together.
-          </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-white text-primary-600 rounded-xl text-lg font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
-          >
-            Start Your Project
-            <ExternalLink className="w-5 h-5" />
-          </Link>
-        </div>
-      </section>
+      <PremiumPageCTA
+        eyebrow="Your project could be next"
+        title="Have an idea worth"
+        highlight="bringing to life?"
+        description="Let's turn your ambition into a digital experience that looks distinctive, works beautifully, and creates measurable value."
+        primaryLabel="Start your project"
+        secondaryLabel="Explore our services"
+        secondaryHref="/services"
+        accent="244, 114, 182"
+      />
     </div>
   );
 };
