@@ -5,7 +5,6 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import WhatsAppFloat from '@/components/ui/WhatsAppFloat';
 import CodeVerseLoader from '@/components/ui/CodeVerseLoader';
-import ScrollExperience from '@/components/ui/ScrollExperience';
 
 export default function ClientLayout({ children }) {
   const pathname = usePathname();
@@ -18,7 +17,6 @@ export default function ClientLayout({ children }) {
   return (
     <>
       <CodeVerseLoader enabled />
-      <ScrollExperience />
       <Navbar />
       <main className="public-site-main min-h-screen">
         {children}

@@ -824,7 +824,38 @@ a, button { -webkit-tap-highlight-color: transparent; }
 @keyframes mobile-phone-ring { 0%,72%,100% { transform:rotate(0); } 76% { transform:rotate(13deg); } 80% { transform:rotate(-12deg); } 84% { transform:rotate(9deg); } 88% { transform:rotate(-6deg); } 92% { transform:rotate(0); } }
 @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; }.hero-wave-field,.hero-wave-field__ribbon,.hero-wave-field__contours,.hero-wave-field__signal,.hero-marquee__track,.hero-marquee__light,.hero-marquee__separator svg { animation:none; will-change:auto; } }
 
-/* Route-safe GSAP enhancement layer. Values are driven by ScrollExperience. */
+/* Hydration-safe page flow. Native scroll timelines never mutate React's DOM. */
+@keyframes page-section-rise {
+    from { transform:translate3d(0,58px,0); }
+    to { transform:translate3d(0,0,0); }
+}
+@keyframes page-header-settle {
+    from { opacity:1; transform:translate3d(0,0,0); }
+    to { opacity:.52; transform:translate3d(0,74px,0); }
+}
+@supports (animation-timeline:view()) {
+    @media (min-width:768px) and (prefers-reduced-motion:no-preference) {
+        .public-site-main section:not(.hero-premium):not(.page-header):not(.detail-hero):not(.portfolio-filter) > :is(.container-custom,.container,[class*="container"]) {
+            animation:page-section-rise linear both;
+            animation-timeline:view(block);
+            animation-range:entry 0% entry 38%;
+        }
+        .page-header [data-page-header-content],.detail-hero > .container {
+            animation:page-header-settle linear both;
+            animation-timeline:view(block);
+            animation-range:exit 0% exit 100%;
+        }
+    }
+    @media (max-width:767px) and (prefers-reduced-motion:no-preference) {
+        .public-site-main section:not(.hero-premium):not(.page-header):not(.detail-hero):not(.portfolio-filter) > :is(.container-custom,.container,[class*="container"]) {
+            animation:page-section-rise linear both;
+            animation-timeline:view(block);
+            animation-range:entry 0% entry 24%;
+        }
+    }
+}
+
+/* Route-safe GSAP component enhancement styles. */
 .gsap-heading-line { overflow:hidden; transform-origin:left bottom; }
 .gsap-premium-card {
     --spot-x:50%;
