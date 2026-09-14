@@ -26,7 +26,15 @@ export default function ScrollExperience() {
       return undefined;
     }
 
-    const media = gsap.matchMedia();
+    let cancelled = false;
+    let media = null;
+    let refreshFrame = null;
+    let idleHandle = null;
+    let timeoutHandle = null;
+
+    const initialize = () => {
+      if (cancelled) return;
+      media = gsap.matchMedia();
 
     media.add("(min-width: 768px)", () => {
       const pageHeader = document.querySelector(
@@ -57,6 +65,7 @@ export default function ScrollExperience() {
           { y: 58 },
           {
             y: 0,
+            immediateRender: false,
             force3D: true,
             ease: "none",
             scrollTrigger: {
@@ -81,6 +90,7 @@ export default function ScrollExperience() {
           { y: 24 },
           {
             y: 0,
+            immediateRender: false,
             duration: 0.65,
             force3D: true,
             ease: "power3.out",
@@ -95,13 +105,25 @@ export default function ScrollExperience() {
       });
     });
 
-    const refreshFrame = window.requestAnimationFrame(() => {
-      ScrollTrigger.refresh();
-    });
+      refreshFrame = window.requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+      });
+    };
+
+    // This component can hydrate before streamed page sections. Waiting for an
+    // idle turn prevents GSAP from adding inline transforms during hydration.
+    if ("requestIdleCallback" in window) {
+      idleHandle = window.requestIdleCallback(initialize, { timeout: 500 });
+    } else {
+      timeoutHandle = window.setTimeout(initialize, 96);
+    }
 
     return () => {
-      window.cancelAnimationFrame(refreshFrame);
-      media.revert();
+      cancelled = true;
+      if (idleHandle !== null) window.cancelIdleCallback(idleHandle);
+      if (timeoutHandle !== null) window.clearTimeout(timeoutHandle);
+      if (refreshFrame !== null) window.cancelAnimationFrame(refreshFrame);
+      media?.revert();
     };
   }, [pathname, isAdmin]);
 
