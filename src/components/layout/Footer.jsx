@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -59,6 +60,28 @@ const socialLinks = [
 
 export default function Footer() {
   const [showMaintenancePopup, setShowMaintenancePopup] = useState(false);
+  const closeButtonRef = useRef(null);
+  const returnFocusRef = useRef(null);
+
+  const openMaintenancePopup = useCallback(() => {
+    returnFocusRef.current = document.activeElement;
+    setShowMaintenancePopup(true);
+  }, []);
+
+  const closeMaintenancePopup = useCallback(() => {
+    setShowMaintenancePopup(false);
+    window.requestAnimationFrame(() => returnFocusRef.current?.focus());
+  }, []);
+
+  useEffect(() => {
+    if (!showMaintenancePopup) return undefined;
+    closeButtonRef.current?.focus();
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") closeMaintenancePopup();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [closeMaintenancePopup, showMaintenancePopup]);
 
   return (
     <footer className="premium-footer">
@@ -96,7 +119,7 @@ export default function Footer() {
               aria-label="CodeVerse home"
             >
               <span className="premium-footer__logo-frame">
-                <img src="/logo_company.png" alt="" />
+                <Image src="/logo_company.png" alt="" width={568} height={439} sizes="72px" />
               </span>
               <span>
                 Code<strong>verse</strong>
@@ -177,12 +200,12 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} CodeVerse. All rights reserved.
           </p>
           <p>Design. Develop. Deliver.</p>
-          <div className="premium-footer__socials" aria-label="Social media">
+          <nav className="premium-footer__socials" aria-label="Social media">
             {socialLinks.map(({ icon: Icon, label }) => (
               <motion.button
                 key={label}
                 type="button"
-                onClick={() => setShowMaintenancePopup(true)}
+                onClick={openMaintenancePopup}
                 whileHover={{ y: -3 }}
                 whileTap={{ scale: 0.94 }}
                 aria-label={label}
@@ -190,7 +213,7 @@ export default function Footer() {
                 <Icon aria-hidden="true" />
               </motion.button>
             ))}
-          </div>
+          </nav>
         </div>
       </div>
 
@@ -198,12 +221,13 @@ export default function Footer() {
         <div
           className="premium-footer__modal-backdrop"
           role="presentation"
-          onClick={() => setShowMaintenancePopup(false)}
+          onClick={closeMaintenancePopup}
         >
           <motion.div
             role="dialog"
             aria-modal="true"
             aria-labelledby="social-maintenance-title"
+            aria-describedby="social-maintenance-description"
             initial={{ opacity: 0, scale: 0.94, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             className="premium-footer__modal"
@@ -215,13 +239,14 @@ export default function Footer() {
             <h3 id="social-maintenance-title">
               We&apos;re polishing our socials
             </h3>
-            <p>
+            <p id="social-maintenance-description">
               Those channels are being refreshed. You can reach us directly from
               the contact options below.
             </p>
             <button
               type="button"
-              onClick={() => setShowMaintenancePopup(false)}
+              ref={closeButtonRef}
+              onClick={closeMaintenancePopup}
             >
               Got it
             </button>

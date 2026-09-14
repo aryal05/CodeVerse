@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { motion, useInView, useReducedMotion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight, ArrowRight, ExternalLink } from "lucide-react";
 import OptimizedImage from "@/components/ui/OptimizedImage";
@@ -10,8 +10,11 @@ const Portfolio = ({ projects = [] }) => {
   const ref = useRef(null);
   const orbitRef = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const isOrbitInView = useInView(orbitRef, { margin: "200px 0px" });
+  const isOrbitInView = useInView(orbitRef, { margin: "-8% 0px -8% 0px" });
+  const reduceMotion = useReducedMotion();
   const [activeFilter, setActiveFilter] = useState("All");
+  const [activeStageIndex, setActiveStageIndex] = useState(0);
+  const [isStagePaused, setIsStagePaused] = useState(false);
 
   const categories = useMemo(() => {
     return ["All", ...new Set(projects.map((p) => p.category).filter(Boolean))];
@@ -28,25 +31,23 @@ const Portfolio = ({ projects = [] }) => {
     [filteredProjects],
   );
 
+  useEffect(() => setActiveStageIndex(0), [activeFilter]);
+
   useEffect(() => {
-    const orbitStage = orbitRef.current;
-    if (!orbitStage) return undefined;
+    if (!isOrbitInView || isStagePaused || orbitProjects.length < 2) return undefined;
+    if (reduceMotion) return undefined;
 
-    let resumeTimer;
-    const pauseOrbitDuringScroll = () => {
-      orbitStage.classList.add("is-scrolling");
-      window.clearTimeout(resumeTimer);
-      resumeTimer = window.setTimeout(() => {
-        orbitStage.classList.remove("is-scrolling");
-      }, 220);
-    };
+    const timer = window.setInterval(() => {
+      setActiveStageIndex((current) => (current + 1) % orbitProjects.length);
+    }, 3200);
 
-    window.addEventListener("scroll", pauseOrbitDuringScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", pauseOrbitDuringScroll);
-      window.clearTimeout(resumeTimer);
-    };
-  }, [projects.length]);
+    return () => window.clearInterval(timer);
+  }, [isOrbitInView, isStagePaused, orbitProjects.length, reduceMotion]);
+
+  const stageIndex = orbitProjects.length
+    ? activeStageIndex % orbitProjects.length
+    : 0;
+  const stageProject = orbitProjects[stageIndex];
 
   const colors = [
     "from-blue-500 to-indigo-600",
@@ -111,13 +112,29 @@ const Portfolio = ({ projects = [] }) => {
           <>
             <motion.div
               ref={orbitRef}
-              initial={{ opacity: 0, y: 28 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              initial={{ y: 28 }}
+              animate={isInView ? { y: 0 } : {}}
               transition={{ duration: 0.65, delay: 0.2 }}
               className={`project-orbit-stage ${isOrbitInView ? "is-orbit-visible" : ""}`}
               aria-label="Selected projects showcase"
             >
+              <div className="project-stage-rail" aria-hidden="true">
+                <span>Selected builds</span>
+                <i />
+                <span className="project-stage-rail__count">
+                  {String(stageIndex + 1).padStart(2, "0")} / {String(orbitProjects.length).padStart(2, "0")}
+                </span>
+                {/*
+                <span>01â€”{String(orbitProjects.length).padStart(2, "0")}</span>
+                */}
+              </div>
               <div className="project-orbit-glow" aria-hidden="true" />
+              <div className="project-stage-projector" aria-hidden="true"><span /></div>
+              <div className="project-stage-beam" aria-hidden="true" />
+              <div className="project-stage-floor" aria-hidden="true">
+                <span />
+              </div>
+              {false && (
               <div
                 className="project-orbit"
                 style={{ "--quantity": orbitProjects.length }}
@@ -156,6 +173,74 @@ const Portfolio = ({ projects = [] }) => {
                       <span>View case study <ArrowUpRight /></span>
                     </span>
                   </Link>
+                ))}
+              </div>
+              )}
+              <div className="project-stage-card-area">
+                <AnimatePresence mode="wait" initial={false}>
+                  {stageProject && (
+                    <motion.div
+                      key={stageProject.id || stageProject.slug}
+                      className="project-stage-card-shell"
+                      onHoverStart={() => setIsStagePaused(true)}
+                      onHoverEnd={() => setIsStagePaused(false)}
+                      initial={reduceMotion ? false : { y: 82, x: 78, rotateY: -82, rotateZ: -3, scale: 0.84, opacity: 0 }}
+                      animate={{ y: 0, x: 0, rotateY: 0, rotateZ: 0, scale: 1, opacity: 1 }}
+                      exit={reduceMotion ? undefined : { y: -38, x: -78, rotateY: 82, rotateZ: 3, scale: 0.88, opacity: 0 }}
+                      transition={{ duration: 0.78, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      <Link
+                        href={`/portfolio/${stageProject.slug}`}
+                        className="project-stage-card"
+                        style={{ "--color-card": orbitColors[stageIndex % orbitColors.length] }}
+                        aria-label={`View ${stageProject.title} project`}
+                      >
+                        {stageProject.image ? (
+                          <OptimizedImage
+                            src={stageProject.image}
+                            alt=""
+                            fill
+                            sizes="(max-width: 767px) 210px, 280px"
+                            className="object-cover"
+                            loading="lazy"
+                            priority={false}
+                            quality="auto"
+                          />
+                        ) : (
+                          <div className={`project-orbit-placeholder bg-gradient-to-br ${colors[stageIndex % colors.length]}`}>
+                            {stageProject.title.charAt(0)}
+                          </div>
+                        )}
+                        <span className="project-orbit-shade" />
+                        <span className="project-orbit-meta">
+                          <small>{stageProject.category || "Project"}</small>
+                          <strong>{stageProject.title}</strong>
+                          <span>View case study <ArrowUpRight /></span>
+                        </span>
+                      </Link>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+              {stageProject && (
+                <div className="project-stage-caption" aria-live="polite">
+                  <span>{String(stageIndex + 1).padStart(2, "0")}</span>
+                  <div>
+                    <small>{stageProject.category || "Selected project"}</small>
+                    <strong>{stageProject.title}</strong>
+                  </div>
+                </div>
+              )}
+              <div className="project-stage-controls" aria-label="Choose featured project">
+                {orbitProjects.map((project, index) => (
+                  <button
+                    type="button"
+                    key={project.id || project.slug}
+                    className={index === stageIndex ? "is-active" : ""}
+                    onClick={() => setActiveStageIndex(index)}
+                    aria-label={`Show ${project.title}`}
+                    aria-pressed={index === stageIndex}
+                  />
                 ))}
               </div>
             </motion.div>

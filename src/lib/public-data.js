@@ -115,7 +115,25 @@ async function loadProject(id) {
     : db.from("projects").select(PROJECT_DETAIL_COLUMNS).eq("slug", id);
   const { data, error } = await query.maybeSingle();
   if (error) throw error;
-  return data ? mapProject(data) : null;
+  if (!data) return null;
+
+  const project = mapProject(data);
+  const version = data.updated_at ? Date.parse(data.updated_at) : 1;
+  const imageEndpoint = (slot) =>
+    `/api/project-images/${encodeURIComponent(data.id)}/${slot}?v=${version}`;
+
+  // Keep multi-megabyte legacy data URIs out of cached RSC payloads while
+  // preserving the images through a cacheable binary endpoint.
+  if (String(project.image || "").startsWith("data:")) {
+    project.image = imageEndpoint("cover");
+  }
+  project.gallery = project.gallery.map((image, index) =>
+    String(image || "").startsWith("data:")
+      ? imageEndpoint(String(index))
+      : image,
+  );
+
+  return project;
 }
 
 function normalizePricingPlan(plan) {

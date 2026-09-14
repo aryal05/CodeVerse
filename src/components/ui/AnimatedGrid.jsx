@@ -11,12 +11,18 @@ export default function AnimatedGrid({ dark = false }) {
 
   useEffect(() => {
     const element = root.current;
-    if (!element || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+    if (
+      !element ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      window.matchMedia("(max-width: 767px)").matches
+    ) return undefined;
 
     const perspective = element.querySelector(".animated-grid__perspective");
     const spotlight = element.querySelector(".animated-grid__spotlight");
     let disposed = false;
     let isVisible = true;
+    let isScrolling = false;
+    let resumeTimer;
     let gridTweens = [];
 
     const ctx = gsap.context(() => {
@@ -38,12 +44,26 @@ export default function AnimatedGrid({ dark = false }) {
 
     const observer = new IntersectionObserver(([entry]) => {
       isVisible = entry.isIntersecting;
-      gridTweens.forEach((tween) => tween.paused(!isVisible));
+      gridTweens.forEach((tween) => tween.paused(!isVisible || isScrolling));
     }, { threshold: .02 });
     observer.observe(element);
 
+    const onScroll = () => {
+      if (!isVisible) return;
+      if (!isScrolling) {
+        isScrolling = true;
+        gridTweens.forEach((tween) => tween.pause());
+      }
+      window.clearTimeout(resumeTimer);
+      resumeTimer = window.setTimeout(() => {
+        isScrolling = false;
+        if (isVisible && !disposed) gridTweens.forEach((tween) => tween.resume());
+      }, 140);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+
     const move = (event) => {
-      if (disposed || !isVisible || !element.isConnected || !perspective || !spotlight) return;
+      if (disposed || !isVisible || isScrolling || !element.isConnected || !perspective || !spotlight) return;
       const x = (event.clientX / window.innerWidth - .5) * 20;
       const y = (event.clientY / window.innerHeight - .5) * 14;
       setGridX(x);
@@ -55,6 +75,8 @@ export default function AnimatedGrid({ dark = false }) {
 
     return () => {
       disposed = true;
+      window.clearTimeout(resumeTimer);
+      window.removeEventListener("scroll", onScroll);
       window.removeEventListener("pointermove", move);
       observer.disconnect();
       gsap.killTweensOf([perspective, spotlight]);

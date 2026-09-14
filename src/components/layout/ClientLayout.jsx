@@ -4,21 +4,20 @@ import { usePathname } from 'next/navigation';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import WhatsAppFloat from '@/components/ui/WhatsAppFloat';
-import CodeVerseLoader from '@/components/ui/CodeVerseLoader';
 
 export default function ClientLayout({ children }) {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith('/admin');
 
   if (isAdmin) {
-    return <><CodeVerseLoader enabled={false} />{children}</>;
+    return children;
   }
 
   return (
     <>
-      <CodeVerseLoader enabled />
+      <a className="skip-to-content" href="#main-content">Skip to main content</a>
       <Navbar />
-      <main className="public-site-main min-h-screen">
+      <main id="main-content" className="public-site-main min-h-screen" tabIndex={-1}>
         {children}
       </main>
       <Footer />

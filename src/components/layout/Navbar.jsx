@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   ArrowUpRight,
@@ -47,7 +48,14 @@ export default function Navbar() {
         <div className="container-custom site-nav__inner">
           <Link href="/" className="brand-mark" aria-label="CodeVerse home">
             <span className="brand-logo-frame">
-              <img src="/logo_company.png" alt="CodeVerse — Design, Develop, Deliver" />
+              <Image
+                src="/logo_company.png"
+                alt="CodeVerse — Design, Develop, Deliver"
+                width={568}
+                height={439}
+                priority
+                sizes="(max-width: 767px) 138px, 156px"
+              />
             </span>
           </Link>
 

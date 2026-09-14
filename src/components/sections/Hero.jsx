@@ -10,7 +10,10 @@ import { motion } from "framer-motion";
 import { ArrowRight, Asterisk, Check, MousePointer2, Play } from "lucide-react";
 import AnimatedGrid from "@/components/ui/AnimatedGrid";
 
-const DashboardVisual = dynamic(() => import("@/components/ui/DashboardVisual"), { ssr: false });
+const DashboardVisual = dynamic(() => import("@/components/ui/DashboardVisual"), {
+  ssr: false,
+  loading: () => <div className="hero-dashboard-placeholder" aria-hidden="true" />,
+});
 
 const HERO_SERVICES = [
   "Product strategy",
@@ -25,14 +28,18 @@ export default function Hero() {
 
   useEffect(() => {
     const element = root.current;
-    if (!element || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+    if (
+      !element ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      window.matchMedia("(max-width: 767px)").matches
+    ) return undefined;
     gsap.registerPlugin(ScrollTrigger, ScrambleTextPlugin);
+    const stickyLayout = window.matchMedia("(min-width: 1101px)").matches;
 
     const ctx = gsap.context(() => {
       gsap.timeline({ defaults: { ease: "power3.out" } })
         .from(".hero-kicker", { opacity: 0, y: 18, duration: .6 })
-        .from(".hero-line", { opacity: 0, yPercent: 105, rotateX: -18, stagger: .1, duration: .9 }, "-=.25")
-        .from(".hero-copy, .hero-actions, .hero-proof", { opacity: 0, y: 24, stagger: .12, duration: .65 }, "-=.45")
+        .from(".hero-copy, .hero-actions, .hero-proof", { opacity: 0, y: 24, stagger: .12, duration: .65 }, "-=.25")
         .from(".hero-visual", { opacity: 0, x: 55, scale: .96, duration: 1 }, "-=.8");
       const studioLabel = element.querySelector("[data-gsap-scramble]");
       if (studioLabel) {
@@ -53,15 +60,49 @@ export default function Hero() {
           scrollTrigger: {
             trigger: element,
             start: "top top",
-            end: "bottom top",
-            scrub: 0.85,
+            end: stickyLayout ? "bottom bottom" : "bottom 35%",
+            scrub: true,
+            invalidateOnRefresh: true,
           },
         })
-        .to(".hero-premium__copy", { y: 86, autoAlpha: 0.46, ease: "none" }, 0)
-        .to(".hero-visual", { y: 126, scale: 0.93, rotateY: -4, autoAlpha: 0.62, ease: "none" }, 0)
-        .to(".animated-grid", { y: 72, scale: 1.055, ease: "none" }, 0)
-        .to(".hero-wave-field", { y: 102, scale: 1.035, ease: "none" }, 0)
-        .to(".hero-marquee", { y: 28, ease: "none" }, 0);
+        .fromTo(
+          ".hero-premium__copy",
+          { y: 0 },
+          {
+            y: () => window.innerHeight * (stickyLayout ? 0.52 : 0.2),
+            force3D: true,
+            ease: "none",
+          },
+          0,
+        )
+        .fromTo(
+          ".hero-visual",
+          { y: 0 },
+          {
+            y: () => window.innerHeight * (stickyLayout ? 0.58 : 0.24),
+            force3D: true,
+            ease: "none",
+          },
+          0,
+        )
+        .fromTo(
+          ".animated-grid",
+          { y: 0 },
+          { y: 88, force3D: true, ease: "none" },
+          0,
+        )
+        .fromTo(
+          ".hero-wave-field",
+          { y: 0 },
+          { y: 148, force3D: true, ease: "none" },
+          0,
+        )
+        .fromTo(
+          ".hero-marquee",
+          { y: 0 },
+          { y: 96, force3D: true, ease: "none" },
+          0,
+        );
     }, element);
 
     const visual = element.querySelector(".hero-visual__tilt");
@@ -128,8 +169,13 @@ export default function Hero() {
     });
     visual?.addEventListener("pointermove", onPointerMove);
     visual?.addEventListener("pointerleave", onPointerLeave);
+    const refreshFrame = window.requestAnimationFrame(() => ScrollTrigger.refresh());
+    const refreshOnLoad = () => ScrollTrigger.refresh();
+    window.addEventListener("load", refreshOnLoad, { once: true });
 
     return () => {
+      window.cancelAnimationFrame(refreshFrame);
+      window.removeEventListener("load", refreshOnLoad);
       visual?.removeEventListener("pointermove", onPointerMove);
       visual?.removeEventListener("pointerleave", onPointerLeave);
       magneticHandlers.forEach(([button, move, leave]) => {
@@ -142,7 +188,8 @@ export default function Hero() {
   }, []);
 
   return (
-    <section ref={root} className="hero-premium">
+    <div ref={root} className="hero-scroll-stage">
+    <section className="hero-premium">
       <AnimatedGrid />
       <div className="hero-wave-field" aria-hidden="true">
         <svg viewBox="0 0 1440 760" preserveAspectRatio="none">
@@ -243,7 +290,9 @@ export default function Hero() {
             <div className="hero-visual__label">
               <Asterisk size={15} /> Live product telemetry
             </div>
-            <DashboardVisual />
+            <div className="hero-dashboard-frame">
+              <DashboardVisual />
+            </div>
             <motion.div
               className="hero-float-card hero-float-card--top"
               whileHover={{ scale: 1.06 }}
@@ -300,5 +349,6 @@ export default function Hero() {
         </div>
       </div>
     </section>
+    </div>
   );
 }

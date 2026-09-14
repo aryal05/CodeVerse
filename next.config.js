@@ -8,8 +8,11 @@ const nextConfig = {
   },
   // Keep production tracing scoped to this app when a parent directory also has a lockfile.
   outputFileTracingRoot: __dirname,
-  // Allows CI/diagnostic builds to avoid a development server's active .next directory.
-  distDir: process.env.NEXT_DIST_DIR || ".next",
+  // Never let a development worker and a production build mutate the same cache.
+  // That race can leave manifests/chunks half-written and trigger false hydration errors.
+  distDir:
+    process.env.NEXT_DIST_DIR ||
+    (process.env.NODE_ENV === "development" ? ".next-dev" : ".next"),
 
   images: {
     remotePatterns: [{ protocol: "https", hostname: "**" }],
